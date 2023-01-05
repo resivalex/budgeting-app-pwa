@@ -1,20 +1,25 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from './logo.svg'
 import './App.css'
 import axios from 'axios'
 
 export default function App() {
+  const [transaction, setTransaction] = useState({})
+
   useEffect(() => {
     async function logTransactions() {
       const response = await axios.get(process.env.REACT_APP_BACKEND_URL + '/transactions')
-      console.log(response.data)
+      setTransaction(response.data)
     }
     void logTransactions()
   }, [])
+
   return (
     <>
       <div id="sidebar">
+        <h1>Transactions</h1>
+        <pre>{JSON.stringify(transaction, null, 2)}</pre>
         <h1>React Router Contacts</h1>
         <div>
           <form id="search-form" role="search">
