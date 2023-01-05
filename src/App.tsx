@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import logo from './logo.svg'
 import './App.css'
+import axios from 'axios'
 
 export default function App() {
+  useEffect(() => {
+    async function logTransactions() {
+      const response = await axios.get(process.env.REACT_APP_BACKEND_URL + '/transactions')
+      console.log(response.data)
+    }
+    void logTransactions()
+  }, [])
   return (
     <>
       <div id="sidebar">
