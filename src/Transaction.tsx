@@ -12,7 +12,7 @@ class TransactionDTO {
   comment!: string
 }
 
-export default function ({ t }: { t: TransactionDTO }) {
+export default function Transaction({ t }: { t: TransactionDTO }) {
   return (
     <Box>
       <Flex direction="row" alignItems="flex-start" justifyContent="space-between">

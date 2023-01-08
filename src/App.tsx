@@ -7,11 +7,16 @@ import Transaction from './Transaction'
 
 export default function App() {
   const [transactions, setTransactions] = useState([])
+  const [error, setError] = useState('')
 
   useEffect(() => {
     async function logTransactions() {
-      const response = await axios.get(process.env.REACT_APP_BACKEND_URL + '/transactions')
-      setTransactions(response.data)
+      try {
+        const response = await axios.get(process.env.REACT_APP_BACKEND_URL + '/transactions')
+        setTransactions(response.data)
+      } catch (err: any) {
+        setError(err.toString())
+      }
     }
     void logTransactions()
   }, [])
@@ -20,9 +25,10 @@ export default function App() {
     <>
       <div id="sidebar">
         <h1>Transactions</h1>
-        {transactions.length == 0 ? 'Empty' : null}
-        {transactions.map((transaction: any) => {
-          return <Transaction t={transaction}></Transaction>
+        <div>{error !== '' && error}</div>
+        {transactions.length === 0 ? 'Empty' : null}
+        {transactions.map((transaction: any, index: number) => {
+          return <Transaction key={index} t={transaction}></Transaction>
         })}
         <h1>React Router Contacts</h1>
         <div>
