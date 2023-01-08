@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom'
 import logo from './logo.svg'
 import './App.css'
 import axios from 'axios'
+import Transaction from './Transaction'
 
 export default function App() {
-  const [transaction, setTransaction] = useState({})
+  const [transactions, setTransactions] = useState([])
 
   useEffect(() => {
     async function logTransactions() {
       const response = await axios.get(process.env.REACT_APP_BACKEND_URL + '/transactions')
-      setTransaction(response.data)
+      setTransactions(response.data)
     }
     void logTransactions()
   }, [])
@@ -19,7 +20,10 @@ export default function App() {
     <>
       <div id="sidebar">
         <h1>Transactions</h1>
-        <pre>{JSON.stringify(transaction, null, 2)}</pre>
+        {transactions.length == 0 ? 'Empty' : null}
+        {transactions.map((transaction: any) => {
+          return <Transaction t={transaction}></Transaction>
+        })}
         <h1>React Router Contacts</h1>
         <div>
           <form id="search-form" role="search">
