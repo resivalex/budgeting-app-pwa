@@ -1,5 +1,14 @@
 import React from 'react'
 
-const Home: React.FC = () => <h1>Welcome to your PWA!</h1>
+type Props = {
+  transactions: any[]
+}
 
-export default Home
+export default function Home({ transactions }: Props) {
+  return (
+    <div className="box">
+      <div>Home</div>
+      <div>Transactions: {transactions.length}</div>
+    </div>
+  )
+}

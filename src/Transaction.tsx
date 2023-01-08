@@ -13,7 +13,7 @@ class TransactionDTO {
 
 export default function Transaction({ t }: { t: TransactionDTO }) {
   return (
-    <div>
+    <div className="box">
       <div>
         <div>
           <div>{t.account}</div>
