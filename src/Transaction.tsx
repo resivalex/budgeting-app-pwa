@@ -1,4 +1,3 @@
-import { Text, Box, Flex } from 'native-base'
 import React from 'react'
 
 class TransactionDTO {
@@ -14,23 +13,23 @@ class TransactionDTO {
 
 export default function Transaction({ t }: { t: TransactionDTO }) {
   return (
-    <Box>
-      <Flex direction="row" alignItems="flex-start" justifyContent="space-between">
-        <Flex direction="column" justifyContent="space-between">
-          <Text>{t.account}</Text>
-          <Text>{t.category}</Text>
-        </Flex>
-        <Flex direction="column" justifyContent="space-between">
+    <div>
+      <div>
+        <div>
+          <div>{t.account}</div>
+          <div>{t.category}</div>
+        </div>
+        <div>
           {t.amount}
-        </Flex>
-      </Flex>
-      <Flex direction="row" justifyContent="space-between">
-        <Box>
-          {t.payee && <Text>{t.payee}</Text>}
-          {t.comment && <Text>{t.comment}</Text>}
-        </Box>
-        <Text textAlign="right">{t.datetime}</Text>
-      </Flex>
-    </Box>
+        </div>
+      </div>
+      <div>
+        <div>
+          {t.payee && <div>{t.payee}</div>}
+          {t.comment && <div>{t.comment}</div>}
+        </div>
+        <div>{t.datetime}</div>
+      </div>
+    </div>
   )
 }

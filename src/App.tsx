@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import logo from './logo.svg'
 import './App.css'
 import axios from 'axios'
-import Transaction from './Transaction'
+import Transactions from './Transactions'
 
 export default function App() {
   const [transactions, setTransactions] = useState([])
@@ -27,9 +27,8 @@ export default function App() {
         <h1>Transactions</h1>
         <div>{error !== '' && error}</div>
         {transactions.length === 0 ? 'Empty' : null}
-        {transactions.map((transaction: any, index: number) => {
-          return <Transaction key={index} t={transaction}></Transaction>
-        })}
+        <Transactions transactions={transactions}></Transactions>
+
         <h1>React Router Contacts</h1>
         <div>
           <form id="search-form" role="search">

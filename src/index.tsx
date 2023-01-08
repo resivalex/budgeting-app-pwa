@@ -8,7 +8,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Contact from './Contact'
 import About from './About'
 import Home from './Home'
-import { NativeBaseProvider } from 'native-base'
 
 const router = createBrowserRouter([
   {
@@ -32,9 +31,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <NativeBaseProvider>
-      <RouterProvider router={router} />
-    </NativeBaseProvider>
+    <RouterProvider router={router} />
   </React.StrictMode>
 )
 
