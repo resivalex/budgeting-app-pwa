@@ -13,22 +13,20 @@ class TransactionDTO {
 
 export default function Transaction({ t }: { t: TransactionDTO }) {
   return (
-    <div className="box">
-      <div>
-        <div>
+    <div className="box m-1">
+      <div className="columns">
+        <div className="column">
+          <div className="has-text-weight-semibold">{t.category}</div>
           <div>{t.account}</div>
-          <div>{t.category}</div>
+          <div className="is-size-7 has-text-weight-semibold">{t.payee}</div>
+          <div className="is-size-7">{t.comment}</div>
         </div>
-        <div>
-          {t.amount}
+        <div className="column">
+          <div className="is-size-5">
+            {t.amount} {t.currency}
+          </div>
+          <div className="is-size-7">{t.datetime}</div>
         </div>
-      </div>
-      <div>
-        <div>
-          {t.payee && <div>{t.payee}</div>}
-          {t.comment && <div>{t.comment}</div>}
-        </div>
-        <div>{t.datetime}</div>
       </div>
     </div>
   )
