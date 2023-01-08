@@ -1,4 +1,5 @@
 import React from 'react'
+import classNames from 'classnames'
 
 class TransactionDTO {
   datetime!: string
@@ -22,8 +23,14 @@ export default function Transaction({ t }: { t: TransactionDTO }) {
           <div className="is-size-7">{t.comment}</div>
         </div>
         <div className="has-text-right">
-          <div className="is-size-5">
-            {t.amount} {t.currency}
+          <div
+            className={classNames('is-size-5', {
+              'has-text-success': t.type === 'income',
+              'has-text-danger': t.type === 'expense',
+            })}
+          >
+            {t.type === 'expense' ? '-' : ''}
+            {t.amount.replace('.00', '')} {t.currency}
           </div>
           <div className="is-size-7">{t.datetime}</div>
         </div>
