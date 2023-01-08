@@ -1,14 +1,17 @@
 import React from 'react'
 
 type Props = {
-  transactions: any[]
+  error: string
+  isLoading: boolean
 }
 
-export default function Home({ transactions }: Props) {
-  return (
-    <div className="box">
-      <div>Home</div>
-      <div>Transactions: {transactions.length}</div>
-    </div>
-  )
+export default function Home({ error, isLoading }: Props) {
+  if (isLoading) {
+    return (
+      <div className="box">
+        <div>Loading...</div>
+      </div>
+    )
+  }
+  return <div className="box">{error === '' ? <div>Loaded.</div> : <div className="has-text-danger">{error}</div>}</div>
 }

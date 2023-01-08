@@ -32,7 +32,10 @@ export default function Transaction({ t }: { t: TransactionDTO }) {
             {t.type === 'expense' ? '-' : ''}
             {t.amount.replace('.00', '')} {t.currency}
           </div>
-          <div className="is-size-7">{t.datetime}</div>
+          <div className="is-size-7">
+            <div className="has-text-grey">{t.datetime.split(' ')[1]}</div>
+            <div className="has-text-weight-semibold">{t.datetime.split(' ')[0]}</div>
+          </div>
         </div>
       </div>
     </div>
