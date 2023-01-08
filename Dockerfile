@@ -2,14 +2,18 @@ FROM node:14-alpine3.12
 
 WORKDIR /app
 
-ADD ["package.json", "package-lock.json", "./"]
+RUN yarn add serve
 
-RUN yarn install
+ADD build build
 
-ADD public public
-ADD src src
-ADD [".env", "tsconfig.json", "./"]
-
-RUN yarn build
+#ADD ["package.json", "package-lock.json", "./"]
+#
+#RUN yarn install
+#
+#ADD public public
+#ADD src src
+#ADD [".env", "tsconfig.json", "./"]
+#
+#RUN yarn build
 
 CMD ["yarn", "run", "serve", "--single", "build", "--listen", "tcp://0.0.0.0:3000"]

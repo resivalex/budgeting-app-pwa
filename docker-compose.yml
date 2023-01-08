@@ -4,6 +4,8 @@ services:
     container_name: budgeting-app-pwa
     command: yarn run serve --single build --listen tcp://0.0.0.0:3000
     build: .
+    volumes:
+      - "./build:/app/build"
     env_file:
       - .env
     ports:
