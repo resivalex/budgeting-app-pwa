@@ -1,0 +1,5 @@
+{
+  "backendUrl": "http://localhost:9000",
+  "backendToken": "secret",
+  "dbUrl": "http://admin:password@localhost:9002"
+}
