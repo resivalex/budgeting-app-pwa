@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import Home from './Home'
+import Status from './Status'
 import Transactions from './Transactions'
 import NotFound from './NotFound'
 import classNames from 'classnames'
@@ -16,10 +17,28 @@ type ConfigType = {
 export default function App() {
   const [transactions, setTransactions] = useState([])
   const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const location = useLocation()
 
+  function saveConfig(config: string) {
+    window.localStorage.config = config
+  }
+
   useEffect(() => {
+    function readAllDocs(db: any) {
+      db.allDocs({
+        include_docs: true,
+      })
+        .then(function (result: any) {
+          // Extract the documents from the result
+          const docs = result.rows.map((row: any) => row.doc)
+          setTransactions(docs)
+        })
+        .catch(function (err: any) {
+          setError(err)
+        })
+    }
+
     async function loadTransactions() {
       if (!window.localStorage.config) {
         return
@@ -33,41 +52,33 @@ export default function App() {
             live: true,
             retry: true,
           })
-          .on('change', (info: any) => {
-            console.log('DB change', info)
+          .on('change', (_info: any) => {
+            console.log('DB change')
+            setIsLoading(true)
           })
-          .on('paused', (err: any) => {
-            console.log('DB paused', err)
+          .on('paused', (_err: any) => {
+            console.log('DB paused')
+            readAllDocs(localDB)
+            setIsLoading(false)
           })
           .on('active', () => {
             console.log('DB active')
+            setIsLoading(true)
           })
-          .on('denied', (err: any) => {
-            console.log('DB denied', err)
+          .on('denied', (_err: any) => {
+            console.log('DB denied')
+            setIsLoading(false)
           })
-          .on('complete', (info: any) => {
-            console.log('DB complete', info)
+          .on('complete', (_info: any) => {
+            console.log('DB complete')
+            setIsLoading(false)
           })
-          .on('error', (err: any) => {
-            console.log('DB error', err)
-          })
-
-        localDB
-          .allDocs({
-            include_docs: true,
-          })
-          .then(function (result: any) {
-            // Extract the documents from the result
-            const docs = result.rows.map((row: any) => row.doc)
-            setTransactions(docs)
-          })
-          .catch(function (err: any) {
-            setError(err)
+          .on('error', (_err: any) => {
+            console.log('DB error')
+            setIsLoading(false)
           })
       } catch (err: any) {
         setError(err.toString())
-      } finally {
-        setIsLoading(false)
       }
     }
     void loadTransactions()
@@ -90,11 +101,12 @@ export default function App() {
           </ul>
         </div>
       </div>
+      <Status isLoading={isLoading} error={error} onClose={() => setError('')} />
       <div className="pt-6">
         <Routes>
-          <Route path="/" element={<Home isLoading={isLoading} error={error} />} />
+          <Route path="/" element={<Home />} />
           <Route path="/transactions" element={<Transactions transactions={transactions} />} />
-          <Route path="/config" element={<Config onChange={(config) => (window.localStorage.config = config)} />} />
+          <Route path="/config" element={<Config onChange={saveConfig} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

@@ -29,7 +29,8 @@ export default function Transaction({ t }: { t: TransactionDTO }) {
               'has-text-danger': t.type === 'expense',
             })}
           >
-            {t.type === 'expense' ? '-' : ''}
+            {t.type === 'expense' && '-'}
+            {t.type === 'income' && '+'}
             {t.amount.replace('.00', '')} {t.currency}
           </div>
           <div className="is-size-7">
