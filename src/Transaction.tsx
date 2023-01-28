@@ -1,5 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
+// @ts-ignore
+import Measure from 'react-measure'
 
 class TransactionDTO {
   datetime!: string
@@ -12,33 +14,54 @@ class TransactionDTO {
   comment!: string
 }
 
-export default function Transaction({ t }: { t: TransactionDTO }) {
+export default function Transaction({
+  t,
+  onDimentionsChange,
+}: {
+  t: TransactionDTO
+  onDimentionsChange: any
+}) {
   return (
-    <div className="box m-1">
-      <div className="is-flex is-justify-content-space-between">
-        <div>
-          <div className="has-text-weight-semibold">{t.category}</div>
-          <div>{t.account}</div>
-          <div className="is-size-7 has-text-weight-semibold">{t.payee}</div>
-          <div className="is-size-7">{t.comment}</div>
-        </div>
-        <div className="has-text-right">
-          <div
-            className={classNames('is-size-5', {
-              'has-text-success': t.type === 'income',
-              'has-text-danger': t.type === 'expense',
-            })}
-          >
-            {t.type === 'expense' && '-'}
-            {t.type === 'income' && '+'}
-            {t.amount.replace('.00', '')} {t.currency}
+    // @ts-ignore
+    <Measure
+      bounds
+      onResize={(contentRect: any) => {
+        onDimentionsChange({
+          width: contentRect.bounds?.width || 300,
+          height: contentRect.bounds?.height || 100,
+        })
+      }}
+    >
+      {({ measureRef }: any) => {
+        return (
+          <div ref={measureRef} className="box m-1">
+            <div className="is-flex is-justify-content-space-between">
+              <div>
+                <div className="has-text-weight-semibold">{t.category}</div>
+                <div>{t.account}</div>
+                <div className="is-size-7 has-text-weight-semibold">{t.payee}</div>
+                <div className="is-size-7">{t.comment}</div>
+              </div>
+              <div className="has-text-right">
+                <div
+                  className={classNames('is-size-5', {
+                    'has-text-success': t.type === 'income',
+                    'has-text-danger': t.type === 'expense',
+                  })}
+                >
+                  {t.type === 'expense' && '-'}
+                  {t.type === 'income' && '+'}
+                  {t.amount.replace('.00', '')} {t.currency}
+                </div>
+                <div className="is-size-7">
+                  <div className="has-text-grey">{t.datetime.split(' ')[1]}</div>
+                  <div className="has-text-weight-semibold">{t.datetime.split(' ')[0]}</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="is-size-7">
-            <div className="has-text-grey">{t.datetime.split(' ')[1]}</div>
-            <div className="has-text-weight-semibold">{t.datetime.split(' ')[0]}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+        )
+      }}
+    </Measure>
   )
 }
