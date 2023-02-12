@@ -6,7 +6,10 @@ import Transactions from './Transactions'
 import NotFound from './NotFound'
 import classNames from 'classnames'
 import Config from './Config'
+import TransactionForm from './TransactionForm'
 import PouchDB from 'pouchdb'
+import { TransactionDTO } from './Transaction'
+import { v4 as uuidv4 } from 'uuid'
 
 type ConfigType = {
   backendUrl: string
@@ -85,6 +88,13 @@ export default function App() {
     void loadTransactions()
   }, [])
 
+  function addTransaction(t: TransactionDTO) {
+    const localDB = new PouchDB('budgeting')
+
+    console.log(t)
+    void localDB.put({ _id: uuidv4(), ...t })
+  }
+
   return (
     <div>
       <div className="navbar is-fixed-top">
@@ -101,6 +111,9 @@ export default function App() {
             <li className={classNames({ 'is-active': location.pathname === '/config' })}>
               <Link to="/config">Config</Link>
             </li>
+            <li className={classNames({ 'is-active': location.pathname === '/add' })}>
+              <Link to="/add">Add</Link>
+            </li>
           </ul>
         </div>
       </div>
@@ -110,6 +123,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/transactions" element={<Transactions transactions={transactions} />} />
           <Route path="/config" element={<Config onChange={saveConfig} />} />
+          <Route path="/add" element={<TransactionForm onAdd={addTransaction} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

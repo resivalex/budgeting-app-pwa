@@ -3,7 +3,7 @@ import classNames from 'classnames'
 // @ts-ignore
 import Measure from 'react-measure'
 
-class TransactionDTO {
+export class TransactionDTO {
   datetime!: string
   account!: string
   category!: string
