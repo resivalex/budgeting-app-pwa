@@ -30,7 +30,7 @@ export default function Transactions({ transactions }: { transactions: any[] }) 
   }
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{ flex: 1 }}>
       {
         // @ts-ignore
         <AutoSizer>

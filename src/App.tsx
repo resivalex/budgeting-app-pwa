@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import Home from './Home'
 import Status from './Status'
@@ -21,7 +21,18 @@ export default function App() {
   const [transactions, setTransactions] = useState([])
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isMenuActive, setIsMenuActive] = useState(false)
+  const menuRef: any = useRef(null)
+  const burgerRef: any = useRef(null)
   const location = useLocation()
+
+  function toggleMenu() {
+    setIsMenuActive(!isMenuActive)
+  }
+
+  function closeMenu() {
+    setIsMenuActive(false)
+  }
 
   function saveConfig(config: string) {
     window.localStorage.config = config
@@ -88,6 +99,24 @@ export default function App() {
     void loadTransactions()
   }, [])
 
+  useEffect(() => {
+    function handleClick(event: any) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        burgerRef.current !== event.target
+      ) {
+        setIsMenuActive(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+    }
+  }, [menuRef, burgerRef])
+
   function addTransaction(t: TransactionDTO) {
     const localDB = new PouchDB('budgeting')
 
@@ -95,38 +124,82 @@ export default function App() {
     void localDB.put({ _id: uuidv4(), ...t })
   }
 
+  const transactionsLinkName =
+    'Transactions' + (!isLoading && !error ? ' (' + transactions.length + ')' : '')
+
   return (
     <div>
-      <div className="navbar is-fixed-top">
-        <div className="tabs is-centered">
-          <ul>
-            <li className={classNames({ 'is-active': location.pathname === '/' })}>
-              <Link to="/">Home</Link>
-            </li>
-            <li className={classNames({ 'is-active': location.pathname === '/transactions' })}>
-              <Link to="/transactions">
-                Transactions{!isLoading && !error ? ' (' + transactions.length + ')' : ''}
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div className="navbar">
+          <div className="navbar-brand">
+            <a
+              ref={burgerRef}
+              role="button"
+              className="navbar-burger"
+              style={{ marginLeft: 0 }}
+              onClick={toggleMenu}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </a>
+          </div>
+          <div ref={menuRef} className={classNames('navbar-menu', { 'is-active': isMenuActive })}>
+            <div className="navbar-start">
+              <Link
+                to="/"
+                className={classNames('navbar-item', { 'is-active': location.pathname === '/' })}
+                onClick={closeMenu}
+              >
+                Home
               </Link>
-            </li>
-            <li className={classNames({ 'is-active': location.pathname === '/config' })}>
-              <Link to="/config">Config</Link>
-            </li>
-            <li className={classNames({ 'is-active': location.pathname === '/add' })}>
-              <Link to="/add">Add</Link>
-            </li>
-          </ul>
+              <Link
+                to="/transactions"
+                className={classNames('navbar-item', {
+                  'is-active': location.pathname === '/transactions',
+                })}
+                onClick={closeMenu}
+              >
+                {transactionsLinkName}
+              </Link>
+              <Link
+                to="/config"
+                className={classNames('navbar-item', {
+                  'is-active': location.pathname === '/config',
+                })}
+                onClick={closeMenu}
+              >
+                Config
+              </Link>
+              <Link
+                to="/add"
+                className={classNames('navbar-item', { 'is-active': location.pathname === '/add' })}
+                onClick={closeMenu}
+              >
+                Add
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            width: '100%',
+            flex: 1,
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/transactions" element={<Transactions transactions={transactions} />} />
+            <Route path="/config" element={<Config onChange={saveConfig} />} />
+            <Route path="/add" element={<TransactionForm onAdd={addTransaction} />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </div>
       </div>
       <Status isLoading={isLoading} error={error} onClose={() => setError('')} />
-      <div className="pt-6">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/transactions" element={<Transactions transactions={transactions} />} />
-          <Route path="/config" element={<Config onChange={saveConfig} />} />
-          <Route path="/add" element={<TransactionForm onAdd={addTransaction} />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
     </div>
   )
 }
