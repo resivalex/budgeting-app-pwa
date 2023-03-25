@@ -5,11 +5,11 @@ import Status from './Status'
 import Transactions from './Transactions'
 import NotFound from './NotFound'
 import classNames from 'classnames'
-import Config from './Config'
 import TransactionForm from './TransactionForm'
 import PouchDB from 'pouchdb'
 import { TransactionDTO } from './Transaction'
 import { v4 as uuidv4 } from 'uuid'
+import Login from './Login'
 
 type ConfigType = {
   backendUrl: string
@@ -34,8 +34,14 @@ export default function App() {
     setIsMenuActive(false)
   }
 
-  function saveConfig(config: string) {
-    window.localStorage.config = config
+  const getIsAuthenticated = () => {
+    return localStorage.getItem('config') !== null
+  }
+  const isAuthenticated = getIsAuthenticated()
+
+  const handleLogout = () => {
+    localStorage.removeItem('config')
+    window.location.reload()
   }
 
   useEffect(() => {
@@ -97,7 +103,7 @@ export default function App() {
       }
     }
     void loadTransactions()
-  }, [])
+  }, [isAuthenticated])
 
   useEffect(() => {
     function handleClick(event: any) {
@@ -129,76 +135,76 @@ export default function App() {
 
   return (
     <div>
-      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <div className="navbar">
-          <div className="navbar-brand">
-            <a
-              ref={burgerRef}
-              role="button"
-              className="navbar-burger"
-              style={{ marginLeft: 0 }}
-              onClick={toggleMenu}
-            >
-              <span></span>
-              <span></span>
-              <span></span>
-            </a>
-          </div>
-          <div ref={menuRef} className={classNames('navbar-menu', { 'is-active': isMenuActive })}>
-            <div className="navbar-start">
-              <Link
-                to="/"
-                className={classNames('navbar-item', { 'is-active': location.pathname === '/' })}
-                onClick={closeMenu}
+      {isAuthenticated ? (
+        <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+          <div className="navbar">
+            <div className="navbar-brand">
+              <a
+                ref={burgerRef}
+                role="button"
+                className="navbar-burger"
+                style={{ marginLeft: 0 }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  toggleMenu()
+                }}
+                href="/"
               >
-                Home
-              </Link>
-              <Link
-                to="/transactions"
-                className={classNames('navbar-item', {
-                  'is-active': location.pathname === '/transactions',
-                })}
-                onClick={closeMenu}
-              >
-                {transactionsLinkName}
-              </Link>
-              <Link
-                to="/config"
-                className={classNames('navbar-item', {
-                  'is-active': location.pathname === '/config',
-                })}
-                onClick={closeMenu}
-              >
-                Config
-              </Link>
-              <Link
-                to="/add"
-                className={classNames('navbar-item', { 'is-active': location.pathname === '/add' })}
-                onClick={closeMenu}
-              >
-                Add
-              </Link>
+                <span></span>
+                <span></span>
+                <span></span>
+              </a>
+            </div>
+            <div ref={menuRef} className={classNames('navbar-menu', { 'is-active': isMenuActive })}>
+              <div className="navbar-start">
+                <Link
+                  to="/"
+                  className={classNames('navbar-item', { 'is-active': location.pathname === '/' })}
+                  onClick={closeMenu}
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/transactions"
+                  className={classNames('navbar-item', {
+                    'is-active': location.pathname === '/transactions',
+                  })}
+                  onClick={closeMenu}
+                >
+                  {transactionsLinkName}
+                </Link>
+                <Link
+                  to="/add"
+                  className={classNames('navbar-item', {
+                    'is-active': location.pathname === '/add',
+                  })}
+                  onClick={closeMenu}
+                >
+                  Add
+                </Link>
+              </div>
             </div>
           </div>
+          <div
+            style={{
+              width: '100%',
+              flex: 1,
+              height: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<Home onLogout={handleLogout} />} />
+              <Route path="/transactions" element={<Transactions transactions={transactions} />} />
+              <Route path="/add" element={<TransactionForm onAdd={addTransaction} />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </div>
-        <div
-          style={{
-            width: '100%',
-            flex: 1,
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/transactions" element={<Transactions transactions={transactions} />} />
-            <Route path="/config" element={<Config onChange={saveConfig} />} />
-            <Route path="/add" element={<TransactionForm onAdd={addTransaction} />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </div>
+      ) : (
+        <Login />
+      )}
       <Status isLoading={isLoading} error={error} onClose={() => setError('')} />
     </div>
   )
