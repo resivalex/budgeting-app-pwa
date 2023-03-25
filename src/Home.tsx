@@ -1,16 +1,17 @@
 import React from 'react'
 
-type HomeProps = {
-  onLogout: () => void
+type Props = {
+  transactions: any[]
 }
 
-export default function Home({ onLogout }: HomeProps) {
+export default function Home({ transactions }: Props) {
   return (
     <div className="box">
-      <h1>Welcome to the Budgeting App!</h1>
-      <button onClick={onLogout} className="button is-danger">
-        Logout
-      </button>
+      <h1 className="title is-2">Welcome to the Budgeting App!</h1>
+
+      <div>
+        <h2 className="subtitle is-3">Transactions count: {transactions.length}</h2>
+      </div>
     </div>
   )
 }

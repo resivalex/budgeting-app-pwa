@@ -182,6 +182,9 @@ export default function App() {
                 >
                   Add
                 </Link>
+                <button onClick={handleLogout} className="button is-danger mt-1">
+                  Logout
+                </button>
               </div>
             </div>
           </div>
@@ -195,7 +198,7 @@ export default function App() {
             }}
           >
             <Routes>
-              <Route path="/" element={<Home onLogout={handleLogout} />} />
+              <Route path="/" element={<Home transactions={transactions} />} />
               <Route path="/transactions" element={<Transactions transactions={transactions} />} />
               <Route path="/add" element={<TransactionForm onAdd={addTransaction} />} />
               <Route path="*" element={<NotFound />} />
