@@ -46,7 +46,7 @@ export default function Login() {
   }
 
   return (
-    <div className="login-container container">
+    <div className="container p-2">
       <h1 className="title">Login</h1>
       {error && <div className="notification is-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
@@ -86,7 +86,7 @@ export default function Login() {
         </div>
         <div className="field">
           <div className="control">
-            <button type="submit" className="button">
+            <button type="submit" className="button is-info">
               Log In
             </button>
           </div>
