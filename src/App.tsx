@@ -130,9 +130,6 @@ export default function App() {
     void localDB.put({ _id: uuidv4(), ...t })
   }
 
-  const transactionsLinkName =
-    'Transactions' + (!isLoading && !error ? ' (' + transactions.length + ')' : '')
-
   return (
     <div>
       {isAuthenticated ? (
@@ -171,7 +168,7 @@ export default function App() {
                   })}
                   onClick={closeMenu}
                 >
-                  {transactionsLinkName}
+                  Transactions
                 </Link>
                 <Link
                   to="/add"
