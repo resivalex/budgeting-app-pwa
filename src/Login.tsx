@@ -47,7 +47,7 @@ export default function Login() {
 
   return (
     <div className="container p-2">
-      <h1 className="title">Login</h1>
+      <h1 className="title is-4">Login</h1>
       {error && <div className="notification is-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="field">
