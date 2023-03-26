@@ -17,6 +17,11 @@ type ConfigType = {
   dbUrl: string
 }
 
+type AccountDetailsType = {
+  currency: string
+  balance: number
+}
+
 export default function App() {
   const [transactions, setTransactions] = useState([])
   const [error, setError] = useState('')
@@ -38,6 +43,38 @@ export default function App() {
     return localStorage.getItem('config') !== null
   }
   const isAuthenticated = getIsAuthenticated()
+  const accountDetails: { [account: string]: AccountDetailsType } = transactions.reduce(
+    (accountCurrencies: any, transaction: any) => {
+      if (!accountCurrencies[transaction.account]) {
+        accountCurrencies[transaction.account] = {
+          currency: transaction.currency,
+          balance: 0,
+        }
+      }
+      accountCurrencies[transaction.account].balance += transaction.amount
+
+      return accountCurrencies
+    },
+    {}
+  )
+  const accountAndCurrencies = Object.keys(accountDetails).map((account) => {
+    return {
+      account: account,
+      currency: accountDetails[account].currency,
+    }
+  })
+  // Make a list of all categories sorted from most common to least common
+  const categoriesCounts = transactions.reduce((categories: any, transaction: any) => {
+    if (!categories[transaction.category]) {
+      categories[transaction.category] = 0
+    }
+    categories[transaction.category]++
+
+    return categories
+  }, {})
+  const sortedCategories = Object.keys(categoriesCounts).sort((a, b) => {
+    return categoriesCounts[b] - categoriesCounts[a]
+  })
 
   const handleLogout = () => {
     localStorage.removeItem('config')
@@ -197,7 +234,16 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Home transactions={transactions} />} />
               <Route path="/transactions" element={<Transactions transactions={transactions} />} />
-              <Route path="/add" element={<TransactionForm onAdd={addTransaction} />} />
+              <Route
+                path="/add"
+                element={
+                  <TransactionForm
+                    onAdd={addTransaction}
+                    accounts={accountAndCurrencies}
+                    categories={sortedCategories}
+                  />
+                }
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

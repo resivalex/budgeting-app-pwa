@@ -3,16 +3,27 @@ import { TransactionDTO } from './Transaction'
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
+  accounts: { account: string; currency: string }[]
+  categories: string[]
 }
 
-export default function Transaction({ onAdd }: Props) {
+export default function Transaction({ onAdd, accounts, categories }: Props) {
   const [amount, setAmount] = useState('')
   const [account, setAccount] = useState('')
-  const [category, setCategory] = useState('')
-  const [type, setType] = useState<'income' | 'expense' | 'transfer'>('expense')
   const [currency, setCurrency] = useState('')
+  const [category, setCategory] = useState('')
+  const [type, setType] = useState<'income' | 'expense'>('expense')
   const [payee, setPayee] = useState('')
   const [comment, setComment] = useState('')
+
+  const handleAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedAccount = accounts.find((a) => a.account === e.target.value)
+
+    if (selectedAccount) {
+      setAccount(selectedAccount.account)
+      setCurrency(selectedAccount.currency)
+    }
+  }
 
   return (
     <div className="field p-2">
@@ -28,22 +39,26 @@ export default function Transaction({ onAdd }: Props) {
       </div>
       <div className="field">
         <div className="control">
-          <input
-            className="input"
-            type="text"
-            placeholder="Account"
-            onChange={(e) => setAccount(e.target.value)}
-          />
+          <select className="input" onChange={handleAccountChange}>
+            <option value="">Select Account</option>
+            {accounts.map((a) => (
+              <option key={a.account} value={a.account}>
+                {`${a.account} (${a.currency})`}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       <div className="field">
         <div className="control">
-          <input
-            className="input"
-            type="text"
-            placeholder="Category"
-            onChange={(e) => setCategory(e.target.value)}
-          />
+          <select className="input" onChange={(e) => setCategory(e.target.value)}>
+            <option value="">Select Category</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       <div className="field">
@@ -51,24 +66,13 @@ export default function Transaction({ onAdd }: Props) {
           <select
             className="input"
             onChange={(e) => {
-              const type = e.target.value as 'income' | 'expense' | 'transfer'
+              const type = e.target.value as 'income' | 'expense'
               setType(type)
             }}
           >
             <option value="expense">Expense</option>
             <option value="income">Income</option>
-            <option value="transfer">Transfer</option>
           </select>
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <input
-            className="input"
-            type="text"
-            placeholder="Currency"
-            onChange={(e) => setCurrency(e.target.value)}
-          />
         </div>
       </div>
       <div className="field">
