@@ -11,16 +11,12 @@ import { TransactionDTO } from './Transaction'
 import { v4 as uuidv4 } from 'uuid'
 import Login from './Login'
 import DbService from './DbService'
+import TransactionAggregator from './TransactionAggregator'
 
 type ConfigType = {
   backendUrl: string
   backendToken: string
   dbUrl: string
-}
-
-type AccountDetailsType = {
-  currency: string
-  balance: number
 }
 
 export default function App() {
@@ -44,38 +40,9 @@ export default function App() {
     return localStorage.getItem('config') !== null
   }
   const isAuthenticated = getIsAuthenticated()
-  const accountDetails: { [account: string]: AccountDetailsType } = transactions.reduce(
-    (accountCurrencies: any, transaction: any) => {
-      if (!accountCurrencies[transaction.account]) {
-        accountCurrencies[transaction.account] = {
-          currency: transaction.currency,
-          balance: 0,
-        }
-      }
-      accountCurrencies[transaction.account].balance += transaction.amount
-
-      return accountCurrencies
-    },
-    {}
-  )
-  const accountAndCurrencies = Object.keys(accountDetails).map((account) => {
-    return {
-      account: account,
-      currency: accountDetails[account].currency,
-    }
-  })
-  // Make a list of all categories sorted from most common to least common
-  const categoriesCounts = transactions.reduce((categories: any, transaction: any) => {
-    if (!categories[transaction.category]) {
-      categories[transaction.category] = 0
-    }
-    categories[transaction.category]++
-
-    return categories
-  }, {})
-  const sortedCategories = Object.keys(categoriesCounts).sort((a, b) => {
-    return categoriesCounts[b] - categoriesCounts[a]
-  })
+  const transactionAggregator = new TransactionAggregator(transactions)
+  const accountAndCurrencies = transactionAggregator.getAccountAndCurrencies()
+  const sortedCategories = transactionAggregator.getSortedCategories()
 
   const handleLogout = () => {
     localStorage.removeItem('config')
@@ -93,8 +60,8 @@ export default function App() {
         onLoading: setIsLoading,
         onDocsRead: setTransactions,
         onError: setError,
-      });
-      await dbService.initialize();
+      })
+      await dbService.initialize()
     }
     void loadTransactions()
   }, [isAuthenticated])
