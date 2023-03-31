@@ -10,9 +10,7 @@ import PouchDB from 'pouchdb'
 import { TransactionDTO } from './Transaction'
 import { v4 as uuidv4 } from 'uuid'
 import Login from './Login'
-import { initializePouchDB } from './dbInitialization'
-import createDBCallbacks from './dbCallbacks'
-import { readAllDocs } from './dbQueries'
+import DbService from './DbService'
 
 type ConfigType = {
   backendUrl: string
@@ -85,37 +83,18 @@ export default function App() {
   }
 
   useEffect(() => {
-    const dbCallbacks = createDBCallbacks(setIsLoading)
-
     async function loadTransactions() {
       if (!window.localStorage.config) {
         return
       }
       const config: ConfigType = JSON.parse(window.localStorage.config)
-      try {
-        const { localDB, remoteDB } = initializePouchDB(config.dbUrl)
-        localDB
-          .sync(remoteDB, {
-            live: true,
-            retry: true,
-          })
-          .on('change', dbCallbacks.handleDBChange)
-          .on('paused', async () => {
-            dbCallbacks.handleDBPaused()
-            try {
-              const docs = await readAllDocs(localDB)
-              setTransactions(docs)
-            } catch (err: any) {
-              setError(err)
-            }
-          })
-          .on('active', dbCallbacks.handleDBActive)
-          .on('denied', dbCallbacks.handleDBDenied)
-          .on('complete', dbCallbacks.handleDBComplete)
-          .on('error', dbCallbacks.handleDBError)
-      } catch (err: any) {
-        setError(err.toString())
-      }
+      const dbService = new DbService({
+        dbUrl: config.dbUrl,
+        onLoading: setIsLoading,
+        onDocsRead: setTransactions,
+        onError: setError,
+      });
+      await dbService.initialize();
     }
     void loadTransactions()
   }, [isAuthenticated])
