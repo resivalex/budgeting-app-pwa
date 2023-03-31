@@ -10,6 +10,9 @@ import PouchDB from 'pouchdb'
 import { TransactionDTO } from './Transaction'
 import { v4 as uuidv4 } from 'uuid'
 import Login from './Login'
+import { initializePouchDB } from './dbInitialization'
+import createDBCallbacks from './dbCallbacks'
+import { readAllDocs } from './dbQueries'
 
 type ConfigType = {
   backendUrl: string
@@ -23,7 +26,7 @@ type AccountDetailsType = {
 }
 
 export default function App() {
-  const [transactions, setTransactions] = useState([])
+  const [transactions, setTransactions] = useState<any[]>([])
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isMenuActive, setIsMenuActive] = useState(false)
@@ -82,20 +85,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    function readAllDocs(db: any) {
-      db.allDocs({
-        include_docs: true,
-      })
-        .then(function (result: any) {
-          // Extract the documents from the result
-          const docs = result.rows.map((row: any) => row.doc)
-          docs.sort((a: any, b: any) => (a.datetime > b.datetime ? -1 : 1))
-          setTransactions(docs)
-        })
-        .catch(function (err: any) {
-          setError(err)
-        })
-    }
+    const dbCallbacks = createDBCallbacks(setIsLoading)
 
     async function loadTransactions() {
       if (!window.localStorage.config) {
@@ -103,38 +93,26 @@ export default function App() {
       }
       const config: ConfigType = JSON.parse(window.localStorage.config)
       try {
-        const localDB = new PouchDB('budgeting')
-        const remoteDB = new PouchDB(config.dbUrl + '/budgeting')
+        const { localDB, remoteDB } = initializePouchDB(config.dbUrl)
         localDB
           .sync(remoteDB, {
             live: true,
             retry: true,
           })
-          .on('change', (_info: any) => {
-            console.log('DB change')
-            setIsLoading(true)
+          .on('change', dbCallbacks.handleDBChange)
+          .on('paused', async () => {
+            dbCallbacks.handleDBPaused()
+            try {
+              const docs = await readAllDocs(localDB)
+              setTransactions(docs)
+            } catch (err: any) {
+              setError(err)
+            }
           })
-          .on('paused', (_err: any) => {
-            console.log('DB paused')
-            readAllDocs(localDB)
-            setIsLoading(false)
-          })
-          .on('active', () => {
-            console.log('DB active')
-            setIsLoading(true)
-          })
-          .on('denied', (_err: any) => {
-            console.log('DB denied')
-            setIsLoading(false)
-          })
-          .on('complete', (_info: any) => {
-            console.log('DB complete')
-            setIsLoading(false)
-          })
-          .on('error', (_err: any) => {
-            console.log('DB error')
-            setIsLoading(false)
-          })
+          .on('active', dbCallbacks.handleDBActive)
+          .on('denied', dbCallbacks.handleDBDenied)
+          .on('complete', dbCallbacks.handleDBComplete)
+          .on('error', dbCallbacks.handleDBError)
       } catch (err: any) {
         setError(err.toString())
       }
