@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './Home'
 import Status from './Status'
@@ -23,13 +23,6 @@ export default function App() {
   const [transactions, setTransactions] = useState<any[]>([])
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [isMenuActive, setIsMenuActive] = useState(false)
-  const menuRef: any = useRef(null)
-  const burgerRef: any = useRef(null)
-
-  function toggleMenu() {
-    setIsMenuActive(!isMenuActive)
-  }
 
   const getIsAuthenticated = () => {
     return localStorage.getItem('config') !== null
@@ -61,24 +54,6 @@ export default function App() {
     void loadTransactions()
   }, [isAuthenticated])
 
-  useEffect(() => {
-    function handleClick(event: any) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        burgerRef.current !== event.target
-      ) {
-        setIsMenuActive(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClick)
-
-    return () => {
-      document.removeEventListener('mousedown', handleClick)
-    }
-  }, [menuRef, burgerRef])
-
   function addTransaction(t: TransactionDTO) {
     const localDB = new PouchDB('budgeting')
 
@@ -90,7 +65,7 @@ export default function App() {
     <div>
       {isAuthenticated ? (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-          <Menu isMenuActive={isMenuActive} toggleMenu={toggleMenu} handleLogout={handleLogout} />{' '}
+          <Menu handleLogout={handleLogout} />
           <div
             style={{
               width: '100%',

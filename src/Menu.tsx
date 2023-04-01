@@ -1,21 +1,38 @@
-import React, { useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 
 type MenuProps = {
-  isMenuActive: boolean
-  toggleMenu: () => void
   handleLogout: () => void
 }
 
-const Menu: React.FC<MenuProps> = ({ isMenuActive, toggleMenu, handleLogout }) => {
+const Menu: React.FC<MenuProps> = ({ handleLogout }) => {
+  const [isMenuActive, setIsMenuActive] = useState(false)
   const menuRef: any = useRef(null)
   const burgerRef: any = useRef(null)
   const location = useLocation()
 
-  function closeMenu() {
-    toggleMenu()
+  function toggleMenu() {
+    setIsMenuActive(!isMenuActive)
   }
+
+  function closeMenu() {
+    setIsMenuActive(false)
+  }
+
+  function handleClick(event: any) {
+    if (!menuRef.current.contains(event.target) && burgerRef.current !== event.target) {
+      closeMenu()
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+    }
+  }, [menuRef, burgerRef])
 
   return (
     <div className="navbar">
@@ -41,7 +58,7 @@ const Menu: React.FC<MenuProps> = ({ isMenuActive, toggleMenu, handleLogout }) =
           <Link
             to="/"
             className={classNames('navbar-item', { 'is-active': location.pathname === '/' })}
-            onClick={closeMenu}
+            onClick={toggleMenu}
           >
             Home
           </Link>
@@ -50,7 +67,7 @@ const Menu: React.FC<MenuProps> = ({ isMenuActive, toggleMenu, handleLogout }) =
             className={classNames('navbar-item', {
               'is-active': location.pathname === '/transactions',
             })}
-            onClick={closeMenu}
+            onClick={toggleMenu}
           >
             Transactions
           </Link>
@@ -59,7 +76,7 @@ const Menu: React.FC<MenuProps> = ({ isMenuActive, toggleMenu, handleLogout }) =
             className={classNames('navbar-item', {
               'is-active': location.pathname === '/add',
             })}
-            onClick={closeMenu}
+            onClick={toggleMenu}
           >
             Add
           </Link>
