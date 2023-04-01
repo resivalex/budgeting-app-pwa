@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './Home'
 import Status from './Status'
@@ -23,6 +23,7 @@ export default function App() {
   const [transactions, setTransactions] = useState<any[]>([])
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const dbServiceRef = useRef<DbService | null>(null)
 
   const getIsAuthenticated = () => {
     return localStorage.getItem('config') !== null
@@ -42,6 +43,9 @@ export default function App() {
       if (!window.localStorage.config) {
         return
       }
+      if (dbServiceRef.current) {
+        return
+      }
       const config: ConfigType = JSON.parse(window.localStorage.config)
       const dbService = new DbService({
         dbUrl: config.dbUrl,
@@ -49,6 +53,7 @@ export default function App() {
         onDocsRead: setTransactions,
         onError: setError,
       })
+      dbServiceRef.current = dbService
       await dbService.initialize()
     }
     void loadTransactions()
