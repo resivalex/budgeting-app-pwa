@@ -25,6 +25,7 @@ export default function App() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [offlineMode, setOfflineMode] = useState(false)
   const dbServiceRef = useRef<DbService | null>(null)
 
   useEffect(() => {
@@ -53,9 +54,12 @@ export default function App() {
       const config: ConfigType = JSON.parse(window.localStorage.config)
 
       const backendService = new BackendService(config.backendUrl, config.backendToken)
-      const settings = await backendService.getSettings()
-      const resetDb = window.localStorage.transactionsUploadedAt !== settings.transactionsUploadedAt
-      window.localStorage.transactionsUploadedAt = settings.transactionsUploadedAt
+      let settings = null
+      try {
+        settings = await backendService.getSettings()
+      } catch (err) {
+        setOfflineMode(true)
+      }
 
       const dbService = new DbService({
         dbUrl: config.dbUrl,
@@ -64,19 +68,26 @@ export default function App() {
         onError: setError,
       })
       dbServiceRef.current = dbService
-      if (resetDb) {
-        await dbService.reset()
+      if (settings) {
+        const resetDb =
+          window.localStorage.transactionsUploadedAt !== settings.transactionsUploadedAt
+        if (resetDb) {
+          window.localStorage.transactionsUploadedAt = settings.transactionsUploadedAt
+          await dbService.reset()
+        }
       }
       await dbService.syncronize({
-        shouldReset: async () => {
-          const settings = await backendService.getSettings()
-          const changed =
-            window.localStorage.transactionsUploadedAt !== settings.transactionsUploadedAt
-          if (changed) {
-            window.localStorage.transactionsUploadedAt = settings.transactionsUploadedAt
-          }
-          return changed
-        },
+        shouldReset: settings
+          ? async () => {
+              const checkSettings = await backendService.getSettings()
+              const changed =
+                window.localStorage.transactionsUploadedAt !== checkSettings.transactionsUploadedAt
+              if (changed) {
+                window.localStorage.transactionsUploadedAt = checkSettings.transactionsUploadedAt
+              }
+              return changed
+            }
+          : async () => false,
       })
     }
     void loadTransactions()
@@ -92,8 +103,15 @@ export default function App() {
   return (
     <div>
       {isAuthenticated ? (
-        <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-          <Menu handleLogout={handleLogout} />
+        <div
+          style={{
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: offlineMode ? 'gray' : 'white',
+          }}
+        >
+          <Menu handleLogout={handleLogout} offlineMode={offlineMode} />
           <div
             style={{
               width: '100%',

@@ -3,10 +3,11 @@ import { Link, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 
 type MenuProps = {
-  handleLogout: () => void
+  handleLogout: () => void,
+  offlineMode: boolean
 }
 
-const Menu: React.FC<MenuProps> = ({ handleLogout }) => {
+const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode }) => {
   const [isMenuActive, setIsMenuActive] = useState(false)
   const menuRef: any = useRef(null)
   const burgerRef: any = useRef(null)
@@ -52,6 +53,12 @@ const Menu: React.FC<MenuProps> = ({ handleLogout }) => {
           <span></span>
           <span></span>
         </a>
+        {offlineMode && (
+          <div className="is-text">
+            <div>Offline</div>
+            <div>mode</div>
+          </div>
+        )}
       </div>
       <div ref={menuRef} className={classNames('navbar-menu', { 'is-active': isMenuActive })}>
         <div className="navbar-start">
