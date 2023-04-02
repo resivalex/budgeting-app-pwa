@@ -23,12 +23,15 @@ export default function App() {
   const [transactions, setTransactions] = useState<any[]>([])
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const dbServiceRef = useRef<DbService | null>(null)
 
-  const getIsAuthenticated = () => {
-    return localStorage.getItem('config') !== null
-  }
-  const isAuthenticated = getIsAuthenticated()
+  useEffect(() => {
+    if (window.localStorage.config) {
+      setIsAuthenticated(true)
+    }
+  }, [])
+
   const transactionAggregator = new TransactionAggregator(transactions)
   const accountAndCurrencies = transactionAggregator.getAccountAndCurrencies()
   const sortedCategories = transactionAggregator.getSortedCategories()
@@ -98,7 +101,7 @@ export default function App() {
           </div>
         </div>
       ) : (
-        <Login />
+        <Login onSuccessfulLogin={() => setIsAuthenticated(true)} />
       )}
       <Status isLoading={isLoading} error={error} onClose={() => setError('')} />
     </div>

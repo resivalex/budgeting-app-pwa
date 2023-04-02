@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
-import axios from 'axios'
+import BackendService, { ConfigData } from './BackendService'
 
-export default function Login() {
+type Props = {
+  onSuccessfulLogin: () => void
+}
+
+export default function Login({ onSuccessfulLogin }: Props) {
   const [backendUrl, setBackendUrl] = useState('')
   const [password, setPassword] = useState('')
-  const [loggedIn, setLoggedIn] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
     if (localStorage.getItem('config')) {
-      setLoggedIn(true)
+      onSuccessfulLogin()
     }
   }, [])
 
@@ -21,28 +23,14 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await axios.get(`${backendUrl}/config`, {
-        params: { password: password },
-      })
+      const backendService = new BackendService(backendUrl)
+      const config: ConfigData = await backendService.getConfig(password)
 
-      if (response.status === 200) {
-        localStorage.setItem(
-          'config',
-          JSON.stringify({
-            backendUrl: backendUrl,
-            backendToken: response.data.backend_token,
-            dbUrl: response.data.db_url,
-          })
-        )
-        setLoggedIn(true)
-      }
-    } catch (err) {
-      setError('Failed to log in. Please check your Backend URL and Password.')
+      window.localStorage.config = JSON.stringify(config)
+      onSuccessfulLogin()
+    } catch (err: any) {
+      setError(err.message)
     }
-  }
-
-  if (loggedIn) {
-    return <Navigate to="/" />
   }
 
   return (
