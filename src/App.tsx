@@ -12,6 +12,7 @@ import Login from './Login'
 import DbService from './DbService'
 import TransactionAggregator from './TransactionAggregator'
 import Menu from './Menu'
+import BackendService from './BackendService'
 
 type ConfigType = {
   backendUrl: string
@@ -50,6 +51,12 @@ export default function App() {
         return
       }
       const config: ConfigType = JSON.parse(window.localStorage.config)
+
+      const backendService = new BackendService(config.backendUrl, config.backendToken)
+      const settings = await backendService.getSettings()
+      const resetDb = window.localStorage.transactionsUploadedAt !== settings.transactionsUploadedAt
+      window.localStorage.transactionsUploadedAt = settings.transactionsUploadedAt
+
       const dbService = new DbService({
         dbUrl: config.dbUrl,
         onLoading: setIsLoading,
@@ -57,7 +64,20 @@ export default function App() {
         onError: setError,
       })
       dbServiceRef.current = dbService
-      await dbService.initialize()
+      if (resetDb) {
+        await dbService.reset()
+      }
+      await dbService.syncronize({
+        shouldReset: async () => {
+          const settings = await backendService.getSettings()
+          const changed =
+            window.localStorage.transactionsUploadedAt !== settings.transactionsUploadedAt
+          if (changed) {
+            window.localStorage.transactionsUploadedAt = settings.transactionsUploadedAt
+          }
+          return changed
+        },
+      })
     }
     void loadTransactions()
   }, [isAuthenticated])

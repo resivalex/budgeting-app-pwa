@@ -1,5 +1,5 @@
 import createDBCallbacks from './dbCallbacks'
-import { initializePouchDB } from './dbInitialization'
+import { initializeLocalPouchDB, initializeRemotePouchDB } from './dbInitialization'
 import { readAllDocs } from './dbQueries'
 
 interface DbServiceProps {
@@ -9,26 +9,39 @@ interface DbServiceProps {
   onError?: (error: any) => void
 }
 
+interface InitializeProps {
+  shouldReset: () => Promise<boolean>
+}
+
 export default class DbService {
   private readonly dbUrl: string
   private readonly onLoading: (isLoading: boolean) => void
   private readonly onDocsRead: (docs: any[]) => void
   private readonly onError: (error: any) => void
+  private localDB: any
+  private remoteDB: any
 
   constructor(props: DbServiceProps) {
     this.dbUrl = props.dbUrl
     this.onLoading = props.onLoading || (() => {})
     this.onDocsRead = props.onDocsRead || (() => {})
     this.onError = props.onError || (() => {})
+
+    this.localDB = initializeLocalPouchDB()
+    this.remoteDB = initializeRemotePouchDB(this.dbUrl)
   }
 
-  async initialize() {
+  async reset() {
+    await this.localDB.destroy()
+    this.localDB = initializeLocalPouchDB()
+  }
+
+  async syncronize({ shouldReset }: InitializeProps) {
     const dbCallbacks = createDBCallbacks(this.onLoading)
 
     try {
-      const { localDB, remoteDB } = initializePouchDB(this.dbUrl)
-      localDB
-        .sync(remoteDB, {
+      this.localDB
+        .sync(this.remoteDB, {
           live: true,
           retry: true,
         })
@@ -36,8 +49,12 @@ export default class DbService {
         .on('paused', async () => {
           dbCallbacks.handleDBPaused()
           try {
-            const docs = await readAllDocs(localDB)
+            const docs = await readAllDocs(this.localDB)
             this.onDocsRead(docs)
+            if (await shouldReset()) {
+              await this.reset()
+              await this.syncronize({ shouldReset })
+            }
           } catch (err) {
             this.onError(err)
           }

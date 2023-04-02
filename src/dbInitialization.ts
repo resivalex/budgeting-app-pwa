@@ -1,8 +1,9 @@
 import PouchDB from 'pouchdb'
 
-export const initializePouchDB = (dbUrl: string) => {
-  const localDB = new PouchDB('budgeting')
-  const remoteDB = new PouchDB(dbUrl + '/budgeting')
+export const initializeLocalPouchDB = () => {
+  return new PouchDB('budgeting')
+}
 
-  return { localDB, remoteDB }
+export const initializeRemotePouchDB = (dbUrl: string) => {
+  return new PouchDB(dbUrl + '/budgeting')
 }
