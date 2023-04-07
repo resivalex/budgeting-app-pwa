@@ -2,6 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 // @ts-ignore
 import Measure from 'react-measure'
+import { convertToLocaleTime } from './date-utils'
 
 export class TransactionDTO {
   datetime!: string
@@ -33,6 +34,8 @@ export default function Transaction({
       }}
     >
       {({ measureRef }: any) => {
+        const datetimeString = convertToLocaleTime(t.datetime)
+
         return (
           <div ref={measureRef} className="box m-1">
             <div className="is-flex is-justify-content-space-between">
@@ -54,8 +57,8 @@ export default function Transaction({
                   {t.amount.replace('.00', '')} {t.currency}
                 </div>
                 <div className="is-size-7">
-                  <div className="has-text-grey">{t.datetime.split(' ')[1]}</div>
-                  <div className="has-text-weight-semibold">{t.datetime.split(' ')[0]}</div>
+                  <div className="has-text-grey">{datetimeString.split(' ')[1]}</div>
+                  <div className="has-text-weight-semibold">{datetimeString.split(' ')[0]}</div>
                 </div>
               </div>
             </div>

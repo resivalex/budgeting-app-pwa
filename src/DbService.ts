@@ -23,7 +23,6 @@ export default class DbService {
   private debouncedReadAllDocs: () => void
 
   constructor(props: DbServiceProps) {
-    console.log('DbService constructor')
     this.dbUrl = props.dbUrl
     this.onLoading = props.onLoading || (() => {})
     this.onDocsRead = props.onDocsRead || (() => {})

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { TransactionDTO } from './Transaction'
+import { convertToUtcTime } from './date-utils'
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
@@ -101,7 +102,7 @@ export default function Transaction({ onAdd, accounts, categories }: Props) {
             className="button is-info"
             onClick={() =>
               onAdd({
-                datetime: new Date().toISOString().substring(0, 19).replace('T', ' '),
+                datetime: convertToUtcTime(new Date()),
                 account: account,
                 category: category,
                 type: type,
