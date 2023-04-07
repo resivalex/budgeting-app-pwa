@@ -37,7 +37,7 @@ export default function Transaction({
         const datetimeString = convertToLocaleTime(t.datetime)
 
         return (
-          <div ref={measureRef} className="box m-1">
+          <div ref={measureRef} className="box m-1" style={{ userSelect: 'none' }}>
             <div className="is-flex is-justify-content-space-between">
               <div>
                 <div className="has-text-weight-semibold">{t.category}</div>
