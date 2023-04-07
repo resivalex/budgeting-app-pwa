@@ -47,9 +47,6 @@ export default function App() {
       if (!window.localStorage.config) {
         return
       }
-      if (dbServiceRef.current) {
-        return
-      }
       const config: ConfigType = JSON.parse(window.localStorage.config)
 
       const backendService = new BackendService(config.backendUrl, config.backendToken)
@@ -72,6 +69,9 @@ export default function App() {
           }
         : async () => false
 
+      if (dbServiceRef.current) {
+        return
+      }
       const dbService = new DbService({
         dbUrl: config.dbUrl,
         onLoading: setIsLoading,
