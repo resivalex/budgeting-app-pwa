@@ -61,7 +61,11 @@ const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode, appVersion }) =>
           </div>
         )}
       </div>
-      <div ref={menuRef} className={classNames('navbar-menu', { 'is-active': isMenuActive })}>
+      <div
+        ref={menuRef}
+        style={{ position: 'absolute', width: '100%' }}
+        className={classNames('navbar-menu', { 'is-active': isMenuActive })}
+      >
         <div className="navbar-start">
           <Link
             to="/"
@@ -88,7 +92,7 @@ const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode, appVersion }) =>
           >
             Add
           </Link>
-          <button onClick={handleLogout} className="button is-danger mt-1">
+          <button onClick={handleLogout} className="button is-danger mt-1 ml-3">
             Version: {appVersion}. Logout
           </button>
         </div>
