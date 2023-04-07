@@ -33,7 +33,7 @@ const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode }) => {
     return () => {
       document.removeEventListener('mousedown', handleClick)
     }
-  }, [menuRef, burgerRef])
+  }, [menuRef, burgerRef, handleClick])
 
   return (
     <div className="navbar">
