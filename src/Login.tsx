@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import BackendService, { ConfigData } from './BackendService'
 
 type Props = {
@@ -10,11 +10,15 @@ export default function Login({ onSuccessfulLogin }: Props) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
+  const onLoginSuccess = useCallback(() => {
+    onSuccessfulLogin()
+  }, [onSuccessfulLogin])
+
   useEffect(() => {
     if (localStorage.getItem('config')) {
-      onSuccessfulLogin()
+      onLoginSuccess()
     }
-  }, [])
+  }, [onLoginSuccess])
 
   const handleInputChange = () => {
     setError('')
@@ -27,7 +31,7 @@ export default function Login({ onSuccessfulLogin }: Props) {
       const config: ConfigData = await backendService.getConfig(password)
 
       window.localStorage.config = JSON.stringify(config)
-      onSuccessfulLogin()
+      onLoginSuccess()
     } catch (err: any) {
       setError(err.message)
     }

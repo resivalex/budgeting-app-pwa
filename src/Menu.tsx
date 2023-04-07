@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 
 type MenuProps = {
-  handleLogout: () => void,
+  handleLogout: () => void
   offlineMode: boolean
 }
 
@@ -21,19 +21,19 @@ const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode }) => {
     setIsMenuActive(false)
   }
 
-  function handleClick(event: any) {
-    if (!menuRef.current.contains(event.target) && burgerRef.current !== event.target) {
-      closeMenu()
-    }
-  }
-
   useEffect(() => {
+    function handleClick(event: any) {
+      if (!menuRef.current.contains(event.target) && burgerRef.current !== event.target) {
+        closeMenu()
+      }
+    }
+
     document.addEventListener('mousedown', handleClick)
 
     return () => {
       document.removeEventListener('mousedown', handleClick)
     }
-  }, [menuRef, burgerRef, handleClick])
+  }, [menuRef, burgerRef])
 
   return (
     <div className="navbar">
