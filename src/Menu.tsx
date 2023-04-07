@@ -5,9 +5,10 @@ import classNames from 'classnames'
 type MenuProps = {
   handleLogout: () => void
   offlineMode: boolean
+  appVersion: string
 }
 
-const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode }) => {
+const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode, appVersion }) => {
   const [isMenuActive, setIsMenuActive] = useState(false)
   const menuRef: any = useRef(null)
   const burgerRef: any = useRef(null)
@@ -88,7 +89,7 @@ const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode }) => {
             Add
           </Link>
           <button onClick={handleLogout} className="button is-danger mt-1">
-            Logout
+            Version: {appVersion}. Logout
           </button>
         </div>
       </div>

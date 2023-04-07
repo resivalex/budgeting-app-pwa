@@ -12,6 +12,8 @@ import TransactionAggregator from './TransactionAggregator'
 import Menu from './Menu'
 import BackendService from './BackendService'
 
+const appVersion = 'v1'
+
 type ConfigType = {
   backendUrl: string
   backendToken: string
@@ -109,7 +111,7 @@ export default function App() {
             backgroundColor: offlineMode ? 'gray' : 'white',
           }}
         >
-          <Menu handleLogout={handleLogout} offlineMode={offlineMode} />
+          <Menu handleLogout={handleLogout} appVersion={appVersion} offlineMode={offlineMode} />
           <div
             style={{
               width: '100%',
