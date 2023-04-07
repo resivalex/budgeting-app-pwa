@@ -42,7 +42,6 @@ export default function App() {
   }
 
   useEffect(() => {
-    console.log('isAuthenticated useEffect', isAuthenticated)
     async function loadTransactions() {
       if (!window.localStorage.config) {
         return
