@@ -42,6 +42,7 @@ export default function App() {
   }
 
   useEffect(() => {
+    console.log('isAuthenticated useEffect', isAuthenticated)
     async function loadTransactions() {
       if (!window.localStorage.config) {
         return
@@ -59,11 +60,24 @@ export default function App() {
         setOfflineMode(true)
       }
 
+      const shouldReset = settings
+        ? async () => {
+            const checkSettings = await backendService.getSettings()
+            const changed =
+              window.localStorage.transactionsUploadedAt !== checkSettings.transactionsUploadedAt
+            if (changed) {
+              window.localStorage.transactionsUploadedAt = checkSettings.transactionsUploadedAt
+            }
+            return changed
+          }
+        : async () => false
+
       const dbService = new DbService({
         dbUrl: config.dbUrl,
         onLoading: setIsLoading,
         onDocsRead: setTransactions,
         onError: setError,
+        shouldReset: shouldReset,
       })
       dbServiceRef.current = dbService
       if (settings) {
@@ -74,19 +88,7 @@ export default function App() {
           await dbService.reset()
         }
       }
-      await dbService.syncronize({
-        shouldReset: settings
-          ? async () => {
-              const checkSettings = await backendService.getSettings()
-              const changed =
-                window.localStorage.transactionsUploadedAt !== checkSettings.transactionsUploadedAt
-              if (changed) {
-                window.localStorage.transactionsUploadedAt = checkSettings.transactionsUploadedAt
-              }
-              return changed
-            }
-          : async () => false,
-      })
+      await dbService.synchronize()
     }
     void loadTransactions()
   }, [isAuthenticated])
