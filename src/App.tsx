@@ -5,9 +5,7 @@ import Status from './Status'
 import Transactions from './Transactions'
 import NotFound from './NotFound'
 import TransactionForm from './TransactionForm'
-import PouchDB from 'pouchdb'
 import { TransactionDTO } from './Transaction'
-import { v4 as uuidv4 } from 'uuid'
 import Login from './Login'
 import DbService from './DbService'
 import TransactionAggregator from './TransactionAggregator'
@@ -93,11 +91,10 @@ export default function App() {
     void loadTransactions()
   }, [isAuthenticated])
 
-  function addTransaction(t: TransactionDTO) {
-    const localDB = new PouchDB('budgeting')
-
-    console.log(t)
-    void localDB.put({ _id: uuidv4(), ...t })
+  async function addTransaction(t: TransactionDTO) {
+    if (dbServiceRef.current) {
+      await dbServiceRef.current.addTransaction(t)
+    }
   }
 
   return (

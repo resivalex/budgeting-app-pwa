@@ -1,6 +1,8 @@
 import createDBCallbacks from './dbCallbacks'
 import { initializeLocalPouchDB, initializeRemotePouchDB } from './dbInitialization'
 import { readAllDocs } from './dbQueries'
+import { v4 as uuidv4 } from 'uuid'
+import { TransactionDTO } from './Transaction'
 
 interface DbServiceProps {
   dbUrl: string
@@ -34,6 +36,11 @@ export default class DbService {
   async reset() {
     await this.localDB.destroy()
     this.localDB = initializeLocalPouchDB()
+  }
+
+  async addTransaction(t: TransactionDTO) {
+    console.log(t)
+    await this.localDB.put({ _id: uuidv4(), ...t })
   }
 
   async syncronize({ shouldReset }: InitializeProps) {
