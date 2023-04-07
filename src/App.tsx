@@ -44,6 +44,9 @@ export default function App() {
   }
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      return
+    }
     async function loadTransactions() {
       if (!window.localStorage.config) {
         return
