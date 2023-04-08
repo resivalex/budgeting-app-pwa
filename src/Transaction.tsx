@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import Measure from 'react-measure'
 import { convertToLocaleTime } from './date-utils'
 import { useLongPress, LongPressDetectEvents } from 'use-long-press'
-import { convertCurrencyCodeToSymbol } from './finance-utils'
+import { convertCurrencyCodeToSymbol, formatFinancialAmount } from './finance-utils'
 
 export class TransactionDTO {
   _id!: string
@@ -70,7 +70,8 @@ export default function Transaction({ t, onDimensionsChange, onLongPress }: Prop
                 >
                   {t.type === 'expense' && '-'}
                   {t.type === 'income' && '+'}
-                  {parseFloat(t.amount)} {convertCurrencyCodeToSymbol(t.currency)}
+                  {formatFinancialAmount(parseFloat(t.amount))}{' '}
+                  {convertCurrencyCodeToSymbol(t.currency)}
                 </div>
                 <div className="is-size-7">
                   <div className="has-text-grey">{datetimeString.split(' ')[1]}</div>

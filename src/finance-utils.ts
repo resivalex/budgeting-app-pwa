@@ -14,3 +14,13 @@ export function convertCurrencyCodeToSymbol(currencyCode: string): string {
       return currencyCode
   }
 }
+
+export function formatFinancialAmount(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+    useGrouping: true,
+  })
+    .format(amount)
+    .replace(',', ' ') // Replace commas with spaces
+}
