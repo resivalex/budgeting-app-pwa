@@ -1,5 +1,6 @@
 import { convertToLocaleTime } from './date-utils'
 import { TransactionDTO } from './Transaction'
+import { convertCurrencyCodeToSymbol, formatFinancialAmount } from './finance-utils'
 
 interface Props {
   transaction: TransactionDTO
@@ -36,7 +37,8 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove }:
             <strong>Type:</strong> {type}
           </p>
           <p>
-            <strong>Amount:</strong> {amount} {currency}
+            <strong>Amount:</strong> {formatFinancialAmount(parseFloat(amount))}{' '}
+            {convertCurrencyCodeToSymbol(currency)}
           </p>
           <p>
             <strong>Payee:</strong> {payee}
