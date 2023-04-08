@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { TransactionDTO } from './Transaction'
 import { convertToUtcTime } from './date-utils'
 import { v4 as uuidv4 } from 'uuid'
+import { AccountDetails } from './TransactionAggregator'
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
-  accounts: { account: string; currency: string }[]
+  accounts: AccountDetails[]
   categories: string[]
 }
 

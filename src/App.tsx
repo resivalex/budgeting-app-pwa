@@ -12,7 +12,7 @@ import TransactionAggregator from './TransactionAggregator'
 import Menu from './Menu'
 import BackendService from './BackendService'
 
-const appVersion = 'v4'
+const appVersion = 'v5'
 
 type ConfigType = {
   backendUrl: string
@@ -35,7 +35,7 @@ export default function App() {
   }, [])
 
   const transactionAggregator = new TransactionAggregator(transactions)
-  const accountAndCurrencies = transactionAggregator.getAccountAndCurrencies()
+  const accountDetails = transactionAggregator.getAccountDetails()
   const sortedCategories = transactionAggregator.getSortedCategories()
 
   const handleLogout = () => {
@@ -137,7 +137,10 @@ export default function App() {
             }}
           >
             <Routes>
-              <Route path="/" element={<Home transactions={transactions} />} />
+              <Route
+                path="/"
+                element={<Home transactions={transactions} accountDetails={accountDetails} />}
+              />
               <Route
                 path="/transactions"
                 element={<Transactions transactions={transactions} onRemove={removeTransaction} />}
@@ -147,7 +150,7 @@ export default function App() {
                 element={
                   <TransactionForm
                     onAdd={addTransaction}
-                    accounts={accountAndCurrencies}
+                    accounts={accountDetails}
                     categories={sortedCategories}
                   />
                 }
