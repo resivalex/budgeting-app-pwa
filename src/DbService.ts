@@ -1,6 +1,5 @@
 import createDBCallbacks from './dbCallbacks'
 import { initializeLocalPouchDB, initializeRemotePouchDB } from './dbInitialization'
-import { v4 as uuidv4 } from 'uuid'
 import { TransactionDTO } from './Transaction'
 import _ from 'lodash'
 
@@ -45,7 +44,12 @@ export default class DbService {
 
   async addTransaction(t: TransactionDTO) {
     console.log(t)
-    await this.localDB.put({ _id: uuidv4(), ...t })
+    await this.localDB.put(t)
+  }
+
+  async removeTransaction(id: string) {
+    const doc = await this.localDB.get(id)
+    await this.localDB.remove(doc)
   }
 
   async readAllDocs(): Promise<any[]> {
@@ -67,7 +71,7 @@ export default class DbService {
     })
   }
 
-  async readDocs() {
+  private async readDocs() {
     try {
       const docs = await this.readAllDocs()
       this.onDocsRead(docs)

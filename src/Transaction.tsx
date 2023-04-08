@@ -5,6 +5,7 @@ import Measure from 'react-measure'
 import { convertToLocaleTime } from './date-utils'
 
 export class TransactionDTO {
+  _id!: string
   datetime!: string
   account!: string
   category!: string
@@ -17,17 +18,19 @@ export class TransactionDTO {
 
 export default function Transaction({
   t,
-  onDimentionsChange,
+  onDimensionsChange,
+  onRemove,
 }: {
   t: TransactionDTO
-  onDimentionsChange: any
+  onDimensionsChange: any
+  onRemove: () => void
 }) {
   return (
     // @ts-ignore
     <Measure
       bounds
       onResize={(contentRect: any) => {
-        onDimentionsChange({
+        onDimensionsChange({
           width: contentRect.bounds?.width || 300,
           height: contentRect.bounds?.height || 100,
         })
@@ -60,6 +63,9 @@ export default function Transaction({
                   <div className="has-text-grey">{datetimeString.split(' ')[1]}</div>
                   <div className="has-text-weight-semibold">{datetimeString.split(' ')[0]}</div>
                 </div>
+                <button onClick={onRemove} className="button is-small is-danger">
+                  Remove
+                </button>
               </div>
             </div>
           </div>

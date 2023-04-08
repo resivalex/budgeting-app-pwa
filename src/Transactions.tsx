@@ -2,7 +2,12 @@ import React, { useRef, useState } from 'react'
 import Transaction from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
 
-export default function Transactions({ transactions }: { transactions: any[] }) {
+interface Props {
+  transactions: any[]
+  onRemove: (id: string) => void
+}
+
+export default function Transactions({ transactions, onRemove }: Props) {
   const [heights, setHeights] = useState<any>({})
   const listRef: any = useRef(null)
 
@@ -16,9 +21,12 @@ export default function Transactions({ transactions }: { transactions: any[] }) 
         <Transaction
           key={index}
           t={transaction}
-          onDimentionsChange={(dimensions: any) => {
+          onDimensionsChange={(dimensions: any) => {
             heights[index] = dimensions.height
             setHeights(heights)
+          }}
+          onRemove={() => {
+            onRemove(transaction._id)
           }}
         />
       </div>

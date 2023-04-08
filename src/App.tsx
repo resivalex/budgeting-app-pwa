@@ -12,7 +12,7 @@ import TransactionAggregator from './TransactionAggregator'
 import Menu from './Menu'
 import BackendService from './BackendService'
 
-const appVersion = 'v3'
+const appVersion = 'v4'
 
 type ConfigType = {
   backendUrl: string
@@ -98,9 +98,21 @@ export default function App() {
   }, [isAuthenticated])
 
   async function addTransaction(t: TransactionDTO) {
-    if (dbServiceRef.current) {
-      await dbServiceRef.current.addTransaction(t)
+    const dbService: DbService | null = dbServiceRef.current
+    if (!dbService) {
+      return
     }
+
+    await dbService.addTransaction(t)
+  }
+
+  async function removeTransaction(id: string) {
+    const dbService: DbService | null = dbServiceRef.current
+    if (!dbService) {
+      return
+    }
+
+    await dbService.removeTransaction(id)
   }
 
   return (
@@ -126,7 +138,10 @@ export default function App() {
           >
             <Routes>
               <Route path="/" element={<Home transactions={transactions} />} />
-              <Route path="/transactions" element={<Transactions transactions={transactions} />} />
+              <Route
+                path="/transactions"
+                element={<Transactions transactions={transactions} onRemove={removeTransaction} />}
+              />
               <Route
                 path="/add"
                 element={

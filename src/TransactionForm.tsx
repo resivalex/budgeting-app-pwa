@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { TransactionDTO } from './Transaction'
 import { convertToUtcTime } from './date-utils'
+import { v4 as uuidv4 } from 'uuid'
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
@@ -102,6 +103,7 @@ export default function Transaction({ onAdd, accounts, categories }: Props) {
             className="button is-info"
             onClick={() =>
               onAdd({
+                _id: uuidv4(),
                 datetime: convertToUtcTime(new Date()),
                 account: account,
                 category: category,
