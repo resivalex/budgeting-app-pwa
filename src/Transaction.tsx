@@ -62,6 +62,7 @@ export default function Transaction({ t, onDimensionsChange, onLongPress }: Prop
                     'has-text-success': t.type === 'income',
                     'has-text-danger': t.type === 'expense',
                   })}
+                  style={{ whiteSpace: 'nowrap' }}
                 >
                   {t.type === 'expense' && '-'}
                   {t.type === 'income' && '+'}

@@ -12,7 +12,7 @@ import TransactionAggregator from './TransactionAggregator'
 import Menu from './Menu'
 import BackendService from './BackendService'
 
-const appVersion = 'v5'
+const appVersion = 'v6'
 
 type ConfigType = {
   backendUrl: string
