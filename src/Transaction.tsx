@@ -48,12 +48,7 @@ export default function Transaction({ t, onDimensionsChange, onLongPress }: Prop
         const datetimeString = convertToLocaleTime(t.datetime)
 
         return (
-          <div
-            {...longPressBind()}
-            ref={measureRef}
-            className="box m-1"
-            style={{ userSelect: 'none' }}
-          >
+          <div {...longPressBind()} ref={measureRef} className="box m-1">
             <div className="is-flex is-justify-content-space-between">
               <div>
                 <div className="has-text-weight-semibold">{t.category}</div>

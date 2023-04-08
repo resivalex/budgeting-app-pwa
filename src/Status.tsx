@@ -8,8 +8,14 @@ type Props = {
 }
 
 export default function Status({ error, isLoading, onClose }: Props) {
+  const visible = isLoading || error
+
+  if (!visible) {
+    return null
+  }
+
   return (
-    <div className={classNames('modal', { 'is-active': isLoading || error })}>
+    <div className={classNames('modal', { 'is-active': visible })}>
       <div className="modal-background"></div>
       <div className="modal-content p-2">
         <div className="box">

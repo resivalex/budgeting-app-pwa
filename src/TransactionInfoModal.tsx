@@ -17,7 +17,7 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove }:
   return (
     <div className="modal is-active">
       <div className="modal-background" onClick={onClose}></div>
-      <div className="modal-card">
+      <div className="modal-card p-2">
         <header className="modal-card-head">
           <p className="modal-card-title">Transaction Info</p>
           <button className="delete" onClick={onClose} aria-label="close"></button>
