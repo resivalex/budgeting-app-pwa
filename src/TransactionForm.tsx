@@ -3,6 +3,7 @@ import { TransactionDTO } from './Transaction'
 import { convertToUtcTime } from './date-utils'
 import { v4 as uuidv4 } from 'uuid'
 import { AccountDetails } from './TransactionAggregator'
+import { convertCurrencyCodeToSymbol } from './finance-utils'
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
@@ -46,7 +47,7 @@ export default function Transaction({ onAdd, accounts, categories }: Props) {
             <option value="">Select Account</option>
             {accounts.map((a) => (
               <option key={a.account} value={a.account}>
-                {`${a.account} (${a.currency})`}
+                {`[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`}
               </option>
             ))}
           </select>

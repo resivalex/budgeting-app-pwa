@@ -1,5 +1,6 @@
 import React from 'react'
 import { AccountDetails } from './TransactionAggregator'
+import { convertCurrencyCodeToSymbol } from './finance-utils'
 
 type Props = {
   transactions: any[]
@@ -18,7 +19,10 @@ export default function Home({ accountDetails }: Props) {
               </div>
               <div className="column has-text-right">
                 <p>
-                  {accountDetail.balance.toFixed(2)} {accountDetail.currency}
+                  {accountDetail.balance.toFixed(2)}{' '}
+                  <span className="title is-6">
+                    {convertCurrencyCodeToSymbol(accountDetail.currency)}
+                  </span>
                 </p>
               </div>
             </div>
