@@ -116,7 +116,7 @@ export default function App() {
   }
 
   return (
-    <div style={{ userSelect: 'none' }}>
+    <div>
       {isAuthenticated ? (
         <div
           style={{

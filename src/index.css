@@ -1,1 +1,6 @@
 @import 'bulma/css/bulma.css';
+
+body {
+  user-select: none;
+  -webkit-user-select: none;
+}
