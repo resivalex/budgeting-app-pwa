@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import Transaction from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
+import TransactionInfoModal from './TransactionInfoModal'
 
 interface Props {
   transactions: any[]
@@ -9,6 +10,7 @@ interface Props {
 
 export default function Transactions({ transactions, onRemove }: Props) {
   const [heights, setHeights] = useState<any>({})
+  const [focusedTransaction, setFocusedTransaction] = useState<any>(null)
   const listRef: any = useRef(null)
 
   if (transactions.length === 0) {
@@ -25,8 +27,8 @@ export default function Transactions({ transactions, onRemove }: Props) {
             heights[index] = dimensions.height
             setHeights(heights)
           }}
-          onRemove={() => {
-            onRemove(transaction._id)
+          onLongPress={() => {
+            setFocusedTransaction(transaction)
           }}
         />
       </div>
@@ -63,6 +65,16 @@ export default function Transactions({ transactions, onRemove }: Props) {
           )}
         </AutoSizer>
       }
+      {focusedTransaction && (
+        <TransactionInfoModal
+          transaction={focusedTransaction}
+          onClose={() => setFocusedTransaction(null)}
+          onRemove={() => {
+            setFocusedTransaction(null)
+            onRemove(focusedTransaction._id)
+          }}
+        />
+      )}
     </div>
   )
 }

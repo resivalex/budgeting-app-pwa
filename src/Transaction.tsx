@@ -3,6 +3,7 @@ import classNames from 'classnames'
 // @ts-ignore
 import Measure from 'react-measure'
 import { convertToLocaleTime } from './date-utils'
+import { useLongPress, LongPressDetectEvents } from 'use-long-press'
 
 export class TransactionDTO {
   _id!: string
@@ -16,15 +17,21 @@ export class TransactionDTO {
   comment!: string
 }
 
-export default function Transaction({
-  t,
-  onDimensionsChange,
-  onRemove,
-}: {
+interface Props {
   t: TransactionDTO
   onDimensionsChange: any
-  onRemove: () => void
-}) {
+  onLongPress: () => void
+}
+
+export default function Transaction({ t, onDimensionsChange, onLongPress }: Props) {
+  const longPressBind = useLongPress(onLongPress, {
+    onFinish: onLongPress,
+    threshold: 500,
+    captureEvent: true,
+    cancelOnMovement: true,
+    detect: LongPressDetectEvents.BOTH,
+  })
+
   return (
     // @ts-ignore
     <Measure
@@ -40,7 +47,12 @@ export default function Transaction({
         const datetimeString = convertToLocaleTime(t.datetime)
 
         return (
-          <div ref={measureRef} className="box m-1" style={{ userSelect: 'none' }}>
+          <div
+            {...longPressBind()}
+            ref={measureRef}
+            className="box m-1"
+            style={{ userSelect: 'none' }}
+          >
             <div className="is-flex is-justify-content-space-between">
               <div>
                 <div className="has-text-weight-semibold">{t.category}</div>
@@ -63,9 +75,6 @@ export default function Transaction({
                   <div className="has-text-grey">{datetimeString.split(' ')[1]}</div>
                   <div className="has-text-weight-semibold">{datetimeString.split(' ')[0]}</div>
                 </div>
-                <button onClick={onRemove} className="button is-small is-danger">
-                  Remove
-                </button>
               </div>
             </div>
           </div>
