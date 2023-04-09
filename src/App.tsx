@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 import Home from './Home'
 import Status from './Status'
 import Transactions from './Transactions'
@@ -35,6 +35,8 @@ export default function App() {
       setIsAuthenticated(true)
     }
   }, [])
+
+  const navigate = useNavigate()
 
   const transactionAggregator = new TransactionAggregator(transactions)
   const accountDetails = transactionAggregator.getAccountDetails()
@@ -107,6 +109,7 @@ export default function App() {
 
     await dbService.addTransaction(t)
     setLastNotificationText('Transaction added')
+    navigate('/transactions')
   }
 
   async function removeTransaction(id: string) {
