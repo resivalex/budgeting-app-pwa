@@ -4,6 +4,7 @@ import { convertToUtcTime } from './date-utils'
 import { v4 as uuidv4 } from 'uuid'
 import { AccountDetails } from './TransactionAggregator'
 import { convertCurrencyCodeToSymbol } from './finance-utils'
+import DateTimePicker from 'react-datetime-picker'
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
@@ -11,7 +12,7 @@ type Props = {
   categories: string[]
 }
 
-export default function Transaction({ onAdd, accounts, categories }: Props) {
+export default function TransactionForm({ onAdd, accounts, categories }: Props) {
   const [amount, setAmount] = useState('')
   const [account, setAccount] = useState('')
   const [currency, setCurrency] = useState('')
@@ -19,6 +20,7 @@ export default function Transaction({ onAdd, accounts, categories }: Props) {
   const [type, setType] = useState<'income' | 'expense'>('expense')
   const [payee, setPayee] = useState('')
   const [comment, setComment] = useState('')
+  const [datetime, setDatetime] = useState(new Date())
 
   const handleAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedAccount = accounts.find((a) => a.account === e.target.value)
@@ -26,6 +28,14 @@ export default function Transaction({ onAdd, accounts, categories }: Props) {
     if (selectedAccount) {
       setAccount(selectedAccount.account)
       setCurrency(selectedAccount.currency)
+    }
+  }
+
+  const handleDatetimeChange = (value: Date | null) => {
+    if (value) {
+      setDatetime(value)
+    } else {
+      setDatetime(new Date())
     }
   }
 
@@ -101,16 +111,26 @@ export default function Transaction({ onAdd, accounts, categories }: Props) {
       </div>
       <div className="field">
         <div className="control">
+          <DateTimePicker
+            onChange={handleDatetimeChange}
+            value={datetime}
+            format="y-MM-dd HH:mm:ss"
+            disableClock
+          />
+        </div>
+      </div>
+      <div className="field">
+        <div className="control">
           <button
             className="button is-info"
             onClick={() =>
               onAdd({
                 _id: uuidv4(),
-                datetime: convertToUtcTime(new Date()),
+                datetime: convertToUtcTime(datetime),
                 account: account,
                 category: category,
                 type: type,
-                amount: `${amount}.00`,
+                amount: (parseFloat(amount) || 0).toFixed(2),
                 currency: currency,
                 payee: payee,
                 comment: comment,
