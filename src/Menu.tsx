@@ -92,8 +92,9 @@ const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode, appVersion }) =>
           >
             Add
           </Link>
+          <div className="has-text-grey m-3">Version: {appVersion}</div>
           <button onClick={handleLogout} className="button is-danger mt-1 ml-3">
-            Version: {appVersion}. Logout
+            Logout
           </button>
         </div>
       </div>
