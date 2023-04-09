@@ -11,6 +11,7 @@ import DbService from './DbService'
 import TransactionAggregator from './TransactionAggregator'
 import Menu from './Menu'
 import BackendService from './BackendService'
+import Notification from './Notification'
 
 const appVersion = '20230409-1600'
 
@@ -26,6 +27,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [offlineMode, setOfflineMode] = useState(false)
+  const [lastNotificationText, setLastNotificationText] = useState('This is a test notification')
   const dbServiceRef = useRef<DbService | null>(null)
 
   useEffect(() => {
@@ -104,6 +106,7 @@ export default function App() {
     }
 
     await dbService.addTransaction(t)
+    setLastNotificationText('Transaction added')
   }
 
   async function removeTransaction(id: string) {
@@ -113,10 +116,21 @@ export default function App() {
     }
 
     await dbService.removeTransaction(id)
+    setLastNotificationText('Transaction removed')
   }
 
   return (
     <div>
+      {lastNotificationText && (
+        <Notification
+          message={lastNotificationText}
+          type="is-success"
+          duration={1500}
+          onDismiss={() => {
+            setLastNotificationText('')
+          }}
+        />
+      )}
       {isAuthenticated ? (
         <div
           style={{
