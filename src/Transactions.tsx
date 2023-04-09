@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Transaction from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
@@ -13,9 +13,16 @@ export default function Transactions({ transactions, onRemove }: Props) {
   const [focusedTransaction, setFocusedTransaction] = useState<any>(null)
   const listRef: any = useRef(null)
 
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.recomputeRowHeights(0)
+    }
+  }, [transactions, heights])
+
   if (transactions.length === 0) {
     return <div className="box">Empty</div>
   }
+
   const rowRenderer = ({ index, key, style }: any) => {
     const transaction = transactions[index]
     return (
@@ -24,8 +31,9 @@ export default function Transactions({ transactions, onRemove }: Props) {
           key={index}
           t={transaction}
           onDimensionsChange={(dimensions: any) => {
-            heights[index] = dimensions.height
-            setHeights(heights)
+            setHeights((prevHeights: any) => {
+              return { ...prevHeights, [index]: dimensions.height }
+            })
           }}
           onLongPress={() => {
             setFocusedTransaction(transaction)
@@ -33,10 +41,6 @@ export default function Transactions({ transactions, onRemove }: Props) {
         />
       </div>
     )
-  }
-
-  const handleMeasure = () => {
-    listRef.current.recomputeRowHeights(0)
   }
 
   return (
@@ -58,9 +62,6 @@ export default function Transactions({ transactions, onRemove }: Props) {
               }}
               rowRenderer={rowRenderer}
               width={width}
-              onRowsRendered={() => {
-                handleMeasure()
-              }}
             />
           )}
         </AutoSizer>

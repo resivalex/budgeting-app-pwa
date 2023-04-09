@@ -27,7 +27,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [offlineMode, setOfflineMode] = useState(false)
-  const [lastNotificationText, setLastNotificationText] = useState('This is a test notification')
+  const [lastNotificationText, setLastNotificationText] = useState('')
   const dbServiceRef = useRef<DbService | null>(null)
 
   useEffect(() => {
