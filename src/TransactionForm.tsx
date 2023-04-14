@@ -3,8 +3,7 @@ import { TransactionDTO } from './Transaction'
 import { convertToUtcTime } from './date-utils'
 import { v4 as uuidv4 } from 'uuid'
 import { AccountDetails } from './TransactionAggregator'
-import { convertCurrencyCodeToSymbol } from './finance-utils'
-import DateTimePicker from 'react-datetime-picker'
+import TransactionFormView from "./TransactionFormView";
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
@@ -39,108 +38,40 @@ export default function TransactionForm({ onAdd, accounts, categories }: Props) 
     }
   }
 
+  const handleAdd = () => {
+    onAdd({
+      _id: uuidv4(),
+      datetime: convertToUtcTime(datetime),
+      account: account,
+      category: category,
+      type: type,
+      amount: (parseFloat(amount) || 0).toFixed(2),
+      currency: currency,
+      payee: payee,
+      comment: comment,
+    })
+  }
+
   return (
-    <div className="field p-2">
-      <div className="field">
-        <div className="control">
-          <select
-            className="input"
-            onChange={(e) => {
-              const type = e.target.value as 'income' | 'expense'
-              setType(type)
-            }}
-          >
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-          </select>
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <input
-            className="input"
-            type="number"
-            placeholder="Amount"
-            onChange={(e) => setAmount(e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <select className="input" onChange={handleAccountChange}>
-            <option value="">Select Account</option>
-            {accounts.map((a) => (
-              <option key={a.account} value={a.account}>
-                {`[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <select className="input" onChange={(e) => setCategory(e.target.value)}>
-            <option value="">Select Category</option>
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <input
-            className="input"
-            type="text"
-            placeholder="Payee"
-            onChange={(e) => setPayee(e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <input
-            className="input"
-            type="text"
-            placeholder="Comment"
-            onChange={(e) => setComment(e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <DateTimePicker
-            onChange={handleDatetimeChange}
-            value={datetime}
-            format="y-MM-dd HH:mm:ss"
-            disableClock
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <button
-            className="button is-info"
-            onClick={() =>
-              onAdd({
-                _id: uuidv4(),
-                datetime: convertToUtcTime(datetime),
-                account: account,
-                category: category,
-                type: type,
-                amount: (parseFloat(amount) || 0).toFixed(2),
-                currency: currency,
-                payee: payee,
-                comment: comment,
-              })
-            }
-          >
-            ADD
-          </button>
-        </div>
-      </div>
-    </div>
+    <TransactionFormView
+      type={type}
+      setType={setType}
+      amount={amount}
+      setAmount={setAmount}
+      account={account}
+      currency={currency}
+      category={category}
+      setCategory={setCategory}
+      payee={payee}
+      setPayee={setPayee}
+      comment={comment}
+      setComment={setComment}
+      datetime={datetime}
+      onAccountChange={handleAccountChange}
+      onDatetimeChange={handleDatetimeChange}
+      onAdd={handleAdd}
+      accounts={accounts}
+      categories={categories}
+    />
   )
 }
