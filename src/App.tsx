@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import Home from './Home'
 import Status from './Status'
@@ -13,6 +14,16 @@ import Menu from './Menu'
 import BackendService from './BackendService'
 import Notification from './Notification'
 
+import { AppState } from './redux/types'
+import {
+  setIsAuthenticated,
+  setIsLoading,
+  setTransactions,
+  setError,
+  setOfflineMode,
+  setLastNotificationText,
+} from './redux/actions'
+
 const appVersion = '20230414-1700'
 
 type ConfigType = {
@@ -22,19 +33,22 @@ type ConfigType = {
 }
 
 export default function App() {
-  const [transactions, setTransactions] = useState<any[]>([])
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [offlineMode, setOfflineMode] = useState(false)
-  const [lastNotificationText, setLastNotificationText] = useState('')
+  // 4. Replace local state management with Redux actions and state
+  const dispatch = useDispatch()
+  const isAuthenticated = useSelector((state: AppState) => state.isAuthenticated)
+  const transactions = useSelector((state: AppState) => state.transactions)
+  const error = useSelector((state: AppState) => state.error)
+  const isLoading = useSelector((state: AppState) => state.isLoading)
+  const offlineMode = useSelector((state: AppState) => state.offlineMode)
+  const lastNotificationText = useSelector((state: AppState) => state.lastNotificationText)
+
   const dbServiceRef = useRef<DbService | null>(null)
 
   useEffect(() => {
     if (window.localStorage.config) {
-      setIsAuthenticated(true)
+      dispatch(setIsAuthenticated(true))
     }
-  }, [])
+  }, [dispatch])
 
   const navigate = useNavigate()
 
@@ -62,7 +76,7 @@ export default function App() {
       try {
         settings = await backendService.getSettings()
       } catch (err) {
-        setOfflineMode(true)
+        dispatch(setOfflineMode(true))
       }
 
       const shouldReset = settings
@@ -82,9 +96,9 @@ export default function App() {
       }
       const dbService = new DbService({
         dbUrl: config.dbUrl,
-        onLoading: setIsLoading,
-        onDocsRead: setTransactions,
-        onError: setError,
+        onLoading: (loading) => dispatch(setIsLoading(loading)),
+        onDocsRead: (transactions) => dispatch(setTransactions(transactions)),
+        onError: (error) => dispatch(setError(error)),
         shouldReset: shouldReset,
       })
       dbServiceRef.current = dbService
@@ -108,7 +122,7 @@ export default function App() {
     }
 
     await dbService.addTransaction(t)
-    setLastNotificationText('Transaction added')
+    dispatch(setLastNotificationText('Transaction added'))
     navigate('/transactions')
   }
 
@@ -119,7 +133,7 @@ export default function App() {
     }
 
     await dbService.removeTransaction(id)
-    setLastNotificationText('Transaction removed')
+    dispatch(setLastNotificationText('Transaction removed'))
   }
 
   return (
@@ -130,7 +144,7 @@ export default function App() {
           type="is-success"
           duration={1500}
           onDismiss={() => {
-            setLastNotificationText('')
+            dispatch(setLastNotificationText(''))
           }}
         />
       )}
@@ -177,9 +191,9 @@ export default function App() {
           </div>
         </div>
       ) : (
-        <Login onSuccessfulLogin={() => setIsAuthenticated(true)} />
+        <Login onSuccessfulLogin={() => dispatch(setIsAuthenticated(true))} />
       )}
-      <Status isLoading={isLoading} error={error} onClose={() => setError('')} />
+      <Status isLoading={isLoading} error={error} onClose={() => dispatch(setError(''))} />
     </div>
   )
 }
