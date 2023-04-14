@@ -22,7 +22,7 @@ import {
   setError,
   setOfflineMode,
   setLastNotificationText,
-} from './redux/actions'
+} from './redux/appSlice'
 
 const appVersion = '20230414-1700'
 
