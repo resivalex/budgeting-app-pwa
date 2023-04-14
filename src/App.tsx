@@ -13,7 +13,7 @@ import Menu from './Menu'
 import BackendService from './BackendService'
 import Notification from './Notification'
 
-const appVersion = '20230409-1800'
+const appVersion = '20230414-1700'
 
 type ConfigType = {
   backendUrl: string
