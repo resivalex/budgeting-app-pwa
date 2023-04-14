@@ -13,11 +13,11 @@ type Props = {
 }
 
 export default function TransactionForm({ onAdd, accounts, categories }: Props) {
+  const [type, setType] = useState<'income' | 'expense'>('expense')
   const [amount, setAmount] = useState('')
   const [account, setAccount] = useState('')
   const [currency, setCurrency] = useState('')
   const [category, setCategory] = useState('')
-  const [type, setType] = useState<'income' | 'expense'>('expense')
   const [payee, setPayee] = useState('')
   const [comment, setComment] = useState('')
   const [datetime, setDatetime] = useState(new Date())
@@ -41,6 +41,20 @@ export default function TransactionForm({ onAdd, accounts, categories }: Props) 
 
   return (
     <div className="field p-2">
+      <div className="field">
+        <div className="control">
+          <select
+            className="input"
+            onChange={(e) => {
+              const type = e.target.value as 'income' | 'expense'
+              setType(type)
+            }}
+          >
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+      </div>
       <div className="field">
         <div className="control">
           <input
@@ -72,20 +86,6 @@ export default function TransactionForm({ onAdd, accounts, categories }: Props) 
                 {c}
               </option>
             ))}
-          </select>
-        </div>
-      </div>
-      <div className="field">
-        <div className="control">
-          <select
-            className="input"
-            onChange={(e) => {
-              const type = e.target.value as 'income' | 'expense'
-              setType(type)
-            }}
-          >
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
           </select>
         </div>
       </div>
