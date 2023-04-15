@@ -1,30 +1,32 @@
 import React, { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import Home from './Home'
 import Status from './Status'
 import Transactions from './Transactions'
 import NotFound from './NotFound'
 import TransactionForm from './TransactionForm'
-import { TransactionDTO } from './Transaction'
 import Login from './Login'
 import DbService from './DbService'
 import TransactionAggregator from './TransactionAggregator'
 import Menu from './Menu'
 import BackendService from './BackendService'
 import Notification from './Notification'
+import { TransactionDTO } from './Transaction'
 
-import { AppState } from './redux/types'
-import {
-  setIsAuthenticated,
-  setIsLoading,
-  setTransactions,
-  setError,
-  setOfflineMode,
-  setLastNotificationText,
-} from './redux/appSlice'
-
-const appVersion = '20230414-1700'
+type AppProps = {
+  isAuthenticated: boolean
+  transactions: any
+  error: string
+  isLoading: boolean
+  offlineMode: boolean
+  lastNotificationText: string
+  onSetIsAuthenticated: (value: boolean) => void
+  onSetTransactions: (transactions: any) => void
+  onSetError: (error: string) => void
+  onSetIsLoading: (value: boolean) => void
+  onSetOfflineMode: (value: boolean) => void
+  onSetLastNotificationText: (text: string) => void
+}
 
 type ConfigType = {
   backendUrl: string
@@ -32,23 +34,31 @@ type ConfigType = {
   dbUrl: string
 }
 
-export default function App() {
-  // 4. Replace local state management with Redux actions and state
-  const dispatch = useDispatch()
-  const isAuthenticated = useSelector((state: AppState) => state.isAuthenticated)
-  const transactions = useSelector((state: AppState) => state.transactions)
-  const error = useSelector((state: AppState) => state.error)
-  const isLoading = useSelector((state: AppState) => state.isLoading)
-  const offlineMode = useSelector((state: AppState) => state.offlineMode)
-  const lastNotificationText = useSelector((state: AppState) => state.lastNotificationText)
+const appVersion = '20230414-1700'
+
+export default function App(props: AppProps) {
+  const {
+    isAuthenticated,
+    transactions,
+    error,
+    isLoading,
+    offlineMode,
+    lastNotificationText,
+    onSetIsAuthenticated,
+    onSetTransactions,
+    onSetError,
+    onSetIsLoading,
+    onSetOfflineMode,
+    onSetLastNotificationText,
+  } = props
 
   const dbServiceRef = useRef<DbService | null>(null)
 
   useEffect(() => {
     if (window.localStorage.config) {
-      dispatch(setIsAuthenticated(true))
+      onSetIsAuthenticated(true)
     }
-  }, [dispatch])
+  }, [])
 
   const navigate = useNavigate()
 
@@ -76,7 +86,7 @@ export default function App() {
       try {
         settings = await backendService.getSettings()
       } catch (err) {
-        dispatch(setOfflineMode(true))
+        onSetOfflineMode(true)
       }
 
       const shouldReset = settings
@@ -96,9 +106,9 @@ export default function App() {
       }
       const dbService = new DbService({
         dbUrl: config.dbUrl,
-        onLoading: (loading) => dispatch(setIsLoading(loading)),
-        onDocsRead: (transactions) => dispatch(setTransactions(transactions)),
-        onError: (error) => dispatch(setError(error)),
+        onLoading: onSetIsLoading,
+        onDocsRead: onSetTransactions,
+        onError: onSetError,
         shouldReset: shouldReset,
       })
       dbServiceRef.current = dbService
@@ -122,7 +132,7 @@ export default function App() {
     }
 
     await dbService.addTransaction(t)
-    dispatch(setLastNotificationText('Transaction added'))
+    onSetLastNotificationText('Transaction added')
     navigate('/transactions')
   }
 
@@ -133,7 +143,7 @@ export default function App() {
     }
 
     await dbService.removeTransaction(id)
-    dispatch(setLastNotificationText('Transaction removed'))
+    onSetLastNotificationText('Transaction removed')
   }
 
   return (
@@ -144,7 +154,7 @@ export default function App() {
           type="is-success"
           duration={1500}
           onDismiss={() => {
-            dispatch(setLastNotificationText(''))
+            onSetLastNotificationText('')
           }}
         />
       )}
@@ -191,9 +201,9 @@ export default function App() {
           </div>
         </div>
       ) : (
-        <Login onSuccessfulLogin={() => dispatch(setIsAuthenticated(true))} />
+        <Login onSuccessfulLogin={() => onSetIsAuthenticated(true)} />
       )}
-      <Status isLoading={isLoading} error={error} onClose={() => dispatch(setError(''))} />
+      <Status isLoading={isLoading} error={error} onClose={() => onSetError('')} />
     </div>
   )
 }
