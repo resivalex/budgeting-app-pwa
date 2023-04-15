@@ -4,7 +4,7 @@ import Home from './Home'
 import Status from './Status'
 import Transactions from './Transactions'
 import NotFound from './NotFound'
-import TransactionForm from './TransactionForm'
+import TransactionFormContainer from './TransactionFormContainer'
 import Login from './Login'
 import Menu from './Menu'
 import Notification from './Notification'
@@ -90,7 +90,7 @@ export default function App(props: AppProps) {
               <Route
                 path="/add"
                 element={
-                  <TransactionForm
+                  <TransactionFormContainer
                     onAdd={onAddTransaction}
                     accounts={accountDetails}
                     categories={sortedCategories}
