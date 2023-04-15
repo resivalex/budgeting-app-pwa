@@ -5,19 +5,19 @@ import { convertCurrencyCodeToSymbol } from './finance-utils'
 
 type Props = {
   type: 'income' | 'expense' | 'transfer'
-  setType: (type: 'income' | 'expense' | 'transfer') => void
+  onTypeChange: (type: 'income' | 'expense' | 'transfer') => void
   amount: string
-  setAmount: (amount: string) => void
+  onAmountChange: (amount: string) => void
   account: string
   currency: string
   category: string
-  setCategory: (category: string) => void
+  onCategoryChange: (category: string) => void
   payee: string
-  setPayee: (payee: string) => void
+  onPayeeChange: (payee: string) => void
   payeeTransferAccount: string
-  setPayeeTransferAccount: (payeeTransferAccount: string) => void
+  onPayeeTransferAccountChange: (payeeTransferAccount: string) => void
   comment: string
-  setComment: (comment: string) => void
+  onCommentChange: (comment: string) => void
   datetime: Date
   onAccountChange: (account: string) => void
   onDatetimeChange: (datetime: Date | null) => void
@@ -30,19 +30,19 @@ type Props = {
 
 function TransactionForm({
   type,
-  setType,
+  onTypeChange,
   amount,
-  setAmount,
+  onAmountChange,
   account,
   currency,
   category,
-  setCategory,
+  onCategoryChange,
   payee,
-  setPayee,
+  onPayeeChange,
   payeeTransferAccount,
-  setPayeeTransferAccount,
+  onPayeeTransferAccountChange,
   comment,
-  setComment,
+  onCommentChange,
   datetime,
   onAccountChange,
   onDatetimeChange,
@@ -62,7 +62,7 @@ function TransactionForm({
             value={type}
             onChange={(e) => {
               const type = e.target.value as 'income' | 'expense' | 'transfer'
-              setType(type)
+              onTypeChange(type)
             }}
           >
             <option value="expense">Expense</option>
@@ -95,7 +95,7 @@ function TransactionForm({
             type="number"
             placeholder="Amount"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => onAmountChange(e.target.value)}
           />
         </div>
       </div>
@@ -122,7 +122,7 @@ function TransactionForm({
             <select
               className="input"
               value={payeeTransferAccount}
-              onChange={(e) => setPayeeTransferAccount(e.target.value)}
+              onChange={(e) => onPayeeTransferAccountChange(e.target.value)}
             >
               {accounts.map((a) => (
                 <option key={a.account} value={a.account}>
@@ -140,7 +140,7 @@ function TransactionForm({
               <select
                 className="input"
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={(e) => onCategoryChange(e.target.value)}
               >
                 {categories.map((c) => (
                   <option key={c} value={c}>
@@ -158,7 +158,7 @@ function TransactionForm({
                 type="text"
                 placeholder="Payee"
                 value={payee}
-                onChange={(e) => setPayee(e.target.value)}
+                onChange={(e) => onPayeeChange(e.target.value)}
               />
             </div>
           </div>
@@ -172,7 +172,7 @@ function TransactionForm({
             type="text"
             placeholder="Comment"
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(e) => onCommentChange(e.target.value)}
           />
         </div>
       </div>

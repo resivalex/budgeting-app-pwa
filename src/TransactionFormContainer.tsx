@@ -104,19 +104,19 @@ export default function TransactionFormContainer({ onAdd }: Props) {
   return (
     <TransactionForm
       type={type}
-      setType={(type: 'income' | 'expense' | 'transfer') => dispatch(setType(type))}
+      onTypeChange={(type: 'income' | 'expense' | 'transfer') => dispatch(setType(type))}
       amount={transactionForm.amount}
-      setAmount={(amount: string) => dispatch(setAmount(amount))}
+      onAmountChange={(amount: string) => dispatch(setAmount(amount))}
       account={account}
       currency={currency}
       category={category}
-      setCategory={(category: string) => dispatch(setCategory(category))}
+      onCategoryChange={(category: string) => dispatch(setCategory(category))}
       payee={transactionForm.payee}
-      setPayee={(payee: string) => dispatch(setPayee(payee))}
+      onPayeeChange={(payee: string) => dispatch(setPayee(payee))}
       payeeTransferAccount={payeeTransferAccount}
-      setPayeeTransferAccount={handlePayeeTransferAccountChange}
+      onPayeeTransferAccountChange={handlePayeeTransferAccountChange}
       comment={transactionForm.comment}
-      setComment={(comment: string) => dispatch(setComment(comment))}
+      onCommentChange={(comment: string) => dispatch(setComment(comment))}
       datetime={new Date(transactionForm.datetime)}
       onAccountChange={(account) => dispatch(setAccount(account))}
       onDatetimeChange={handleDatetimeChange}
