@@ -8,6 +8,7 @@ interface TransactionFormState {
   currency: string
   category: string
   payee: string
+  payeeTransferAccount: string
   comment: string
   datetime: string
 }
@@ -19,6 +20,7 @@ const initialState: TransactionFormState = {
   currency: '',
   category: '',
   payee: '',
+  payeeTransferAccount: '',
   comment: '',
   datetime: new Date().toISOString(),
 }
@@ -34,7 +36,11 @@ export const transactionFormSlice = createSlice({
       state.amount = action.payload
     },
     setAccount: (state, action: PayloadAction<string>) => {
-      state.account = action.payload
+      const account = action.payload
+      if (state.type === 'transfer' && state.payeeTransferAccount === account) {
+        state.payeeTransferAccount = state.account
+      }
+      state.account = account
     },
     setCurrency: (state, action: PayloadAction<string>) => {
       state.currency = action.payload
@@ -44,6 +50,13 @@ export const transactionFormSlice = createSlice({
     },
     setPayee: (state, action: PayloadAction<string>) => {
       state.payee = action.payload
+    },
+    setPayeeTransferAccount: (state, action: PayloadAction<string>) => {
+      const account = action.payload
+      if (state.type === 'transfer' && state.account === account) {
+        state.account = state.payeeTransferAccount
+      }
+      state.payeeTransferAccount = account
     },
     setComment: (state, action: PayloadAction<string>) => {
       state.comment = action.payload
@@ -61,6 +74,7 @@ export const {
   setCurrency,
   setCategory,
   setPayee,
+  setPayeeTransferAccount,
   setComment,
   setDatetime,
 } = transactionFormSlice.actions

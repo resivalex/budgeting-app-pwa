@@ -14,6 +14,8 @@ type Props = {
   setCategory: (category: string) => void
   payee: string
   setPayee: (payee: string) => void
+  payeeTransferAccount: string
+  setPayeeTransferAccount: (payeeTransferAccount: string) => void
   comment: string
   setComment: (comment: string) => void
   datetime: Date
@@ -37,6 +39,8 @@ function TransactionForm({
   setCategory,
   payee,
   setPayee,
+  payeeTransferAccount,
+  setPayeeTransferAccount,
   comment,
   setComment,
   datetime,
@@ -48,7 +52,6 @@ function TransactionForm({
   currencies,
   onCurrencyChange,
 }: Props) {
-  console.log(`Category: ${category}`)
   return (
     <div className="field p-2">
       <div className="field">
@@ -64,6 +67,7 @@ function TransactionForm({
           >
             <option value="expense">Expense</option>
             <option value="income">Income</option>
+            <option value="transfer">Transfer</option>
           </select>
         </div>
       </div>
@@ -112,7 +116,22 @@ function TransactionForm({
         </div>
       </div>
       {type === 'transfer' ? (
-        <div>Transfer</div>
+        <div className="field">
+          <div className="label">Transfer to account</div>
+          <div className="control">
+            <select
+              className="input"
+              value={payeeTransferAccount}
+              onChange={(e) => setPayeeTransferAccount(e.target.value)}
+            >
+              {accounts.map((a) => (
+                <option key={a.account} value={a.account}>
+                  {`[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       ) : (
         <>
           <div className="field">

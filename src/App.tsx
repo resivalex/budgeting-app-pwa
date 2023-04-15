@@ -27,7 +27,7 @@ type AppProps = {
   accountDetails: AccountDetails[]
 }
 
-const appVersion = '20230414-1700'
+const appVersion = '20230415-1730'
 
 export default function App(props: AppProps) {
   const {

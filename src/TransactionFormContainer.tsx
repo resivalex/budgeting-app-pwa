@@ -11,6 +11,7 @@ import {
   setCurrency,
   setCategory,
   setPayee,
+  setPayeeTransferAccount,
   setComment,
   setDatetime,
   selectTransactionForm,
@@ -33,9 +34,14 @@ export default function TransactionFormContainer({ onAdd }: Props) {
     return null
   }
 
-  const currency = _.includes(currencies, transactionForm.currency)
+  const type = transactionForm.type
+  const availableCurrencies =
+    type === 'transfer'
+      ? currencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
+      : currencies
+  const currency = _.includes(availableCurrencies, transactionForm.currency)
     ? transactionForm.currency
-    : currencies[0]
+    : availableCurrencies[0]
   const currencyAccounts = accounts.filter((a) => a.currency === currency)
   const account = _.includes(
     currencyAccounts.map((a) => a.account),
@@ -46,6 +52,18 @@ export default function TransactionFormContainer({ onAdd }: Props) {
   const category = _.includes(categories, transactionForm.category)
     ? transactionForm.category
     : categories[0]
+  let payeeTransferAccount = transactionForm.payeeTransferAccount
+  if (
+    !_.includes(
+      currencyAccounts.map((a) => a.account),
+      payeeTransferAccount
+    )
+  ) {
+    payeeTransferAccount = currencyAccounts[0].account
+  }
+  if (payeeTransferAccount === account) {
+    payeeTransferAccount = currencyAccounts[1].account
+  }
 
   const handleDatetimeChange = (value: Date | null) => {
     if (value) {
@@ -55,23 +73,30 @@ export default function TransactionFormContainer({ onAdd }: Props) {
     }
   }
 
+  const handlePayeeTransferAccountChange = (value: string) => {
+    if (value === account) {
+      dispatch(setAccount(payeeTransferAccount))
+    }
+    dispatch(setPayeeTransferAccount(value))
+  }
+
   const handleAdd = () => {
     onAdd({
       _id: uuidv4(),
       datetime: convertToUtcTime(transactionForm.datetime),
       account: account,
-      category: category,
-      type: transactionForm.type,
+      category: type == 'transfer' ? '' : category,
+      type: type,
       amount: (parseFloat(transactionForm.amount) || 0).toFixed(2),
       currency: currency,
-      payee: transactionForm.payee,
+      payee: type === 'transfer' ? payeeTransferAccount : transactionForm.payee,
       comment: transactionForm.comment,
     })
   }
 
   return (
     <TransactionForm
-      type={transactionForm.type}
+      type={type}
       setType={(type: 'income' | 'expense' | 'transfer') => dispatch(setType(type))}
       amount={transactionForm.amount}
       setAmount={(amount: string) => dispatch(setAmount(amount))}
@@ -81,6 +106,8 @@ export default function TransactionFormContainer({ onAdd }: Props) {
       setCategory={(category: string) => dispatch(setCategory(category))}
       payee={transactionForm.payee}
       setPayee={(payee: string) => dispatch(setPayee(payee))}
+      payeeTransferAccount={payeeTransferAccount}
+      setPayeeTransferAccount={handlePayeeTransferAccountChange}
       comment={transactionForm.comment}
       setComment={(comment: string) => dispatch(setComment(comment))}
       datetime={new Date(transactionForm.datetime)}
@@ -89,7 +116,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
       onAdd={handleAdd}
       accounts={currencyAccounts}
       categories={categories}
-      currencies={currencies}
+      currencies={availableCurrencies}
       onCurrencyChange={(currency: string) => dispatch(setCurrency(currency))}
     />
   )
