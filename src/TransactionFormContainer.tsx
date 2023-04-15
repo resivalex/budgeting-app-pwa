@@ -15,25 +15,37 @@ import {
   setDatetime,
   selectTransactionForm,
 } from './redux/transactionFormSlice'
+import { useAppSelector } from './redux/appSlice'
+import _ from 'lodash'
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
-  accounts: AccountDetails[]
-  categories: string[]
 }
 
-export default function TransactionFormContainer({ onAdd, accounts, categories }: Props) {
+export default function TransactionFormContainer({ onAdd }: Props) {
   const dispatch = useDispatch()
   const transactionForm = useSelector(selectTransactionForm)
+  const accounts: AccountDetails[] = useAppSelector((state) => state.accountDetails)
+  const categories: string[] = useAppSelector((state) => state.categories)
+  const currencies: string[] = useAppSelector((state) => state.currencies)
 
-  const handleAccountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedAccount = accounts.find((a) => a.account === e.target.value)
-
-    if (selectedAccount) {
-      dispatch(setAccount(selectedAccount.account))
-      dispatch(setCurrency(selectedAccount.currency))
-    }
+  if (accounts.length === 0) {
+    return null
   }
+
+  const currency = _.includes(currencies, transactionForm.currency)
+    ? transactionForm.currency
+    : currencies[0]
+  const currencyAccounts = accounts.filter((a) => a.currency === currency)
+  const account = _.includes(
+    currencyAccounts.map((a) => a.account),
+    transactionForm.account
+  )
+    ? transactionForm.account
+    : currencyAccounts[0].account
+  const category = _.includes(categories, transactionForm.category)
+    ? transactionForm.category
+    : categories[0]
 
   const handleDatetimeChange = (value: Date | null) => {
     if (value) {
@@ -47,11 +59,11 @@ export default function TransactionFormContainer({ onAdd, accounts, categories }
     onAdd({
       _id: uuidv4(),
       datetime: convertToUtcTime(transactionForm.datetime),
-      account: transactionForm.account,
-      category: transactionForm.category,
+      account: account,
+      category: category,
       type: transactionForm.type,
       amount: (parseFloat(transactionForm.amount) || 0).toFixed(2),
-      currency: transactionForm.currency,
+      currency: currency,
       payee: transactionForm.payee,
       comment: transactionForm.comment,
     })
@@ -60,23 +72,25 @@ export default function TransactionFormContainer({ onAdd, accounts, categories }
   return (
     <TransactionForm
       type={transactionForm.type}
-      setType={(type: 'income' | 'expense') => dispatch(setType(type))}
+      setType={(type: 'income' | 'expense' | 'transfer') => dispatch(setType(type))}
       amount={transactionForm.amount}
       setAmount={(amount: string) => dispatch(setAmount(amount))}
-      account={transactionForm.account}
-      currency={transactionForm.currency}
-      category={transactionForm.category}
+      account={account}
+      currency={currency}
+      category={category}
       setCategory={(category: string) => dispatch(setCategory(category))}
       payee={transactionForm.payee}
       setPayee={(payee: string) => dispatch(setPayee(payee))}
       comment={transactionForm.comment}
       setComment={(comment: string) => dispatch(setComment(comment))}
       datetime={new Date(transactionForm.datetime)}
-      onAccountChange={handleAccountChange}
+      onAccountChange={(account) => dispatch(setAccount(account))}
       onDatetimeChange={handleDatetimeChange}
       onAdd={handleAdd}
-      accounts={accounts}
+      accounts={currencyAccounts}
       categories={categories}
+      currencies={currencies}
+      onCurrencyChange={(currency: string) => dispatch(setCurrency(currency))}
     />
   )
 }

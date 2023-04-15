@@ -45,7 +45,7 @@ export default class TransactionAggregator {
     this.transactions = transactions
   }
 
-  getAccountDetails() {
+  getAccountDetails(): AccountDetails[] {
     const accountsStat = this.transactions.reduce((accountCurrencies: any, transaction: any) => {
       if (!accountCurrencies[transaction.account]) {
         accountCurrencies[transaction.account] = {
@@ -96,5 +96,13 @@ export default class TransactionAggregator {
     })
 
     return sortedCategories.filter(_.identity)
+  }
+
+  getSortedCurrencies() {
+    return _(this.transactions)
+      .map((t) => t.currency)
+      .uniq()
+      .sortBy()
+      .value()
   }
 }

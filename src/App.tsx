@@ -9,6 +9,7 @@ import Login from './Login'
 import Menu from './Menu'
 import Notification from './Notification'
 import { TransactionDTO } from './Transaction'
+import { AccountDetails } from './TransactionAggregator'
 
 type AppProps = {
   isAuthenticated: boolean
@@ -22,9 +23,8 @@ type AppProps = {
   onRemoveTransaction: (id: string) => void
   onSuccessfulLogin: () => void
   onCloseError: () => void
-  onDismissNotification: () => void,
-  accountDetails: any,
-  sortedCategories: any,
+  onDismissNotification: () => void
+  accountDetails: AccountDetails[]
 }
 
 const appVersion = '20230414-1700'
@@ -44,7 +44,6 @@ export default function App(props: AppProps) {
     onCloseError,
     onDismissNotification,
     accountDetails,
-    sortedCategories,
   } = props
 
   return (
@@ -87,16 +86,7 @@ export default function App(props: AppProps) {
                   <Transactions transactions={transactions} onRemove={onRemoveTransaction} />
                 }
               />
-              <Route
-                path="/add"
-                element={
-                  <TransactionFormContainer
-                    onAdd={onAddTransaction}
-                    accounts={accountDetails}
-                    categories={sortedCategories}
-                  />
-                }
-              />
+              <Route path="/add" element={<TransactionFormContainer onAdd={onAddTransaction} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

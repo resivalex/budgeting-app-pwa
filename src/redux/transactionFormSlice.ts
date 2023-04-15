@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store'
 
 interface TransactionFormState {
-  type: 'income' | 'expense'
+  type: 'income' | 'expense' | 'transfer'
   amount: string
   account: string
   currency: string
@@ -27,7 +27,7 @@ export const transactionFormSlice = createSlice({
   name: 'transactionForm',
   initialState,
   reducers: {
-    setType: (state, action: PayloadAction<'income' | 'expense'>) => {
+    setType: (state, action: PayloadAction<'income' | 'expense' | 'transfer'>) => {
       state.type = action.payload
     },
     setAmount: (state, action: PayloadAction<string>) => {

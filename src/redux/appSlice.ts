@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { RootState } from './store'
+import TransactionAggregator, {AccountDetails} from "../TransactionAggregator";
 
 export interface AppState {
   isAuthenticated: boolean
@@ -9,6 +10,9 @@ export interface AppState {
   isLoading: boolean
   offlineMode: boolean
   lastNotificationText: string
+  accountDetails: AccountDetails[]
+  categories: string[]
+  currencies: string[]
 }
 
 const initialState: AppState = {
@@ -18,6 +22,9 @@ const initialState: AppState = {
   isLoading: false,
   offlineMode: false,
   lastNotificationText: '',
+  accountDetails: [],
+  categories: [],
+  currencies: [],
 }
 
 const appSlice = createSlice({
@@ -28,7 +35,13 @@ const appSlice = createSlice({
       state.isAuthenticated = action.payload
     },
     setTransactions: (state, action: PayloadAction<any[]>) => {
-      state.transactions = action.payload
+      const transactions = action.payload
+      state.transactions = transactions
+
+      const transactionAggregator = new TransactionAggregator(transactions)
+      state.accountDetails = transactionAggregator.getAccountDetails()
+      state.categories = transactionAggregator.getSortedCategories()
+      state.currencies = transactionAggregator.getSortedCurrencies()
     },
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload

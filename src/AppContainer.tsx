@@ -15,7 +15,6 @@ import App from './App'
 import DbService from './DbService'
 import BackendService from './BackendService'
 import { TransactionDTO } from './Transaction'
-import TransactionAggregator from './TransactionAggregator'
 
 type ConfigType = {
   backendUrl: string
@@ -32,6 +31,7 @@ export default function AppContainer() {
   const isLoading = useAppSelector((state: AppState) => state.isLoading)
   const offlineMode = useAppSelector((state: AppState) => state.offlineMode)
   const lastNotificationText = useAppSelector((state: AppState) => state.lastNotificationText)
+  const accountDetails = useAppSelector((state: AppState) => state.accountDetails)
   const dbServiceRef = useRef<DbService | null>(null)
 
   useEffect(() => {
@@ -144,10 +144,6 @@ export default function AppContainer() {
     handleSetLastNotificationText('')
   }
 
-  const transactionAggregator = new TransactionAggregator(transactions)
-  const accountDetails = transactionAggregator.getAccountDetails()
-  const sortedCategories = transactionAggregator.getSortedCategories()
-
   return (
     <App
       isAuthenticated={isAuthenticated}
@@ -163,7 +159,6 @@ export default function AppContainer() {
       onCloseError={handleCloseError}
       onDismissNotification={handleDismissNotification}
       accountDetails={accountDetails}
-      sortedCategories={sortedCategories}
     />
   )
 }
