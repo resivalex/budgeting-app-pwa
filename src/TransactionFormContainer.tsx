@@ -15,9 +15,11 @@ import {
   setComment,
   setDatetime,
   selectTransactionForm,
+  reset,
 } from './redux/transactionFormSlice'
 import { useAppSelector } from './redux/appSlice'
 import _ from 'lodash'
+import { useEffect } from 'react'
 
 type Props = {
   onAdd: (t: TransactionDTO) => void
@@ -29,6 +31,11 @@ export default function TransactionFormContainer({ onAdd }: Props) {
   const accounts: AccountDetails[] = useAppSelector((state) => state.accountDetails)
   const categories: string[] = useAppSelector((state) => state.categories)
   const currencies: string[] = useAppSelector((state) => state.currencies)
+
+  useEffect(() => {
+    // reset form on mount
+    dispatch(reset())
+  }, [])
 
   if (accounts.length === 0) {
     return null
@@ -61,7 +68,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
   ) {
     payeeTransferAccount = currencyAccounts[0].account
   }
-  if (payeeTransferAccount === account) {
+  if (type === 'transfer' && payeeTransferAccount === account) {
     payeeTransferAccount = currencyAccounts[1].account
   }
 

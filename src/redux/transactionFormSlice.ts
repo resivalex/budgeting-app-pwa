@@ -13,17 +13,21 @@ interface TransactionFormState {
   datetime: string
 }
 
-const initialState: TransactionFormState = {
-  type: 'expense',
-  amount: '',
-  account: '',
-  currency: '',
-  category: '',
-  payee: '',
-  payeeTransferAccount: '',
-  comment: '',
-  datetime: new Date().toISOString(),
+function generateInitialState(): TransactionFormState {
+  return {
+    type: 'expense',
+    amount: '',
+    account: '',
+    currency: '',
+    category: '',
+    payee: '',
+    payeeTransferAccount: '',
+    comment: '',
+    datetime: new Date().toISOString(),
+  }
 }
+
+const initialState: TransactionFormState = generateInitialState()
 
 export const transactionFormSlice = createSlice({
   name: 'transactionForm',
@@ -64,6 +68,9 @@ export const transactionFormSlice = createSlice({
     setDatetime: (state, action: PayloadAction<string>) => {
       state.datetime = action.payload
     },
+    reset: () => {
+      return generateInitialState()
+    },
   },
 })
 
@@ -77,6 +84,7 @@ export const {
   setPayeeTransferAccount,
   setComment,
   setDatetime,
+  reset,
 } = transactionFormSlice.actions
 
 export const selectTransactionForm = (state: RootState) => state.transactionForm
