@@ -38,7 +38,7 @@ export default function AppContainer() {
     if (window.localStorage.config) {
       dispatch(setIsAuthenticated(true))
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -92,7 +92,7 @@ export default function AppContainer() {
       await dbService.synchronize()
     }
     void loadTransactions()
-  }, [isAuthenticated])
+  }, [isAuthenticated, dispatch])
 
   async function addTransaction(t: TransactionDTO) {
     const dbService: DbService | null = dbServiceRef.current

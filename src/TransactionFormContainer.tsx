@@ -35,7 +35,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
   useEffect(() => {
     // reset form on mount
     dispatch(reset())
-  }, [])
+  }, [dispatch])
 
   if (accounts.length === 0) {
     return null
@@ -92,7 +92,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
       _id: uuidv4(),
       datetime: convertToUtcTime(transactionForm.datetime),
       account: account,
-      category: type == 'transfer' ? '' : category,
+      category: type === 'transfer' ? '' : category,
       type: type,
       amount: (parseFloat(transactionForm.amount) || 0).toFixed(2),
       currency: currency,
