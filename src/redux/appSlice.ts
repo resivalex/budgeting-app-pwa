@@ -1,5 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppState } from './types'
+import { useSelector } from 'react-redux'
+import { RootState } from './store'
+
+export interface AppState {
+  isAuthenticated: boolean
+  transactions: any[]
+  error: string
+  isLoading: boolean
+  offlineMode: boolean
+  lastNotificationText: string
+}
 
 const initialState: AppState = {
   isAuthenticated: false,
@@ -43,5 +53,9 @@ export const {
   setOfflineMode,
   setLastNotificationText,
 } = appSlice.actions
+
+export function useAppSelector(selector: (state: AppState) => any) {
+  return useSelector((state: RootState) => selector(state.app))
+}
 
 export default appSlice.reducer

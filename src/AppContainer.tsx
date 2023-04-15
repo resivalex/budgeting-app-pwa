@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { AppState } from './redux/types'
 import {
   setIsAuthenticated,
   setIsLoading,
@@ -9,6 +8,8 @@ import {
   setError,
   setOfflineMode,
   setLastNotificationText,
+  useAppSelector,
+  AppState,
 } from './redux/appSlice'
 import App from './App'
 import DbService from './DbService'
@@ -25,12 +26,12 @@ type ConfigType = {
 export default function AppContainer() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const isAuthenticated = useSelector((state: AppState) => state.isAuthenticated)
-  const transactions = useSelector((state: AppState) => state.transactions)
-  const error = useSelector((state: AppState) => state.error)
-  const isLoading = useSelector((state: AppState) => state.isLoading)
-  const offlineMode = useSelector((state: AppState) => state.offlineMode)
-  const lastNotificationText = useSelector((state: AppState) => state.lastNotificationText)
+  const isAuthenticated = useAppSelector((state: AppState) => state.isAuthenticated)
+  const transactions = useAppSelector((state: AppState) => state.transactions)
+  const error = useAppSelector((state: AppState) => state.error)
+  const isLoading = useAppSelector((state: AppState) => state.isLoading)
+  const offlineMode = useAppSelector((state: AppState) => state.offlineMode)
+  const lastNotificationText = useAppSelector((state: AppState) => state.lastNotificationText)
   const dbServiceRef = useRef<DbService | null>(null)
 
   useEffect(() => {
