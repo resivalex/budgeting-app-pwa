@@ -32,6 +32,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
   const categories: string[] = useAppSelector((state) => state.categories)
   const currencies: string[] = useAppSelector((state) => state.currencies)
   const payees: string[] = useAppSelector((state) => state.payees)
+  const comments: string[] = useAppSelector((state) => state.comments)
 
   useEffect(() => {
     // reset form on mount
@@ -139,6 +140,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
       onCurrencyChange={(currency: string) => dispatch(setCurrency(currency))}
       isValid={isValid}
       payees={payees}
+      comments={comments}
     />
   )
 }

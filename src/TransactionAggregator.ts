@@ -111,8 +111,20 @@ export default class TransactionAggregator {
     const payees: { [name: string]: boolean } = {}
     const sortedTransactions = _.sortBy(this.transactions, (t) => -new Date(t.datetime).getTime())
     for (const transaction of sortedTransactions) {
-      if (transaction.type !== 'transfer') {
+      if (transaction.type !== 'transfer' && transaction.payee) {
         payees[transaction.payee] = true
+      }
+    }
+
+    return Object.keys(payees)
+  }
+
+  getRecentComments() {
+    const payees: { [name: string]: boolean } = {}
+    const sortedTransactions = _.sortBy(this.transactions, (t) => -new Date(t.datetime).getTime())
+    for (const transaction of sortedTransactions) {
+      if (transaction.comment) {
+        payees[transaction.comment] = true
       }
     }
 

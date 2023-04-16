@@ -30,6 +30,7 @@ interface Props {
   onCurrencyChange: (currency: string) => void
   isValid: boolean
   payees: string[]
+  comments: string[]
 }
 
 function TransactionForm({
@@ -57,6 +58,7 @@ function TransactionForm({
   onCurrencyChange,
   isValid,
   payees,
+  comments,
 }: Props) {
   const typeOptions = [
     { value: 'expense', label: 'Expense' },
@@ -169,14 +171,7 @@ function TransactionForm({
           <div className="field">
             <div className="label">Payee</div>
             <div className="control">
-              <SuggestingInput
-                value={payee}
-                suggestions={payees}
-                onChange={(value) => {
-                  console.log('value', value)
-                  onPayeeChange(value)
-                }}
-              />
+              <SuggestingInput value={payee} suggestions={payees} onChange={onPayeeChange} />
             </div>
           </div>
         </>
@@ -184,13 +179,7 @@ function TransactionForm({
       <div className="field">
         <div className="label">Comment</div>
         <div className="control">
-          <input
-            className="input"
-            type="text"
-            placeholder="Comment"
-            value={comment}
-            onChange={(e) => onCommentChange(e.target.value)}
-          />
+          <SuggestingInput suggestions={comments} value={comment} onChange={onCommentChange} />
         </div>
       </div>
       <div className="field">

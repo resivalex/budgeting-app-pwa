@@ -15,6 +15,7 @@ export type AppState = {
   categories: string[]
   currencies: string[]
   payees: string[]
+  comments: string[]
 }
 
 const initialState: AppState = {
@@ -29,6 +30,7 @@ const initialState: AppState = {
   categories: [],
   currencies: [],
   payees: [],
+  comments: [],
 }
 
 const appSlice = createSlice({
@@ -48,6 +50,7 @@ const appSlice = createSlice({
       state.categories = transactionAggregator.getSortedCategories()
       state.currencies = transactionAggregator.getSortedCurrencies()
       state.payees = transactionAggregator.getRecentPayees()
+      state.comments = transactionAggregator.getRecentComments()
     },
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload
