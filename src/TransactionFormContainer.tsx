@@ -87,6 +87,17 @@ export default function TransactionFormContainer({ onAdd }: Props) {
     dispatch(setPayeeTransferAccount(value))
   }
 
+  const isValid = !!(
+    transactionForm.datetime &&
+    transactionForm.amount &&
+    account &&
+    category &&
+    type &&
+    currency &&
+    (type === 'transfer' ? payeeTransferAccount : transactionForm.payee) &&
+    payeeTransferAccount
+  )
+
   const handleAdd = () => {
     onAdd({
       _id: uuidv4(),
@@ -125,6 +136,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
       categories={categories}
       currencies={availableCurrencies}
       onCurrencyChange={(currency: string) => dispatch(setCurrency(currency))}
+      isValid={isValid}
     />
   )
 }

@@ -26,6 +26,7 @@ type Props = {
   categories: string[]
   currencies: string[]
   onCurrencyChange: (currency: string) => void
+  isValid: boolean
 }
 
 function TransactionForm({
@@ -51,6 +52,7 @@ function TransactionForm({
   categories,
   currencies,
   onCurrencyChange,
+  isValid,
 }: Props) {
   return (
     <div className="field p-2">
@@ -189,8 +191,8 @@ function TransactionForm({
       </div>
       <div className="field">
         <div className="control">
-          <button className="button is-info" onClick={onAdd}>
-            ADD
+          <button className="button is-info" onClick={onAdd} disabled={!isValid}>
+            {isValid ? 'Add' : 'Fill all required fields'}
           </button>
         </div>
       </div>
