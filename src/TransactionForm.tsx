@@ -62,9 +62,9 @@ function TransactionForm({
   comments,
 }: Props) {
   const typeOptions = [
-    { value: 'expense', label: 'Expense' },
-    { value: 'income', label: 'Income' },
-    { value: 'transfer', label: 'Transfer' },
+    { value: 'expense', label: 'Расход' },
+    { value: 'income', label: 'Доход' },
+    { value: 'transfer', label: 'Перевод' },
   ]
   const currencyOptions = currencies.map((c) => ({ value: c, label: c }))
   const accountOptions = accounts.map((a) => ({
@@ -76,7 +76,7 @@ function TransactionForm({
   return (
     <div className="field p-2">
       <div className="field">
-        <div className="is-size-7">Type</div>
+        <div className="is-size-7">Тип</div>
         <div className="control">
           <Select
             className="basic-single"
@@ -93,7 +93,7 @@ function TransactionForm({
         </div>
       </div>
       <div className="field">
-        <div className="is-size-7">Currency</div>
+        <div className="is-size-7">Валюта</div>
         <div className="control">
           <Select
             className="basic-single"
@@ -110,7 +110,7 @@ function TransactionForm({
         </div>
       </div>
       <div className="field">
-        <div className="is-size-7">Amount</div>
+        <div className="is-size-7">Сумма</div>
         <div className="control">
           <input
             className="input is-small"
@@ -122,7 +122,7 @@ function TransactionForm({
         </div>
       </div>
       <div className="field">
-        <div className="is-size-7">Account</div>
+        <div className="is-size-7">Счёт</div>
         <div className="control">
           <Select
             className="basic-single"
@@ -140,7 +140,7 @@ function TransactionForm({
       </div>
       {type === 'transfer' ? (
         <div className="field">
-          <div className="is-size-7">Transfer to account</div>
+          <div className="is-size-7">Перевод на счёт</div>
           <div className="control">
             <Select
               className="basic-single"
@@ -159,7 +159,7 @@ function TransactionForm({
       ) : (
         <>
           <div className="field">
-            <div className="is-size-7">Category</div>
+            <div className="is-size-7">Категория</div>
             <div className="control">
               <Select
                 className="basic-single"
@@ -175,7 +175,7 @@ function TransactionForm({
             </div>
           </div>
           <div className="field">
-            <div className="is-size-7">Payee</div>
+            <div className="is-size-7">Получатель</div>
             <div className="control">
               <SuggestingInput value={payee} suggestions={payees} onChange={onPayeeChange} />
             </div>
@@ -183,13 +183,13 @@ function TransactionForm({
         </>
       )}
       <div className="field">
-        <div className="is-size-7">Comment</div>
+        <div className="is-size-7">Комментарий</div>
         <div className="control">
           <SuggestingInput suggestions={comments} value={comment} onChange={onCommentChange} />
         </div>
       </div>
       <div className="field">
-        <div className="is-size-7">Date & Time</div>
+        <div className="is-size-7">Дата и время</div>
         <div className="control">
           <DateTimePicker
             onChange={onDatetimeChange}
@@ -202,7 +202,7 @@ function TransactionForm({
       <div className="field">
         <div className="control">
           <button className="button is-info" onClick={onAdd} disabled={!isValid}>
-            {isValid ? 'Add' : 'Fill in all required fields'}
+            {isValid ? 'Добавить' : 'Заполните необходимые поля'}
           </button>
         </div>
       </div>

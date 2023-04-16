@@ -56,8 +56,8 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
         </a>
         {offlineMode && (
           <div className="is-text">
-            <div>Offline</div>
-            <div>mode</div>
+            <div>Оффлайн</div>
+            <div>режим</div>
           </div>
         )}
       </div>
@@ -72,7 +72,7 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
             className={classNames('navbar-item', { 'is-active': location.pathname === '/' })}
             onClick={toggleMenu}
           >
-            Home
+            Главная
           </Link>
           <Link
             to="/transactions"
@@ -81,7 +81,7 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
             })}
             onClick={toggleMenu}
           >
-            Transactions
+            Записи
           </Link>
           <Link
             to="/add"
@@ -90,11 +90,11 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
             })}
             onClick={toggleMenu}
           >
-            Add
+            Новая запись
           </Link>
           <div className="has-text-grey m-3">Version: {appVersion}</div>
           <button onClick={handleLogout} className="button is-danger mt-1 ml-3">
-            Logout
+            Выйти
           </button>
         </div>
       </div>

@@ -20,39 +20,39 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove }:
       <div className="modal-background" onClick={onClose}></div>
       <div className="modal-card p-2">
         <header className="modal-card-head">
-          <p className="modal-card-title">Transaction Info</p>
+          <p className="modal-card-title">Запись</p>
           <button className="delete" onClick={onClose} aria-label="close"></button>
         </header>
         <section className="modal-card-body">
           <p>
-            <strong>Date:</strong> {datetimeString}
+            <strong>Дата и время:</strong> {datetimeString}
           </p>
           <p>
-            <strong>Account:</strong> {account}
+            <strong>Счёт:</strong> {account}
           </p>
           <p>
-            <strong>Category:</strong> {category}
+            <strong>Категория:</strong> {category}
           </p>
           <p>
-            <strong>Type:</strong> {type}
+            <strong>Тип:</strong> {type}
           </p>
           <p>
-            <strong>Amount:</strong> {formatFinancialAmount(parseFloat(amount))}{' '}
+            <strong>Сумма:</strong> {formatFinancialAmount(parseFloat(amount))}{' '}
             {convertCurrencyCodeToSymbol(currency)}
           </p>
           <p>
-            <strong>Payee:</strong> {payee}
+            <strong>Получатель:</strong> {payee}
           </p>
           <p>
-            <strong>Comment:</strong> {comment}
+            <strong>Комментарий:</strong> {comment}
           </p>
         </section>
         <footer className="modal-card-foot">
           <button className="button is-danger" onClick={() => onRemove(transaction._id)}>
-            Remove
+            Удалить
           </button>
           <button className="button" style={{ marginLeft: 'auto' }} onClick={onClose}>
-            Close
+            Отмена
           </button>
         </footer>
       </div>

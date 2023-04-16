@@ -102,7 +102,7 @@ export default function AppContainer() {
     }
 
     await dbService.addTransaction(t)
-    dispatch(setLastNotificationText('Transaction added'))
+    dispatch(setLastNotificationText('Запись добавлена'))
     navigate('/transactions')
   }
 
@@ -113,7 +113,7 @@ export default function AppContainer() {
     }
 
     await dbService.removeTransaction(id)
-    dispatch(setLastNotificationText('Transaction removed'))
+    dispatch(setLastNotificationText('Запись удалена'))
   }
 
   const handleLogout = () => {

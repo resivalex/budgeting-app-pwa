@@ -39,12 +39,12 @@ export default function Login({ onSuccessfulLogin }: Props) {
 
   return (
     <div className="container p-2">
-      <h1 className="title is-4">Login</h1>
+      <h1 className="title is-4">Вход</h1>
       {error && <div className="notification is-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="backendUrl" className="label">
-            Backend URL:
+            URL (спросите у администратора):
           </label>
           <div className="control">
             <input
@@ -61,7 +61,7 @@ export default function Login({ onSuccessfulLogin }: Props) {
         </div>
         <div className="field">
           <label htmlFor="password" className="label">
-            Password:
+            Пароль:
           </label>
           <div className="control">
             <input
@@ -79,7 +79,7 @@ export default function Login({ onSuccessfulLogin }: Props) {
         <div className="field">
           <div className="control">
             <button type="submit" className="button is-info">
-              Log In
+              Войти
             </button>
           </div>
         </div>

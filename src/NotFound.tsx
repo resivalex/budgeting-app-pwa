@@ -7,9 +7,9 @@ export default function NotFound() {
   return (
     <div>
       <div>
-        Page not found. Go to <Link to="/">Home</Link>.
+        Страница не найдена. Перейти на <Link to="/">Главную</Link>.
       </div>
-      Current location
+      Вы находитесь
       <pre>{JSON.stringify(location, null, 2)}</pre>
     </div>
   )
