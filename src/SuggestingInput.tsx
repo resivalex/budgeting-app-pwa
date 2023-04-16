@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
+import { reactSelectSmallStyles } from './react-select-styles'
 
 type OptionType = {
   value: string
@@ -50,6 +51,7 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
       options={options}
       value={selectedOption}
       inputValue={inputValue}
+      styles={reactSelectSmallStyles}
     />
   )
 }

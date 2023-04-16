@@ -4,6 +4,7 @@ import { AccountDetails } from './TransactionAggregator'
 import { convertCurrencyCodeToSymbol } from './finance-utils'
 import Select from 'react-select'
 import SuggestingInput from './SuggestingInput'
+import { reactSelectSmallStyles } from './react-select-styles'
 
 interface Props {
   type: 'income' | 'expense' | 'transfer'
@@ -75,7 +76,7 @@ function TransactionForm({
   return (
     <div className="field p-2">
       <div className="field">
-        <div className="label">Type</div>
+        <div className="is-size-7">Type</div>
         <div className="control">
           <Select
             className="basic-single"
@@ -87,11 +88,12 @@ function TransactionForm({
             }}
             options={typeOptions}
             isSearchable={false}
+            styles={reactSelectSmallStyles}
           />
         </div>
       </div>
       <div className="field">
-        <div className="label">Currency</div>
+        <div className="is-size-7">Currency</div>
         <div className="control">
           <Select
             className="basic-single"
@@ -103,14 +105,15 @@ function TransactionForm({
             }}
             options={currencyOptions}
             isSearchable={false}
+            styles={reactSelectSmallStyles}
           />
         </div>
       </div>
       <div className="field">
-        <div className="label">Amount</div>
+        <div className="is-size-7">Amount</div>
         <div className="control">
           <input
-            className="input"
+            className="input is-small"
             type="number"
             placeholder="Amount"
             value={amount}
@@ -119,7 +122,7 @@ function TransactionForm({
         </div>
       </div>
       <div className="field">
-        <div className="label">Account</div>
+        <div className="is-size-7">Account</div>
         <div className="control">
           <Select
             className="basic-single"
@@ -131,12 +134,13 @@ function TransactionForm({
             }}
             options={accountOptions}
             isSearchable={false}
+            styles={reactSelectSmallStyles}
           />
         </div>
       </div>
       {type === 'transfer' ? (
         <div className="field">
-          <div className="label">Transfer to account</div>
+          <div className="is-size-7">Transfer to account</div>
           <div className="control">
             <Select
               className="basic-single"
@@ -148,13 +152,14 @@ function TransactionForm({
               }}
               options={accountOptions}
               isSearchable={false}
+              styles={reactSelectSmallStyles}
             />
           </div>
         </div>
       ) : (
         <>
           <div className="field">
-            <div className="label">Category</div>
+            <div className="is-size-7">Category</div>
             <div className="control">
               <Select
                 className="basic-single"
@@ -165,11 +170,12 @@ function TransactionForm({
                   onCategoryChange(selectedOption.value)
                 }}
                 options={categoryOptions}
+                styles={reactSelectSmallStyles}
               />
             </div>
           </div>
           <div className="field">
-            <div className="label">Payee</div>
+            <div className="is-size-7">Payee</div>
             <div className="control">
               <SuggestingInput value={payee} suggestions={payees} onChange={onPayeeChange} />
             </div>
@@ -177,13 +183,13 @@ function TransactionForm({
         </>
       )}
       <div className="field">
-        <div className="label">Comment</div>
+        <div className="is-size-7">Comment</div>
         <div className="control">
           <SuggestingInput suggestions={comments} value={comment} onChange={onCommentChange} />
         </div>
       </div>
       <div className="field">
-        <div className="label">Date & Time</div>
+        <div className="is-size-7">Date & Time</div>
         <div className="control">
           <DateTimePicker
             onChange={onDatetimeChange}
