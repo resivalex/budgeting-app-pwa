@@ -2,6 +2,7 @@ import React from 'react'
 import DateTimePicker from 'react-datetime-picker'
 import { AccountDetails } from './TransactionAggregator'
 import { convertCurrencyCodeToSymbol } from './finance-utils'
+import Select from 'react-select'
 
 type Props = {
   type: 'income' | 'expense' | 'transfer'
@@ -54,6 +55,8 @@ function TransactionForm({
   onCurrencyChange,
   isValid,
 }: Props) {
+  const categoryOptions = categories.map((c) => ({ value: c, label: c }))
+
   return (
     <div className="field p-2">
       <div className="field">
@@ -139,17 +142,16 @@ function TransactionForm({
           <div className="field">
             <div className="label">Category</div>
             <div className="control">
-              <select
-                className="input"
-                value={category}
-                onChange={(e) => onCategoryChange(e.target.value)}
-              >
-                {categories.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+              <Select
+                className="basic-single"
+                classNamePrefix="select"
+                value={categoryOptions.find((option) => option.value === category)}
+                onChange={(selectedOption) => {
+                  if (!selectedOption) return
+                  onCategoryChange(selectedOption.value)
+                }}
+                options={categoryOptions}
+              />
             </div>
           </div>
           <div className="field">
