@@ -3,6 +3,7 @@ import DateTimePicker from 'react-datetime-picker'
 import { AccountDetails } from './TransactionAggregator'
 import { convertCurrencyCodeToSymbol } from './finance-utils'
 import Select from 'react-select'
+import SuggestingInput from './SuggestingInput'
 
 interface Props {
   type: 'income' | 'expense' | 'transfer'
@@ -28,6 +29,7 @@ interface Props {
   currencies: string[]
   onCurrencyChange: (currency: string) => void
   isValid: boolean
+  payees: string[]
 }
 
 function TransactionForm({
@@ -54,6 +56,7 @@ function TransactionForm({
   currencies,
   onCurrencyChange,
   isValid,
+  payees,
 }: Props) {
   const typeOptions = [
     { value: 'expense', label: 'Expense' },
@@ -166,13 +169,9 @@ function TransactionForm({
           <div className="field">
             <div className="label">Payee</div>
             <div className="control">
-              <input
-                className="input"
-                type="text"
-                placeholder="Payee"
-                value={payee}
-                onChange={(e) => onPayeeChange(e.target.value)}
-              />
+              <SuggestingInput value={payee} suggestions={payees} onChange={(value) => {
+                onPayeeChange(value)
+              }} />
             </div>
           </div>
         </>

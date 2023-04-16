@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { TransactionDTO } from './Transaction'
 
 export type AccountDetails = {
   account: string
@@ -39,7 +40,7 @@ function calculateBalanceChanges(transaction: any): BalanceChange[] {
 }
 
 export default class TransactionAggregator {
-  transactions: any[]
+  transactions: TransactionDTO[]
 
   constructor(transactions: any[]) {
     this.transactions = transactions
@@ -104,5 +105,17 @@ export default class TransactionAggregator {
       .uniq()
       .sortBy()
       .value()
+  }
+
+  getRecentPayees() {
+    const payees: { [name: string]: boolean } = {}
+    const sortedTransactions = _.sortBy(this.transactions, (t) => -new Date(t.datetime).getTime())
+    for (const transaction of sortedTransactions) {
+      if (transaction.type !== 'transfer') {
+        payees[transaction.payee] = true
+      }
+    }
+
+    return Object.keys(payees)
   }
 }
