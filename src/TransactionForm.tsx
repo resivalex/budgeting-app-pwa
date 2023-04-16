@@ -169,13 +169,6 @@ function TransactionForm({
           <div className="field">
             <div className="label">Payee</div>
             <div className="control">
-              <input
-                className="input"
-                type="text"
-                placeholder="Payee"
-                value={payee}
-                onChange={(e) => onPayeeChange(e.target.value)}
-              />
               <SuggestingInput
                 value={payee}
                 suggestions={payees}
