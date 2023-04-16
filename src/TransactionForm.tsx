@@ -55,6 +55,16 @@ function TransactionForm({
   onCurrencyChange,
   isValid,
 }: Props) {
+  const typeOptions = [
+    { value: 'expense', label: 'Expense' },
+    { value: 'income', label: 'Income' },
+    { value: 'transfer', label: 'Transfer' },
+  ]
+  const currencyOptions = currencies.map((c) => ({ value: c, label: c }))
+  const accountOptions = accounts.map((a) => ({
+    value: a.account,
+    label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
+  }))
   const categoryOptions = categories.map((c) => ({ value: c, label: c }))
 
   return (
@@ -62,34 +72,33 @@ function TransactionForm({
       <div className="field">
         <div className="label">Type</div>
         <div className="control">
-          <select
-            className="input"
-            value={type}
-            onChange={(e) => {
-              const type = e.target.value as 'income' | 'expense' | 'transfer'
-              onTypeChange(type)
+          <Select
+            className="basic-single"
+            classNamePrefix="select"
+            value={typeOptions.find((option) => option.value === type)}
+            onChange={(selectedOption) => {
+              if (!selectedOption) return
+              onTypeChange(selectedOption.value as 'income' | 'expense' | 'transfer')
             }}
-          >
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
-            <option value="transfer">Transfer</option>
-          </select>
+            options={typeOptions}
+            isSearchable={false}
+          />
         </div>
       </div>
       <div className="field">
         <div className="label">Currency</div>
         <div className="control">
-          <select
-            className="input"
-            value={currency}
-            onChange={(e) => onCurrencyChange(e.target.value)}
-          >
-            {currencies.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+          <Select
+            className="basic-single"
+            classNamePrefix="select"
+            value={currencyOptions.find((option) => option.value === currency)}
+            onChange={(selectedOption) => {
+              if (!selectedOption) return
+              onCurrencyChange(selectedOption.value)
+            }}
+            options={currencyOptions}
+            isSearchable={false}
+          />
         </div>
       </div>
       <div className="field">
@@ -107,34 +116,34 @@ function TransactionForm({
       <div className="field">
         <div className="label">Account</div>
         <div className="control">
-          <select
-            className="input"
-            value={account}
-            onChange={(e) => onAccountChange(e.target.value)}
-          >
-            {accounts.map((a) => (
-              <option key={a.account} value={a.account}>
-                {`[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`}
-              </option>
-            ))}
-          </select>
+          <Select
+            className="basic-single"
+            classNamePrefix="select"
+            value={accountOptions.find((option) => option.value === account)}
+            onChange={(selectedOption) => {
+              if (!selectedOption) return
+              onAccountChange(selectedOption.value)
+            }}
+            options={accountOptions}
+            isSearchable={false}
+          />
         </div>
       </div>
       {type === 'transfer' ? (
         <div className="field">
           <div className="label">Transfer to account</div>
           <div className="control">
-            <select
-              className="input"
-              value={payeeTransferAccount}
-              onChange={(e) => onPayeeTransferAccountChange(e.target.value)}
-            >
-              {accounts.map((a) => (
-                <option key={a.account} value={a.account}>
-                  {`[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`}
-                </option>
-              ))}
-            </select>
+            <Select
+              className="basic-single"
+              classNamePrefix="select"
+              value={accountOptions.find((option) => option.value === payeeTransferAccount)}
+              onChange={(selectedOption) => {
+                if (!selectedOption) return
+                onPayeeTransferAccountChange(selectedOption.value)
+              }}
+              options={accountOptions}
+              isSearchable={false}
+            />
           </div>
         </div>
       ) : (
@@ -194,7 +203,7 @@ function TransactionForm({
       <div className="field">
         <div className="control">
           <button className="button is-info" onClick={onAdd} disabled={!isValid}>
-            {isValid ? 'Add' : 'Fill all required fields'}
+            {isValid ? 'Add' : 'Fill in all required fields'}
           </button>
         </div>
       </div>
