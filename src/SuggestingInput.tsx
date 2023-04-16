@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import CreatableSelect from 'react-select/creatable'
+import Select from 'react-select'
 
 type OptionType = {
   value: string
@@ -19,12 +19,15 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   }))
 
   const [inputValue, setInputValue] = useState('')
+  // HACK: Rerender to avoid clearing of input
+  const [renderKey, setRenderKey] = useState(Math.random())
 
   const handleChange = (selectedOption: any) => {
     if (!selectedOption) return
-    const inputValue: string = (selectedOption as OptionType).value
-    setInputValue(inputValue)
-    onChange(inputValue)
+    const selectedValue: string = (selectedOption as OptionType).value
+    setInputValue(selectedValue)
+    onChange(selectedValue)
+    setRenderKey(Math.random())
   }
 
   const handleInputChange = (inputValue: string, { action }: { action: string }) => {
@@ -40,7 +43,8 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   }
 
   return (
-    <CreatableSelect
+    <Select
+      key={renderKey}
       onChange={handleChange}
       onInputChange={handleInputChange}
       options={options}

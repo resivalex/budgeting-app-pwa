@@ -169,9 +169,21 @@ function TransactionForm({
           <div className="field">
             <div className="label">Payee</div>
             <div className="control">
-              <SuggestingInput value={payee} suggestions={payees} onChange={(value) => {
-                onPayeeChange(value)
-              }} />
+              <input
+                className="input"
+                type="text"
+                placeholder="Payee"
+                value={payee}
+                onChange={(e) => onPayeeChange(e.target.value)}
+              />
+              <SuggestingInput
+                value={payee}
+                suggestions={payees}
+                onChange={(value) => {
+                  console.log('value', value)
+                  onPayeeChange(value)
+                }}
+              />
             </div>
           </div>
         </>
