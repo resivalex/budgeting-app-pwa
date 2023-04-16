@@ -32,6 +32,7 @@ export default function AppContainer() {
   const offlineMode = useAppSelector((state: AppState) => state.offlineMode)
   const lastNotificationText = useAppSelector((state: AppState) => state.lastNotificationText)
   const accountDetails = useAppSelector((state: AppState) => state.accountDetails)
+  const isInitialized = useAppSelector((state: AppState) => state.isInitialized)
   const dbServiceRef = useRef<DbService | null>(null)
 
   useEffect(() => {
@@ -149,7 +150,7 @@ export default function AppContainer() {
       isAuthenticated={isAuthenticated}
       transactions={transactions}
       error={error}
-      isLoading={isLoading}
+      isLoading={isLoading || (isAuthenticated && !isInitialized)}
       offlineMode={offlineMode}
       lastNotificationText={lastNotificationText}
       onLogout={handleLogout}

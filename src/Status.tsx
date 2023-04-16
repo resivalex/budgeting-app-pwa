@@ -16,12 +16,21 @@ export default function Status({ error, isLoading, onClose }: Props) {
 
   return (
     <div className={classNames('modal', { 'is-active': visible })}>
-      <div className="modal-background"></div>
-      <div className="modal-content p-2">
+      <div className="modal-background" style={{ backgroundColor: 'rgba(255, 255, 255)' }}></div>
+      <div
+        className="modal-content"
+        style={{
+          position: 'fixed',
+          top: 0,
+          margin: '1.5rem',
+          maxHeight: 'calc(100% - 3rem)',
+          overflowY: 'auto',
+        }}
+      >
         <div className="box">
           {isLoading && (
             <>
-              <div className="is-size-6 pb-1">Sync...</div>
+              <div className="is-size-6 pb-1">Loading...</div>
               <progress className="progress is-info" max="100">
                 15%
               </progress>

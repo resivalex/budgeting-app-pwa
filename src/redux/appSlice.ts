@@ -4,6 +4,7 @@ import { RootState } from './store'
 import TransactionAggregator, {AccountDetails} from "../TransactionAggregator";
 
 export interface AppState {
+  isInitialized: boolean
   isAuthenticated: boolean
   transactions: any[]
   error: string
@@ -16,6 +17,7 @@ export interface AppState {
 }
 
 const initialState: AppState = {
+  isInitialized: false,
   isAuthenticated: false,
   transactions: [],
   error: '',
@@ -37,6 +39,7 @@ const appSlice = createSlice({
     setTransactions: (state, action: PayloadAction<any[]>) => {
       const transactions = action.payload
       state.transactions = transactions
+      state.isInitialized = true
 
       const transactionAggregator = new TransactionAggregator(transactions)
       state.accountDetails = transactionAggregator.getAccountDetails()
