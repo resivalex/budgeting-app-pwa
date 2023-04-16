@@ -30,7 +30,7 @@ export default function Status({ error, isLoading, onClose }: Props) {
         <div className="box">
           {isLoading && (
             <>
-              <div className="is-size-6 pb-1">Loading...</div>
+              <div className="is-size-6 pb-1 has-text-centered">Loading...</div>
               <progress className="progress is-info" max="100">
                 15%
               </progress>

@@ -10,6 +10,7 @@ import Menu from './Menu'
 import Notification from './Notification'
 import { TransactionDTO } from './Transaction'
 import { AccountDetails } from './TransactionAggregator'
+import { appVersion } from './version'
 
 type AppProps = {
   isAuthenticated: boolean
@@ -26,8 +27,6 @@ type AppProps = {
   onDismissNotification: () => void
   accountDetails: AccountDetails[]
 }
-
-const appVersion = '20230415-1730'
 
 export default function App(props: AppProps) {
   const {
