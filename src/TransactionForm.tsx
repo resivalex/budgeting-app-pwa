@@ -4,7 +4,7 @@ import { AccountDetails } from './TransactionAggregator'
 import { convertCurrencyCodeToSymbol } from './finance-utils'
 import Select from 'react-select'
 
-type Props = {
+interface Props {
   type: 'income' | 'expense' | 'transfer'
   onTypeChange: (type: 'income' | 'expense' | 'transfer') => void
   amount: string

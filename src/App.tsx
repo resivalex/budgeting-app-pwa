@@ -12,7 +12,7 @@ import { TransactionDTO } from './Transaction'
 import { AccountDetails } from './TransactionAggregator'
 import { appVersion } from './version'
 
-type AppProps = {
+interface AppProps {
   isAuthenticated: boolean
   transactions: any
   error: string

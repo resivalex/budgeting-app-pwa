@@ -6,16 +6,16 @@ import { convertToLocaleTime } from './date-utils'
 import { useLongPress, LongPressDetectEvents } from 'use-long-press'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from './finance-utils'
 
-export class TransactionDTO {
-  _id!: string
-  datetime!: string
-  account!: string
-  category!: string
-  type!: 'income' | 'expense' | 'transfer'
-  amount!: string
-  currency!: string
-  payee!: string
-  comment!: string
+export interface TransactionDTO {
+  _id: string
+  datetime: string
+  account: string
+  category: string
+  type: 'income' | 'expense' | 'transfer'
+  amount: string
+  currency: string
+  payee: string
+  comment: string
 }
 
 interface Props {

@@ -21,7 +21,7 @@ import { useAppSelector } from './redux/appSlice'
 import _ from 'lodash'
 import { useEffect } from 'react'
 
-type Props = {
+interface Props {
   onAdd: (t: TransactionDTO) => void
 }
 

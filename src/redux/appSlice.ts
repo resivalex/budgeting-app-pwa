@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from './store'
 import TransactionAggregator, {AccountDetails} from "../TransactionAggregator";
 
-export interface AppState {
+export type AppState = {
   isInitialized: boolean
   isAuthenticated: boolean
   transactions: any[]

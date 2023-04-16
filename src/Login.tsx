@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import BackendService, { ConfigData } from './BackendService'
 
-type Props = {
+interface Props {
   onSuccessfulLogin: () => void
 }
 

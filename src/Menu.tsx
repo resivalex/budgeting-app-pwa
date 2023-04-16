@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import classNames from 'classnames'
 
-type MenuProps = {
+interface Props {
   handleLogout: () => void
   offlineMode: boolean
   appVersion: string
 }
 
-const Menu: React.FC<MenuProps> = ({ handleLogout, offlineMode, appVersion }) => {
+const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
   const [isMenuActive, setIsMenuActive] = useState(false)
   const menuRef: any = useRef(null)
   const burgerRef: any = useRef(null)

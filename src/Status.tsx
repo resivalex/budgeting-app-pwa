@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 
-type Props = {
+interface Props {
   error: string
   isLoading: boolean
   onClose: () => void

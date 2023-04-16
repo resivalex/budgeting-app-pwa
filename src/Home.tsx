@@ -2,7 +2,7 @@ import React from 'react'
 import { AccountDetails } from './TransactionAggregator'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from './finance-utils'
 
-type Props = {
+interface Props {
   transactions: any[]
   accountDetails: AccountDetails[]
 }
