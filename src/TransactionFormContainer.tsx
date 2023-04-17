@@ -96,7 +96,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
     category &&
     type &&
     currency &&
-    (type === 'transfer' ? payeeTransferAccount : transactionForm.payee) &&
+    (type !== 'transfer' || payeeTransferAccount) &&
     payeeTransferAccount
   )
 
