@@ -71,6 +71,7 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
             to="/"
             className={classNames('navbar-item', { 'is-active': location.pathname === '/' })}
             onClick={toggleMenu}
+            replace
           >
             Главная
           </Link>
@@ -80,6 +81,7 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
               'is-active': location.pathname === '/transactions',
             })}
             onClick={toggleMenu}
+            replace
           >
             Записи
           </Link>
@@ -89,6 +91,7 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
               'is-active': location.pathname === '/add',
             })}
             onClick={toggleMenu}
+            replace
           >
             Новая запись
           </Link>

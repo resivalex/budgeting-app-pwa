@@ -103,7 +103,7 @@ export default function AppContainer() {
 
     await dbService.addTransaction(t)
     dispatch(setLastNotificationText('Запись добавлена'))
-    navigate('/transactions')
+    navigate('/transactions', { replace: true })
   }
 
   async function removeTransaction(id: string) {
