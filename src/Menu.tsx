@@ -86,6 +86,16 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
             Записи
           </Link>
           <Link
+            to="/budgets"
+            className={classNames('navbar-item', {
+              'is-active': location.pathname === '/budgets',
+            })}
+            onClick={toggleMenu}
+            replace
+          >
+            Бюджеты
+          </Link>
+          <Link
             to="/add"
             className={classNames('navbar-item', {
               'is-active': location.pathname === '/add',

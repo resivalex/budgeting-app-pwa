@@ -10,6 +10,27 @@ export interface SettingsData {
   transactionsUploadedAt: string
 }
 
+export interface ConversionRate {
+  currency: string
+  rate: number
+}
+
+export interface CurrencyConfig {
+  mainCurrency: string
+  conversionRates: ConversionRate[]
+}
+
+export interface SpendingLimit {
+  name: string
+  currency: string
+  amount: number
+  categories: string[]
+}
+
+export interface SpendingLimits {
+  limits: SpendingLimit[]
+}
+
 class BackendService {
   private readonly backendUrl: string
   private readonly token?: string
@@ -35,7 +56,7 @@ class BackendService {
     }
   }
 
-  async getSettings(): Promise<any> {
+  async getSettings(): Promise<SettingsData> {
     const response = await axios.get(`${this.backendUrl}/settings`, {
       params: { token: this.token },
     })
@@ -43,6 +64,27 @@ class BackendService {
     return {
       transactionsUploadedAt: response.data.transactions_uploaded_at,
     }
+  }
+
+  async getCurrencyConfig(): Promise<CurrencyConfig> {
+    const response = await axios.get(`${this.backendUrl}/currency_config`, {
+      params: { token: this.token },
+    })
+
+    const data = response.data
+
+    return {
+      mainCurrency: data.main_currency,
+      conversionRates: data.conversion_rates,
+    }
+  }
+
+  async getSpendingLimits(): Promise<SpendingLimits> {
+    const response = await axios.get(`${this.backendUrl}/spending_limits`, {
+      params: { token: this.token },
+    })
+
+    return response.data
   }
 }
 

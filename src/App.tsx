@@ -5,6 +5,7 @@ import Status from './Status'
 import Transactions from './Transactions'
 import NotFound from './NotFound'
 import TransactionFormContainer from './TransactionFormContainer'
+import BudgetsContainer from './BudgetsContainer'
 import Login from './Login'
 import Menu from './Menu'
 import Notification from './Notification'
@@ -85,6 +86,7 @@ export default function App(props: AppProps) {
                   <Transactions transactions={transactions} onRemove={onRemoveTransaction} />
                 }
               />
+              <Route path="/budgets" element={<BudgetsContainer />} />
               <Route path="/add" element={<TransactionFormContainer onAdd={onAddTransaction} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
