@@ -69,10 +69,10 @@ export default function App(props: AppProps) {
           <div
             style={{
               width: '100%',
-              flex: 1,
-              height: '100vh',
+              height: '100%',
               display: 'flex',
               flexDirection: 'column',
+              overflow: 'auto',
             }}
           >
             <Routes>

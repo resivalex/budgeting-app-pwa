@@ -9,15 +9,15 @@ interface Props {
   currency: string
 }
 
-const Budget: React.FC<Props> = ({ totalAmount, spentAmount, currency, name }: Props) => {
+export default function Budget({ totalAmount, spentAmount, currency, name }: Props) {
   const isOverSpent = spentAmount > totalAmount
   const diffAmount = Math.abs(totalAmount - spentAmount)
   const currencySymbol = convertCurrencyCodeToSymbol(currency)
 
   return (
     <div className="box">
-      <div className="is-flex is-justify-content-space-between pb-1">
-        <div className="has-text-weight-bold is-flex">{name}</div>
+      <div className="is-flex is-justify-content-space-between pb-1" style={{ flexWrap: 'wrap' }}>
+        <div className="has-text-weight-bold is-flex pr-1">{name}</div>
         <div className="is-flex">
           <div>
             {isOverSpent ? 'Перерасход' : 'Осталось'}{' '}
@@ -35,5 +35,3 @@ const Budget: React.FC<Props> = ({ totalAmount, spentAmount, currency, name }: P
     </div>
   )
 }
-
-export default Budget
