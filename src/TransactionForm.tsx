@@ -175,7 +175,7 @@ function TransactionForm({
             </div>
           </div>
           <div className="field">
-            <div className="is-size-7">Получатель</div>
+            <div className="is-size-7">{type === 'expense' ? 'Получатель' : 'Плательщик'}</div>
             <div className="control">
               <SuggestingInput value={payee} suggestions={payees} onChange={onPayeeChange} />
             </div>
