@@ -10,6 +10,10 @@ export default function Budgets({ budgets }: Props) {
   return (
     <div className="box" style={{ flex: 1, overflow: 'scroll' }}>
       {budgets.map((budget: Budget, index: number) => {
+        const percentage = budget.amount === 0 ? 0 : (budget.spentAmount / budget.amount) * 100
+
+        const progressBarValue = budget.spentAmount > budget.amount ? 100 : percentage
+
         return (
           <div key={index} className="box">
             <div className="level">
@@ -39,6 +43,9 @@ export default function Budgets({ budgets }: Props) {
                 </div>
               </div>
             </div>
+            <progress className="progress is-primary" value={progressBarValue} max="100">
+              {progressBarValue}%
+            </progress>
           </div>
         )
       })}
