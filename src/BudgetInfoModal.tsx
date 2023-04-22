@@ -22,19 +22,25 @@ export default function BudgetInfoModal({ budget, onClose }: Props) {
         </header>
         <section className="modal-card-body">
           <p>
-            <strong>Всего:</strong> {formatFinancialAmount(amount)}{' '}
-            {convertCurrencyCodeToSymbol(currency)}
+            Всего:{' '}
+            <strong>
+              {formatFinancialAmount(amount)} {convertCurrencyCodeToSymbol(currency)}
+            </strong>
           </p>
           <p>
-            <strong>Потрачено:</strong> {formatFinancialAmount(spentAmount)}{' '}
-            {convertCurrencyCodeToSymbol(currency)}
+            Потрачено:{' '}
+            <strong>
+              {formatFinancialAmount(spentAmount)} {convertCurrencyCodeToSymbol(currency)}
+            </strong>
           </p>
           <p>
-            <strong>Осталось:</strong> {formatFinancialAmount(amount - spentAmount)}{' '}
-            {convertCurrencyCodeToSymbol(currency)}
+            Осталось:{' '}
+            <strong>
+              {formatFinancialAmount(amount - spentAmount)} {convertCurrencyCodeToSymbol(currency)}
+            </strong>
           </p>
           <p>
-            <strong>Категории:</strong> {categories.join(', ')}
+            Категории: <strong>{categories.join(', ')}</strong>
           </p>
           <div style={{ height: 300, display: 'flex' }}>
             <Transactions transactions={transactions} onRemove={() => {}} />
