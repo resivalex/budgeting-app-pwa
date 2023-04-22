@@ -70,14 +70,21 @@ function calculateBudgets(
     name: 'ОБЩИЙ',
     currency: currencyConfig.mainCurrency,
     amount: 0,
-    categories: []
+    categories: [],
   }
   spendingLimits.limits.forEach((spendingLimit: SpendingLimit) => {
     totalLimit.amount += spendingLimit.amount
     totalLimit.categories = totalLimit.categories.concat(spendingLimit.categories)
   })
 
-  return [totalLimit, ...spendingLimits.limits].map((spendingLimit: SpendingLimit) => {
+  const restLimit: SpendingLimit = {
+    name: 'Другое',
+    currency: currencyConfig.mainCurrency,
+    amount: 0,
+    categories: categories.filter((category) => !totalLimit.categories.includes(category)),
+  }
+
+  return [totalLimit, ...spendingLimits.limits, restLimit].map((spendingLimit: SpendingLimit) => {
     if (spendingLimit.currency !== currencyConfig.mainCurrency) {
       throw new Error('Limit must be in main currency')
     }
