@@ -14,6 +14,8 @@ export default function Budgets({ budgets }: Props) {
 
         const progressBarValue = budget.spentAmount > budget.amount ? 100 : percentage
 
+        const progressBarColor = budget.spentAmount > budget.amount ? 'is-danger' : 'is-primary'
+
         return (
           <div key={index} className="box">
             <div className="level">
@@ -23,27 +25,31 @@ export default function Budgets({ budgets }: Props) {
                 </div>
               </div>
             </div>
-            <div className="level">
+            <div className="level is-flex-mobile">
               <div className="level-left">
                 <div className="level-item">
                   <div>
-                    Всего {formatFinancialAmount(budget.amount)}{' '}
+                    {formatFinancialAmount(budget.spentAmount)}{' '}
+                    {convertCurrencyCodeToSymbol(budget.currency)}
+                  </div>
+                </div>
+              </div>
+              <div className="level-item has-text-centered">
+                <div>
+                  {formatFinancialAmount(budget.amount - budget.spentAmount)}{' '}
+                  {convertCurrencyCodeToSymbol(budget.currency)}
+                </div>
+              </div>
+              <div className="level-right">
+                <div className="level-item">
+                  <div>
+                    {formatFinancialAmount(budget.amount)}{' '}
                     {convertCurrencyCodeToSymbol(budget.currency)}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="level">
-              <div className="level-left">
-                <div className="level-item">
-                  <div>
-                    Потрачено {formatFinancialAmount(budget.spentAmount)}{' '}
-                    {convertCurrencyCodeToSymbol(budget.currency)}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <progress className="progress is-primary" value={progressBarValue} max="100">
+            <progress className={`progress ${progressBarColor}`} value={progressBarValue} max="100">
               {progressBarValue}%
             </progress>
           </div>
