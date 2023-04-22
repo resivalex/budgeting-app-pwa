@@ -24,3 +24,12 @@ export function formatFinancialAmount(amount: number): string {
     .format(amount)
     .replace(',', ' ') // Replace commas with spaces
 }
+
+export function formatFinancialAmountRounded(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: 0,
+    useGrouping: true,
+  })
+    .format(amount)
+    .replace(',', ' ') // Replace commas with spaces
+}
