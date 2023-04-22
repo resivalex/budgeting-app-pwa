@@ -12,7 +12,7 @@ export default function Home({ accountDetails }: Props) {
     <div className="box">
       <div>
         {accountDetails.map((accountDetail, index) => (
-          <div key={index} className="box">
+          <div key={index} className="box my-2">
             <div className="columns is-mobile">
               <div className="column is-flex-grow-1 has-text-left-tablet">
                 <h3 className="title is-6">{accountDetail.account}</h3>
