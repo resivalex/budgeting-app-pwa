@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { convertToLocaleTime } from './date-utils'
-import { Budget, setBudgets, useBudgetsSelector } from './redux/budgetsSlice'
+import { Budget, setBudgets, setFocusedBudgetName, useBudgetsSelector } from './redux/budgetsSlice'
 import { AppState, useAppSelector } from './redux/appSlice'
 import { useEffect } from 'react'
 import BackendService, { SpendingLimits, CurrencyConfig, SpendingLimit } from './BackendService'
@@ -79,6 +79,7 @@ export default function BudgetsContainer() {
   const categories: string[] = useAppSelector((state) => state.categories)
   const transactions = useAppSelector((state: AppState) => state.transactions)
   const budgets: any[] = useBudgetsSelector((state) => state.budgets)
+  const focusedBudgetName = useBudgetsSelector((state) => state.focusedBudgetName)
 
   useEffect(() => {
     const config = JSON.parse(window.localStorage.config)
@@ -94,5 +95,11 @@ export default function BudgetsContainer() {
     void requestBudgetsFromBackend(backendService)
   }, [dispatch, categories, transactions])
 
-  return <Budgets budgets={budgets} />
+  function handleFocus(budgetName: string) {
+    dispatch(setFocusedBudgetName(budgetName))
+  }
+
+  const focusedBudget = budgets.find((budget) => budget.name === focusedBudgetName) || null
+
+  return <Budgets budgets={budgets} onFocus={handleFocus} focusedBudget={focusedBudget} />
 }

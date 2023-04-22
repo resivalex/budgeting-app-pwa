@@ -14,10 +14,12 @@ export type Budget = {
 
 interface BudgetsState {
   budgets: Budget[]
+  focusedBudgetName: string
 }
 
 const initialState: BudgetsState = {
   budgets: [],
+  focusedBudgetName: '',
 }
 
 export const budgetsSlice = createSlice({
@@ -27,10 +29,13 @@ export const budgetsSlice = createSlice({
     setBudgets: (state, action: PayloadAction<any[]>) => {
       state.budgets = action.payload
     },
+    setFocusedBudgetName: (state, action: PayloadAction<string>) => {
+      state.focusedBudgetName = action.payload
+    },
   },
 })
 
-export const { setBudgets } = budgetsSlice.actions
+export const { setBudgets, setFocusedBudgetName } = budgetsSlice.actions
 
 export function useBudgetsSelector(selector: (state: BudgetsState) => any) {
   return useSelector((state: RootState) => selector(state.budgets))
