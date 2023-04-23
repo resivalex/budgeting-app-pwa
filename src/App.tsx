@@ -11,7 +11,7 @@ import Notification from './Notification'
 import { TransactionDTO } from './Transaction'
 import { AccountDetails } from './TransactionAggregator'
 import { appVersion } from './version'
-import TransactionsContainer from './TransactionsContainer'
+import TransactionsPageContainer from './TransactionPageContainer'
 
 interface AppProps {
   isAuthenticated: boolean
@@ -85,7 +85,7 @@ export default function App(props: AppProps) {
               <Route
                 path="/transactions"
                 element={
-                  <TransactionsContainer
+                  <TransactionsPageContainer
                     transactions={transactions}
                     onRemove={onRemoveTransaction}
                   />
