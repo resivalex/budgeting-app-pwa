@@ -91,7 +91,10 @@ export default function App(props: AppProps) {
                   />
                 }
               />
-              <Route path="/budgets" element={<BudgetsContainer />} />
+              <Route
+                path="/budgets"
+                element={<BudgetsContainer onTransactionRemove={onRemoveTransaction} />}
+              />
               <Route
                 path="/add"
                 element={<TransactionFormContainer onApply={onAddTransaction} />}

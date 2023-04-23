@@ -9,6 +9,10 @@ import { TransactionDTO } from './Transaction'
 
 type ConversionMapType = { [targetCurrency: string]: number }
 
+interface Props {
+  onTransactionRemove: (id: string) => void
+}
+
 function calculateBudget(
   transactions: TransactionDTO[],
   spendingLimit: SpendingLimit,
@@ -92,7 +96,7 @@ function calculateBudgets(
   })
 }
 
-export default function BudgetsContainer() {
+export default function BudgetsContainer({ onTransactionRemove }: Props) {
   const dispatch = useDispatch()
   const categories: string[] = useAppSelector((state) => state.categories)
   const transactions = useAppSelector((state: AppState) => state.transactions)
@@ -119,5 +123,12 @@ export default function BudgetsContainer() {
 
   const focusedBudget = budgets.find((budget) => budget.name === focusedBudgetName) || null
 
-  return <Budgets budgets={budgets} onFocus={handleFocus} focusedBudget={focusedBudget} />
+  return (
+    <Budgets
+      budgets={budgets}
+      onFocus={handleFocus}
+      focusedBudget={focusedBudget}
+      onTransactionRemove={onTransactionRemove}
+    />
+  )
 }

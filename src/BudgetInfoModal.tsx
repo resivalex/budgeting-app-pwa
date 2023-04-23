@@ -1,13 +1,14 @@
 import { Budget } from './redux/budgetsSlice'
 import { formatFinancialAmount, convertCurrencyCodeToSymbol } from './finance-utils'
-import BudgetTransactionsContainer from './BudgetTransactionsContainer'
+import TransactionsContainer from './TransactionsContainer'
 
 interface Props {
   budget: Budget
   onClose: () => void
+  onTransactionRemove: (id: string) => void
 }
 
-export default function BudgetInfoModal({ budget, onClose }: Props) {
+export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }: Props) {
   if (!budget) return null
 
   const { name, currency, amount, categories, transactions, spentAmount } = budget
@@ -43,7 +44,7 @@ export default function BudgetInfoModal({ budget, onClose }: Props) {
             Категории: <strong>{categories.join(', ')}</strong>
           </p>
           <div style={{ height: 300, display: 'flex' }}>
-            <BudgetTransactionsContainer transactions={transactions} />
+            <TransactionsContainer transactions={transactions} onRemove={onTransactionRemove} />
           </div>
         </section>
       </div>

@@ -7,9 +7,10 @@ interface Props {
   budgets: BudgetType[]
   onFocus: (name: string) => void
   focusedBudget: BudgetType | null
+  onTransactionRemove: (id: string) => void
 }
 
-export default function Budgets({ budgets, onFocus, focusedBudget }: Props) {
+export default function Budgets({ budgets, onFocus, focusedBudget, onTransactionRemove }: Props) {
   return (
     <>
       <div className="box" style={{ flex: 1, overflow: 'scroll' }}>
@@ -24,7 +25,13 @@ export default function Budgets({ budgets, onFocus, focusedBudget }: Props) {
           />
         ))}
       </div>{' '}
-      {focusedBudget && <BudgetInfoModal budget={focusedBudget} onClose={() => onFocus('')} />}
+      {focusedBudget && (
+        <BudgetInfoModal
+          budget={focusedBudget}
+          onClose={() => onFocus('')}
+          onTransactionRemove={onTransactionRemove}
+        />
+      )}
     </>
   )
 }
