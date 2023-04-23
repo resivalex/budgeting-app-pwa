@@ -59,7 +59,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
     } else {
       dispatch(reset())
     }
-  }, [dispatch])
+  }, [dispatch, navigate, transaction, transactionId])
 
   if (accounts.length === 0) {
     return null
