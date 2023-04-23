@@ -15,12 +15,5 @@ export default function TransactionsContainer({ transactions, onRemove }: Props)
     navigate(`/transactions/${id}`, { replace: true })
   }
 
-  return (
-    <Transactions
-      transactions={transactions}
-      showRemoveButton={true}
-      onRemove={onRemove}
-      onEdit={handleEdit}
-    />
-  )
+  return <Transactions transactions={transactions} onRemove={onRemove} onEdit={handleEdit} />
 }

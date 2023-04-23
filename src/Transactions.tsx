@@ -8,10 +8,9 @@ interface Props {
   transactions: any[]
   onRemove: (id: string) => void
   onEdit: (id: string) => void
-  showRemoveButton: boolean
 }
 
-export default function Transactions({ transactions, onRemove, onEdit, showRemoveButton }: Props) {
+export default function Transactions({ transactions, onRemove, onEdit }: Props) {
   const [heights, setHeights] = useState<any>({})
   const [focusedTransaction, setFocusedTransaction] = useState<any>(null)
   const listRef: any = useRef(null)
@@ -73,15 +72,10 @@ export default function Transactions({ transactions, onRemove, onEdit, showRemov
         <TransactionInfoModal
           transaction={focusedTransaction}
           onClose={() => setFocusedTransaction(null)}
-          showRemoveButton={showRemoveButton}
-          onRemove={
-            showRemoveButton
-              ? () => {
-                  setFocusedTransaction(null)
-                  onRemove(focusedTransaction._id)
-                }
-              : () => {}
-          }
+          onRemove={() => {
+            setFocusedTransaction(null)
+            onRemove(focusedTransaction._id)
+          }}
           onEdit={onEdit}
         />
       )}

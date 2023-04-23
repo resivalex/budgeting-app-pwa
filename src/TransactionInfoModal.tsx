@@ -8,18 +8,11 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 interface Props {
   transaction: TransactionDTO
   onEdit: (id: string) => void
-  showRemoveButton: boolean
   onRemove: (id: string) => void
   onClose: () => void
 }
 
-export default function TransactionInfoModal({
-  transaction,
-  onClose,
-  showRemoveButton,
-  onRemove,
-  onEdit,
-}: Props) {
+export default function TransactionInfoModal({ transaction, onClose, onRemove, onEdit }: Props) {
   const [isRemoveActive, setIsRemoveActive] = useState(false)
   if (!transaction) return null
 
@@ -71,19 +64,18 @@ export default function TransactionInfoModal({
           <button className="button is-info" onClick={() => onEdit(transaction._id)}>
             <FontAwesomeIcon icon={faEdit} style={{ color: 'white' }} />
           </button>
-          {showRemoveButton && (
-            <button
-              className="button is-danger"
-              style={{ marginLeft: 'auto' }}
-              onClick={() => handleRemoveClick(transaction._id)}
-            >
-              {isRemoveActive ? (
-                <span>Подтвердите удаление</span>
-              ) : (
-                <FontAwesomeIcon icon={faTrash} style={{ color: 'white' }} />
-              )}
-            </button>
-          )}
+
+          <button
+            className="button is-danger"
+            style={{ marginLeft: 'auto' }}
+            onClick={() => handleRemoveClick(transaction._id)}
+          >
+            {isRemoveActive ? (
+              <span>Подтвердите удаление</span>
+            ) : (
+              <FontAwesomeIcon icon={faTrash} style={{ color: 'white' }} />
+            )}
+          </button>
         </footer>
       </div>
     </div>

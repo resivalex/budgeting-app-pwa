@@ -14,12 +14,5 @@ export default function BudgetTransactionsContainer({ transactions }: Props) {
     navigate(`/transactions/${id}`, { replace: true })
   }
 
-  return (
-    <Transactions
-      transactions={transactions}
-      showRemoveButton={false}
-      onRemove={() => {}}
-      onEdit={handleEdit}
-    />
-  )
+  return <Transactions transactions={transactions} onRemove={() => {}} onEdit={handleEdit} />
 }
