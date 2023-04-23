@@ -43,7 +43,7 @@ export default function BudgetInfoModal({ budget, onClose }: Props) {
             Категории: <strong>{categories.join(', ')}</strong>
           </p>
           <div style={{ height: 300, display: 'flex' }}>
-            <Transactions transactions={transactions} onRemove={() => {}} />
+            <Transactions transactions={transactions} onRemove={null} />
           </div>
         </section>
       </div>

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 interface Props {
   transactions: any[]
-  onRemove: (id: string) => void
+  onRemove: ((id: string) => void) | null
 }
 
 export default function Transactions({ transactions, onRemove }: Props) {
@@ -73,10 +73,14 @@ export default function Transactions({ transactions, onRemove }: Props) {
         <TransactionInfoModal
           transaction={focusedTransaction}
           onClose={() => setFocusedTransaction(null)}
-          onRemove={() => {
-            setFocusedTransaction(null)
-            onRemove(focusedTransaction._id)
-          }}
+          onRemove={
+            onRemove
+              ? () => {
+                  setFocusedTransaction(null)
+                  onRemove(focusedTransaction._id)
+                }
+              : null
+          }
           onEdit={() => {
             navigate(`/transactions/${focusedTransaction._id}`, { replace: true })
           }}
