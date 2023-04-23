@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { TransactionDTO } from './Transaction'
-import { convertToUtcTime } from './date-utils'
+import { convertToLocaleTime, convertToUtcTime } from './date-utils'
 import { v4 as uuidv4 } from 'uuid'
 import { AccountDetails } from './TransactionAggregator'
 import TransactionForm from './TransactionForm'
@@ -45,14 +45,14 @@ export default function TransactionFormContainer({ onApply }: Props) {
     if (transactionId) {
       if (transaction) {
         dispatch(setType(transaction.type))
-        dispatch(setAmount(transaction.amount))
+        dispatch(setAmount(`${parseFloat(transaction.amount)}`.replace(',', '.')))
         dispatch(setAccount(transaction.account))
         dispatch(setCurrency(transaction.currency))
         dispatch(setCategory(transaction.category))
         dispatch(setPayee(transaction.payee))
         dispatch(setPayeeTransferAccount(transaction.payeeTransferAccount))
         dispatch(setComment(transaction.comment))
-        dispatch(setDatetime(transaction.datetime))
+        dispatch(setDatetime(convertToLocaleTime(transaction.datetime)))
       } else {
         navigate('/', { replace: true })
       }
