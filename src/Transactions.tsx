@@ -1,4 +1,3 @@
-// Transactions.tsx
 import React, { useRef, useState, useEffect } from 'react'
 import Transaction from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
