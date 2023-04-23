@@ -2,7 +2,6 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './Home'
 import Status from './Status'
-import Transactions from './Transactions'
 import NotFound from './NotFound'
 import TransactionFormContainer from './TransactionFormContainer'
 import BudgetsContainer from './BudgetsContainer'
@@ -12,6 +11,7 @@ import Notification from './Notification'
 import { TransactionDTO } from './Transaction'
 import { AccountDetails } from './TransactionAggregator'
 import { appVersion } from './version'
+import TransactionsContainer from './TransactionsContainer'
 
 interface AppProps {
   isAuthenticated: boolean
@@ -85,7 +85,10 @@ export default function App(props: AppProps) {
               <Route
                 path="/transactions"
                 element={
-                  <Transactions transactions={transactions} onRemove={onRemoveTransaction} />
+                  <TransactionsContainer
+                    transactions={transactions}
+                    onRemove={onRemoveTransaction}
+                  />
                 }
               />
               <Route path="/budgets" element={<BudgetsContainer />} />
