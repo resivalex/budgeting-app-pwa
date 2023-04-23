@@ -1,17 +1,24 @@
 import React, { useRef, useState, useEffect } from 'react'
-import Transaction from './Transaction'
+import Transaction, { TransactionDTO } from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
 
 interface Props {
-  transactions: any[]
+  transactions: TransactionDTO[]
+  focusedTransaction?: TransactionDTO
   onRemove: (id: string) => void
   onEdit: (id: string) => void
+  onFocus: (id: string) => void
 }
 
-export default function Transactions({ transactions, onRemove, onEdit }: Props) {
+export default function Transactions({
+  transactions,
+  focusedTransaction,
+  onRemove,
+  onEdit,
+  onFocus,
+}: Props) {
   const [heights, setHeights] = useState<any>({})
-  const [focusedTransaction, setFocusedTransaction] = useState<any>(null)
   const listRef: any = useRef(null)
 
   useEffect(() => {
@@ -37,7 +44,7 @@ export default function Transactions({ transactions, onRemove, onEdit }: Props) 
             })
           }}
           onLongPress={() => {
-            setFocusedTransaction(transaction)
+            onFocus(transaction._id)
           }}
         />
       </div>
@@ -70,9 +77,9 @@ export default function Transactions({ transactions, onRemove, onEdit }: Props) 
       {focusedTransaction && (
         <TransactionInfoModal
           transaction={focusedTransaction}
-          onClose={() => setFocusedTransaction(null)}
+          onClose={() => onFocus('')}
           onRemove={() => {
-            setFocusedTransaction(null)
+            onFocus('')
             onRemove(focusedTransaction._id)
           }}
           onEdit={onEdit}
