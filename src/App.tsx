@@ -4,7 +4,7 @@ import Home from './Home'
 import Status from './Status'
 import Transactions from './Transactions'
 import NotFound from './NotFound'
-import AddTransactionContainer from './AddTransactionContainer'
+import TransactionFormContainer from './TransactionFormContainer'
 import BudgetsContainer from './BudgetsContainer'
 import Login from './Login'
 import Menu from './Menu'
@@ -87,7 +87,7 @@ export default function App(props: AppProps) {
                 }
               />
               <Route path="/budgets" element={<BudgetsContainer />} />
-              <Route path="/add" element={<AddTransactionContainer onAdd={onAddTransaction} />} />
+              <Route path="/add" element={<TransactionFormContainer onAdd={onAddTransaction} />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

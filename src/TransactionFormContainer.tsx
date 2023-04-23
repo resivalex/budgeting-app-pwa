@@ -25,7 +25,7 @@ interface Props {
   onAdd: (t: TransactionDTO) => void
 }
 
-export default function AddTransactionContainer({ onAdd }: Props) {
+export default function TransactionFormContainer({ onAdd }: Props) {
   const dispatch = useDispatch()
   const transactionForm = useSelector(selectTransactionForm)
   const accounts: AccountDetails[] = useAppSelector((state) => state.accountDetails)
