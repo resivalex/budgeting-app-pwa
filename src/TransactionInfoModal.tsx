@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { convertToLocaleTime } from './date-utils'
 import { TransactionDTO } from './Transaction'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from './finance-utils'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   transaction: TransactionDTO
@@ -60,13 +62,18 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove, o
         </section>
         <footer className="modal-card-foot">
           <button className="button is-info" onClick={() => onEdit(transaction._id)}>
-            Редактировать
+            <FontAwesomeIcon icon={faEdit} style={{ color: 'white' }} />
           </button>
-          <button className="button is-danger" onClick={() => handleRemoveClick(transaction._id)}>
-            {isRemoveActive ? 'Подтвердите удаление' : 'Удалить'}
-          </button>
-          <button className="button" style={{ marginLeft: 'auto' }} onClick={onClose}>
-            Отмена
+          <button
+            className="button is-danger"
+            style={{ marginLeft: 'auto' }}
+            onClick={() => handleRemoveClick(transaction._id)}
+          >
+            {isRemoveActive ? (
+              <span>Подтвердите удаление</span>
+            ) : (
+              <FontAwesomeIcon icon={faTrash} style={{ color: 'white' }} />
+            )}
           </button>
         </footer>
       </div>
