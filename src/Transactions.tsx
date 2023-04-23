@@ -6,11 +6,12 @@ import TransactionInfoModal from './TransactionInfoModal'
 
 interface Props {
   transactions: any[]
-  onRemove: ((id: string) => void) | null
+  onRemove: (id: string) => void
   onEdit: (id: string) => void
+  showRemoveButton: boolean
 }
 
-export default function Transactions({ transactions, onRemove, onEdit }: Props) {
+export default function Transactions({ transactions, onRemove, onEdit, showRemoveButton }: Props) {
   const [heights, setHeights] = useState<any>({})
   const [focusedTransaction, setFocusedTransaction] = useState<any>(null)
   const listRef: any = useRef(null)
@@ -72,13 +73,14 @@ export default function Transactions({ transactions, onRemove, onEdit }: Props) 
         <TransactionInfoModal
           transaction={focusedTransaction}
           onClose={() => setFocusedTransaction(null)}
+          showRemoveButton={showRemoveButton}
           onRemove={
-            onRemove
+            showRemoveButton
               ? () => {
                   setFocusedTransaction(null)
                   onRemove(focusedTransaction._id)
                 }
-              : null
+              : () => {}
           }
           onEdit={onEdit}
         />

@@ -8,11 +8,18 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 interface Props {
   transaction: TransactionDTO
   onEdit: (id: string) => void
-  onRemove: ((id: string) => void) | null
+  showRemoveButton: boolean
+  onRemove: (id: string) => void
   onClose: () => void
 }
 
-export default function TransactionInfoModal({ transaction, onClose, onRemove, onEdit }: Props) {
+export default function TransactionInfoModal({
+  transaction,
+  onClose,
+  showRemoveButton,
+  onRemove,
+  onEdit,
+}: Props) {
   const [isRemoveActive, setIsRemoveActive] = useState(false)
   if (!transaction) return null
 
@@ -21,8 +28,6 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove, o
   const datetimeString = convertToLocaleTime(datetime)
 
   function handleRemoveClick(transactionId: string) {
-    if (onRemove === null) return
-
     if (isRemoveActive) {
       onRemove(transactionId)
     } else {
@@ -66,7 +71,7 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove, o
           <button className="button is-info" onClick={() => onEdit(transaction._id)}>
             <FontAwesomeIcon icon={faEdit} style={{ color: 'white' }} />
           </button>
-          {onRemove !== null && (
+          {showRemoveButton && (
             <button
               className="button is-danger"
               style={{ marginLeft: 'auto' }}

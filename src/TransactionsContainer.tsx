@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 interface Props {
   transactions: any[]
-  onRemove: ((id: string) => void) | null
+  onRemove: (id: string) => void
 }
 
 export default function TransactionsContainer({ transactions, onRemove }: Props) {
@@ -15,5 +15,12 @@ export default function TransactionsContainer({ transactions, onRemove }: Props)
     navigate(`/transactions/${id}`, { replace: true })
   }
 
-  return <Transactions transactions={transactions} onRemove={onRemove} onEdit={handleEdit} />
+  return (
+    <Transactions
+      transactions={transactions}
+      showRemoveButton={true}
+      onRemove={onRemove}
+      onEdit={handleEdit}
+    />
+  )
 }
