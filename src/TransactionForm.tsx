@@ -24,7 +24,7 @@ interface Props {
   datetime: Date
   onAccountChange: (account: string) => void
   onDatetimeChange: (datetime: Date | null) => void
-  onAdd: () => void
+  onSave: () => void
   accounts: AccountDetails[]
   categories: string[]
   currencies: string[]
@@ -52,7 +52,7 @@ function TransactionForm({
   datetime,
   onAccountChange,
   onDatetimeChange,
-  onAdd,
+  onSave,
   accounts,
   categories,
   currencies,
@@ -201,8 +201,8 @@ function TransactionForm({
       </div>
       <div className="field">
         <div className="control">
-          <button className="button is-info" onClick={onAdd} disabled={!isValid}>
-            {isValid ? 'Добавить' : 'Заполните необходимые поля'}
+          <button className="button is-info" onClick={onSave} disabled={!isValid}>
+            {isValid ? 'Сохранить' : 'Заполните необходимые поля'}
           </button>
         </div>
       </div>

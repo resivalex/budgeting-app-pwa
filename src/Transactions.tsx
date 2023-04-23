@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import Transaction from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   transactions: any[]
@@ -18,6 +19,8 @@ export default function Transactions({ transactions, onRemove }: Props) {
       listRef.current.recomputeRowHeights(0)
     }
   }, [transactions, heights])
+
+  const navigate = useNavigate()
 
   if (transactions.length === 0) {
     return <div className="box">Empty</div>
@@ -73,6 +76,9 @@ export default function Transactions({ transactions, onRemove }: Props) {
           onRemove={() => {
             setFocusedTransaction(null)
             onRemove(focusedTransaction._id)
+          }}
+          onEdit={() => {
+            navigate(`/transactions/${focusedTransaction._id}`, { replace: true })
           }}
         />
       )}

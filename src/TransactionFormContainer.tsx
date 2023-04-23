@@ -20,12 +20,14 @@ import {
 import { useAppSelector } from './redux/appSlice'
 import _ from 'lodash'
 import { useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 interface Props {
-  onAdd: (t: TransactionDTO) => void
+  transactionId?: string
+  onApply: (t: TransactionDTO) => void
 }
 
-export default function TransactionFormContainer({ onAdd }: Props) {
+export default function TransactionFormContainer({ onApply }: Props) {
   const dispatch = useDispatch()
   const transactionForm = useSelector(selectTransactionForm)
   const accounts: AccountDetails[] = useAppSelector((state) => state.accountDetails)
@@ -33,10 +35,30 @@ export default function TransactionFormContainer({ onAdd }: Props) {
   const currencies: string[] = useAppSelector((state) => state.currencies)
   const payees: string[] = useAppSelector((state) => state.payees)
   const comments: string[] = useAppSelector((state) => state.comments)
+  const navigate = useNavigate()
+  const { transactionId } = useParams()
+  const transaction = useAppSelector((state) => state.transactions).find(
+    (t: TransactionDTO) => t._id === transactionId
+  )
 
   useEffect(() => {
-    // reset form on mount
-    dispatch(reset())
+    if (transactionId) {
+      if (transaction) {
+        dispatch(setType(transaction.type))
+        dispatch(setAmount(transaction.amount))
+        dispatch(setAccount(transaction.account))
+        dispatch(setCurrency(transaction.currency))
+        dispatch(setCategory(transaction.category))
+        dispatch(setPayee(transaction.payee))
+        dispatch(setPayeeTransferAccount(transaction.payeeTransferAccount))
+        dispatch(setComment(transaction.comment))
+        dispatch(setDatetime(transaction.datetime))
+      } else {
+        navigate('/', { replace: true })
+      }
+    } else {
+      dispatch(reset())
+    }
   }, [dispatch])
 
   if (accounts.length === 0) {
@@ -100,9 +122,9 @@ export default function TransactionFormContainer({ onAdd }: Props) {
     payeeTransferAccount
   )
 
-  const handleAdd = () => {
-    onAdd({
-      _id: uuidv4(),
+  const handleSave = () => {
+    onApply({
+      _id: transactionId || uuidv4(),
       datetime: convertToUtcTime(transactionForm.datetime),
       account: account,
       category: type === 'transfer' ? '' : category,
@@ -133,7 +155,7 @@ export default function TransactionFormContainer({ onAdd }: Props) {
       datetime={new Date(transactionForm.datetime)}
       onAccountChange={(account) => dispatch(setAccount(account))}
       onDatetimeChange={handleDatetimeChange}
-      onAdd={handleAdd}
+      onSave={handleSave}
       accounts={currencyAccounts}
       categories={categories}
       currencies={availableCurrencies}

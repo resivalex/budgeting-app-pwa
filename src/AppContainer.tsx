@@ -106,6 +106,17 @@ export default function AppContainer() {
     navigate('/transactions', { replace: true })
   }
 
+  async function editTransaction(t: TransactionDTO) {
+    const dbService: DbService | null = dbServiceRef.current
+    if (!dbService) {
+      return
+    }
+
+    await dbService.replaceTransaction(t)
+    dispatch(setLastNotificationText('Запись изменена'))
+    navigate('/transactions', { replace: true })
+  }
+
   async function removeTransaction(id: string) {
     const dbService: DbService | null = dbServiceRef.current
     if (!dbService) {
@@ -155,6 +166,7 @@ export default function AppContainer() {
       lastNotificationText={lastNotificationText}
       onLogout={handleLogout}
       onAddTransaction={addTransaction}
+      onEditTransaction={editTransaction}
       onRemoveTransaction={removeTransaction}
       onSuccessfulLogin={handleSuccessfulLogin}
       onCloseError={handleCloseError}

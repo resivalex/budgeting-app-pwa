@@ -22,6 +22,7 @@ interface AppProps {
   lastNotificationText: string
   onLogout: () => void
   onAddTransaction: (transaction: TransactionDTO) => void
+  onEditTransaction: (transaction: TransactionDTO) => void
   onRemoveTransaction: (id: string) => void
   onSuccessfulLogin: () => void
   onCloseError: () => void
@@ -39,6 +40,7 @@ export default function App(props: AppProps) {
     lastNotificationText,
     onLogout,
     onAddTransaction,
+    onEditTransaction,
     onRemoveTransaction,
     onSuccessfulLogin,
     onCloseError,
@@ -87,7 +89,14 @@ export default function App(props: AppProps) {
                 }
               />
               <Route path="/budgets" element={<BudgetsContainer />} />
-              <Route path="/add" element={<TransactionFormContainer onAdd={onAddTransaction} />} />
+              <Route
+                path="/add"
+                element={<TransactionFormContainer onApply={onAddTransaction} />}
+              />
+              <Route
+                path="/transactions/:transactionId"
+                element={<TransactionFormContainer onApply={onEditTransaction} />}
+              />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

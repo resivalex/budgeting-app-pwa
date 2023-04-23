@@ -43,8 +43,22 @@ export default class DbService {
   }
 
   async addTransaction(t: TransactionDTO) {
-    console.log(t)
-    await this.localDB.put(t)
+    try {
+      await this.localDB.put(t)
+    } catch (err) {
+      this.onError(err)
+    }
+  }
+
+  async replaceTransaction(transaction: TransactionDTO) {
+    try {
+      const doc = await this.localDB.get(transaction._id)
+      const updatedDoc = { ...doc, ...transaction }
+
+      await this.localDB.put(updatedDoc)
+    } catch (err) {
+      this.onError(err)
+    }
   }
 
   async removeTransaction(id: string) {

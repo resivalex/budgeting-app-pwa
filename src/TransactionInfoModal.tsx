@@ -5,11 +5,12 @@ import { convertCurrencyCodeToSymbol, formatFinancialAmount } from './finance-ut
 
 interface Props {
   transaction: TransactionDTO
+  onEdit: (id: string) => void
   onRemove: (id: string) => void
   onClose: () => void
 }
 
-export default function TransactionInfoModal({ transaction, onClose, onRemove }: Props) {
+export default function TransactionInfoModal({ transaction, onClose, onRemove, onEdit }: Props) {
   const [isRemoveActive, setIsRemoveActive] = useState(false)
   if (!transaction) return null
 
@@ -58,6 +59,9 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove }:
           </p>
         </section>
         <footer className="modal-card-foot">
+          <button className="button is-info" onClick={() => onEdit(transaction._id)}>
+            Редактировать
+          </button>
           <button className="button is-danger" onClick={() => handleRemoveClick(transaction._id)}>
             {isRemoveActive ? 'Подтвердите удаление' : 'Удалить'}
           </button>
