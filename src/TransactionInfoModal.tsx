@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { convertToLocaleTime } from './date-utils'
 import { TransactionDTO } from './Transaction'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from './finance-utils'
@@ -9,11 +10,20 @@ interface Props {
 }
 
 export default function TransactionInfoModal({ transaction, onClose, onRemove }: Props) {
+  const [isRemoveActive, setIsRemoveActive] = useState(false)
   if (!transaction) return null
 
   const { datetime, account, category, type, amount, currency, payee, comment } = transaction
 
   const datetimeString = convertToLocaleTime(datetime)
+
+  function handleRemoveClick(transactionId: string) {
+    if (isRemoveActive) {
+      onRemove(transactionId)
+    } else {
+      setIsRemoveActive(true)
+    }
+  }
 
   return (
     <div className="modal is-active">
@@ -48,8 +58,8 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove }:
           </p>
         </section>
         <footer className="modal-card-foot">
-          <button className="button is-danger" onClick={() => onRemove(transaction._id)}>
-            Удалить
+          <button className="button is-danger" onClick={() => handleRemoveClick(transaction._id)}>
+            {isRemoveActive ? 'Подтвердите удаление' : 'Удалить'}
           </button>
           <button className="button" style={{ marginLeft: 'auto' }} onClick={onClose}>
             Отмена
