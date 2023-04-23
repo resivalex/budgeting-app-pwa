@@ -1,6 +1,7 @@
 // TransactionsContainer.tsx
 import React from 'react'
 import Transactions from './Transactions'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   transactions: any[]
@@ -8,10 +9,11 @@ interface Props {
 }
 
 export default function TransactionsContainer({ transactions, onRemove }: Props) {
-  return (
-    <Transactions
-      transactions={transactions}
-      onRemove={onRemove}
-    />
-  )
+  const navigate = useNavigate()
+
+  function handleEdit(id: string) {
+    navigate(`/transactions/${id}`, { replace: true })
+  }
+
+  return <Transactions transactions={transactions} onRemove={onRemove} onEdit={handleEdit} />
 }

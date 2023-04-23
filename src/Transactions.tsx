@@ -3,14 +3,14 @@ import React, { useRef, useState, useEffect } from 'react'
 import Transaction from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
-import { useNavigate } from 'react-router-dom'
 
 interface Props {
   transactions: any[]
   onRemove: ((id: string) => void) | null
+  onEdit: (id: string) => void
 }
 
-export default function Transactions({ transactions, onRemove }: Props) {
+export default function Transactions({ transactions, onRemove, onEdit }: Props) {
   const [heights, setHeights] = useState<any>({})
   const [focusedTransaction, setFocusedTransaction] = useState<any>(null)
   const listRef: any = useRef(null)
@@ -20,8 +20,6 @@ export default function Transactions({ transactions, onRemove }: Props) {
       listRef.current.recomputeRowHeights(0)
     }
   }, [transactions, heights])
-
-  const navigate = useNavigate()
 
   if (transactions.length === 0) {
     return <div className="box">Empty</div>
@@ -82,9 +80,7 @@ export default function Transactions({ transactions, onRemove }: Props) {
                 }
               : null
           }
-          onEdit={() => {
-            navigate(`/transactions/${focusedTransaction._id}`, { replace: true })
-          }}
+          onEdit={onEdit}
         />
       )}
     </div>
