@@ -52,28 +52,26 @@ export default function Transactions({
   }
 
   return (
-    <div style={{ flex: 1 }}>
-      {
-        // @ts-ignore
-        <AutoSizer>
-          {({ height, width }: any) => (
-            // @ts-ignore
-            <List
-              ref={listRef}
-              height={height}
-              rowCount={transactions.length}
-              rowHeight={({ index }) => {
-                if (heights[index]) {
-                  return heights[index]
-                }
-                return 80
-              }}
-              rowRenderer={rowRenderer}
-              width={width}
-            />
-          )}
-        </AutoSizer>
-      }
+    <>
+      {/* @ts-ignore */}
+      <AutoSizer>
+        {({ height, width }: any) => (
+          // @ts-ignore
+          <List
+            ref={listRef}
+            height={height}
+            rowCount={transactions.length}
+            rowHeight={({ index }) => {
+              if (heights[index]) {
+                return heights[index]
+              }
+              return 80
+            }}
+            rowRenderer={rowRenderer}
+            width={width}
+          />
+        )}
+      </AutoSizer>
       {focusedTransaction && (
         <TransactionInfoModal
           transaction={focusedTransaction}
@@ -85,6 +83,6 @@ export default function Transactions({
           onEdit={onEdit}
         />
       )}
-    </div>
+    </>
   )
 }
