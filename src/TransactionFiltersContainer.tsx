@@ -12,7 +12,7 @@ export default function TransactionFiltersContainer() {
 
   return (
     <TransactionFilters
-      filterAccountName={filterAccountName}
+      filterAccountName={filterAccountName === '' ? 'Все счета' : filterAccountName}
       accountNames={['Все счета', ...accountNames]}
       onFilterAccountNameChange={(name) => {
         const accountName = name === 'Все счета' ? '' : name
