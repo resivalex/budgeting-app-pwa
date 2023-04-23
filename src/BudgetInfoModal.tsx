@@ -1,6 +1,6 @@
-import Transactions from './Transactions'
 import { Budget } from './redux/budgetsSlice'
 import { formatFinancialAmount, convertCurrencyCodeToSymbol } from './finance-utils'
+import BudgetTransactionsContainer from './BudgetTransactionsContainer'
 
 interface Props {
   budget: Budget
@@ -43,7 +43,7 @@ export default function BudgetInfoModal({ budget, onClose }: Props) {
             Категории: <strong>{categories.join(', ')}</strong>
           </p>
           <div style={{ height: 300, display: 'flex' }}>
-            <Transactions transactions={transactions} onRemove={null} />
+            <BudgetTransactionsContainer transactions={transactions} />
           </div>
         </section>
       </div>
