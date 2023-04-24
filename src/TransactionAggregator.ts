@@ -108,26 +108,30 @@ export default class TransactionAggregator {
   }
 
   getRecentPayees() {
-    const payees: { [name: string]: boolean } = {}
+    const payeesSet: { [name: string]: boolean } = {}
+    const result = []
     const sortedTransactions = _.sortBy(this.transactions, (t) => -new Date(t.datetime).getTime())
     for (const transaction of sortedTransactions) {
-      if (transaction.type !== 'transfer' && transaction.payee) {
-        payees[transaction.payee] = true
+      if (transaction.type !== 'transfer' && transaction.payee && !payeesSet[transaction.payee]) {
+        payeesSet[transaction.payee] = true
+        result.push(transaction.payee)
       }
     }
 
-    return Object.keys(payees)
+    return result
   }
 
   getRecentComments() {
-    const payees: { [name: string]: boolean } = {}
+    const commentsSet: { [name: string]: boolean } = {}
+    const result = []
     const sortedTransactions = _.sortBy(this.transactions, (t) => -new Date(t.datetime).getTime())
     for (const transaction of sortedTransactions) {
-      if (transaction.comment) {
-        payees[transaction.comment] = true
+      if (transaction.comment && !commentsSet[transaction.comment]) {
+        commentsSet[transaction.comment] = true
+        result.push(transaction.comment)
       }
     }
 
-    return Object.keys(payees)
+    return result
   }
 }
