@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from 'react'
 import Transaction, { TransactionDTO } from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
+import { convertToLocaleTime } from './date-utils'
+import dayjs from 'dayjs'
 
 interface Props {
   transactions: TransactionDTO[]
@@ -19,6 +21,7 @@ export default function Transactions({
   onFocus,
 }: Props) {
   const [heights, setHeights] = useState<any>({})
+  const [hasDateHeaderMap, setHasDateHeaderMap] = useState<any>({})
   const listRef: any = useRef(null)
 
   useEffect(() => {
@@ -26,6 +29,20 @@ export default function Transactions({
       listRef.current.recomputeRowHeights(0)
     }
   }, [transactions, heights])
+
+  useEffect(() => {
+    const headerMap: { [transactionId: string]: boolean } = {}
+    let lastDate = 'There will be a fresher transaction date'
+    transactions.forEach((t) => {
+      const localDate = convertToLocaleTime(t.datetime)
+      const currentDate = dayjs(localDate).startOf('day').toISOString()
+      if (currentDate !== lastDate) {
+        headerMap[t._id] = true
+      }
+      lastDate = currentDate
+    })
+    setHasDateHeaderMap(headerMap)
+  }, [transactions])
 
   if (transactions.length === 0) {
     return <div className="box">Empty</div>
@@ -38,6 +55,7 @@ export default function Transactions({
         <Transaction
           key={index}
           t={transaction}
+          hasDateHeader={hasDateHeaderMap[transaction._id]}
           onDimensionsChange={(dimensions: any) => {
             setHeights((prevHeights: any) => {
               return { ...prevHeights, [index]: dimensions.height }

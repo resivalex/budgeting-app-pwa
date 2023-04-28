@@ -5,6 +5,10 @@ import Measure from 'react-measure'
 import { convertToLocaleTime } from './date-utils'
 import { useLongPress, LongPressDetectEvents } from 'use-long-press'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from './finance-utils'
+import dayjs from 'dayjs'
+import ruLocale from 'dayjs/locale/ru'
+
+dayjs.locale(ruLocale)
 
 export interface TransactionDTO {
   _id: string
@@ -20,11 +24,12 @@ export interface TransactionDTO {
 
 interface Props {
   t: TransactionDTO
+  hasDateHeader?: boolean
   onDimensionsChange: any
   onLongPress: () => void
 }
 
-export default function Transaction({ t, onDimensionsChange, onLongPress }: Props) {
+export default function Transaction({ t, hasDateHeader, onDimensionsChange, onLongPress }: Props) {
   const longPressBind = useLongPress(onLongPress, {
     onFinish: onLongPress,
     threshold: 500,
@@ -46,32 +51,41 @@ export default function Transaction({ t, onDimensionsChange, onLongPress }: Prop
     >
       {({ measureRef }: any) => {
         const datetimeString = convertToLocaleTime(t.datetime)
+        const currentDate = dayjs(datetimeString)
 
+        const formattedDate = currentDate.format('D MMMM YYYY, dddd')
         return (
-          <div {...longPressBind()} ref={measureRef} className="box m-1">
-            <div className="is-flex is-justify-content-space-between">
-              <div>
-                <div className="has-text-weight-semibold">{t.category}</div>
-                <div>{t.account}</div>
-                <div className="is-size-7 has-text-weight-semibold">{t.payee}</div>
-                <div className="is-size-7">{t.comment}</div>
+          <div ref={measureRef}>
+            {hasDateHeader && (
+              <div className="has-text-weight-semibold py-1 px-3" style={{ background: '#f3f3f3' }}>
+                {formattedDate}
               </div>
-              <div className="has-text-right">
-                <div
-                  className={classNames('is-size-5', {
-                    'has-text-success': t.type === 'income',
-                    'has-text-danger': t.type === 'expense',
-                  })}
-                  style={{ whiteSpace: 'nowrap' }}
-                >
-                  {t.type === 'expense' && '-'}
-                  {t.type === 'income' && '+'}
-                  {formatFinancialAmount(parseFloat(t.amount))}{' '}
-                  {convertCurrencyCodeToSymbol(t.currency)}
+            )}
+            <div {...longPressBind()} className="box m-0 is-flex">
+              <div className="is-flex is-justify-content-space-between is-flex-grow-1">
+                <div>
+                  <div className="has-text-weight-semibold">{t.category}</div>
+                  <div>{t.account}</div>
+                  <div className="is-size-7 has-text-weight-semibold">{t.payee}</div>
+                  <div className="is-size-7">{t.comment}</div>
                 </div>
-                <div className="is-size-7">
-                  <div className="has-text-grey">{datetimeString.split(' ')[1]}</div>
-                  <div className="has-text-weight-semibold">{datetimeString.split(' ')[0]}</div>
+                <div className="has-text-right">
+                  <div
+                    className={classNames('is-size-5', {
+                      'has-text-success': t.type === 'income',
+                      'has-text-danger': t.type === 'expense',
+                    })}
+                    style={{ whiteSpace: 'nowrap' }}
+                  >
+                    {t.type === 'expense' && '-'}
+                    {t.type === 'income' && '+'}
+                    {formatFinancialAmount(parseFloat(t.amount))}{' '}
+                    {convertCurrencyCodeToSymbol(t.currency)}
+                  </div>
+                  <div className="is-size-7">
+                    <div className="has-text-grey">{datetimeString.split(' ')[1]}</div>
+                    <div className="has-text-weight-semibold">{datetimeString.split(' ')[0]}</div>
+                  </div>
                 </div>
               </div>
             </div>
