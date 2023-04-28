@@ -84,7 +84,6 @@ export default function Transaction({ t, hasDateHeader, onDimensionsChange, onLo
                   </div>
                   <div className="is-size-7">
                     <div className="has-text-grey">{datetimeString.split(' ')[1]}</div>
-                    <div className="has-text-weight-semibold">{datetimeString.split(' ')[0]}</div>
                   </div>
                 </div>
               </div>
