@@ -21,6 +21,7 @@ import { useAppSelector } from './redux/appSlice'
 import _ from 'lodash'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { CategoryExpansions } from './BackendService'
 
 interface Props {
   transactionId?: string
@@ -40,6 +41,15 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const transaction = useAppSelector((state) => state.transactions).find(
     (t: TransactionDTO) => t._id === transactionId
   )
+  const categoryExpansions: CategoryExpansions = window.localStorage.categoryExpansions
+    ? JSON.parse(window.localStorage.categoryExpansions)
+    : { expansions: [] }
+  const categoryNameToExtendedMap: { [name: string]: string } = {}
+  const categoryNameFromExtendedMap: { [extendedName: string]: string } = {}
+  categoryExpansions.expansions.forEach((e) => {
+    categoryNameToExtendedMap[e.name] = e.expandedName
+    categoryNameFromExtendedMap[e.expandedName] = e.name
+  })
 
   useEffect(() => {
     if (transactionId) {
@@ -136,6 +146,9 @@ export default function TransactionFormContainer({ onApply }: Props) {
     })
   }
 
+  const expandedCategory = categoryNameToExtendedMap[category] || category
+  const expandedCategories = categories.map((c) => categoryNameToExtendedMap[c] || c)
+
   return (
     <TransactionForm
       type={type}
@@ -144,8 +157,11 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onAmountChange={(amount: string) => dispatch(setAmount(amount))}
       account={account}
       currency={currency}
-      category={category}
-      onCategoryChange={(category: string) => dispatch(setCategory(category))}
+      category={expandedCategory}
+      onCategoryChange={(category: string) => {
+        const fixedCategory = categoryNameFromExtendedMap[category] || category
+        dispatch(setCategory(fixedCategory))
+      }}
       payee={transactionForm.payee}
       onPayeeChange={(payee: string) => dispatch(setPayee(payee))}
       payeeTransferAccount={payeeTransferAccount}
@@ -157,7 +173,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onDatetimeChange={handleDatetimeChange}
       onSave={handleSave}
       accounts={currencyAccounts}
-      categories={categories}
+      categories={expandedCategories}
       currencies={availableCurrencies}
       onCurrencyChange={(currency: string) => dispatch(setCurrency(currency))}
       isValid={isValid}

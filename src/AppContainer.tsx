@@ -92,7 +92,20 @@ export default function AppContainer() {
       }
       await dbService.synchronize()
     }
+
+    async function loadCategoryExpansions() {
+      if (!window.localStorage.config) {
+        return
+      }
+      const config: ConfigType = JSON.parse(window.localStorage.config)
+      const backendService = new BackendService(config.backendUrl, config.backendToken)
+      const categoryExpansions = await backendService.getCategoryExpansions()
+
+      window.localStorage.categoryExpansions = JSON.stringify(categoryExpansions)
+    }
+
     void loadTransactions()
+    void loadCategoryExpansions()
   }, [isAuthenticated, dispatch])
 
   async function addTransaction(t: TransactionDTO) {

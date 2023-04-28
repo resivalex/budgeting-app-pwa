@@ -31,6 +31,15 @@ export interface SpendingLimits {
   limits: SpendingLimit[]
 }
 
+export interface CategoryExpansion {
+  name: string
+  expandedName: string
+}
+
+export interface CategoryExpansions {
+  expansions: CategoryExpansion[]
+}
+
 class BackendService {
   private readonly backendUrl: string
   private readonly token?: string
@@ -81,6 +90,14 @@ class BackendService {
 
   async getSpendingLimits(): Promise<SpendingLimits> {
     const response = await axios.get(`${this.backendUrl}/spending_limits`, {
+      params: { token: this.token },
+    })
+
+    return response.data
+  }
+
+  async getCategoryExpansions(): Promise<CategoryExpansions> {
+    const response = await axios.get(`${this.backendUrl}/category_expansions`, {
       params: { token: this.token },
     })
 
