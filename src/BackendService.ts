@@ -67,7 +67,7 @@ class BackendService {
 
   async getSettings(): Promise<SettingsData> {
     const response = await axios.get(`${this.backendUrl}/settings`, {
-      params: { token: this.token },
+      headers: { Authorization: `Bearer ${this.token}` },
     })
 
     return {
@@ -77,7 +77,7 @@ class BackendService {
 
   async getCurrencyConfig(): Promise<CurrencyConfig> {
     const response = await axios.get(`${this.backendUrl}/currency_config`, {
-      params: { token: this.token },
+      headers: { Authorization: `Bearer ${this.token}` },
     })
 
     const data = response.data
@@ -90,7 +90,7 @@ class BackendService {
 
   async getSpendingLimits(): Promise<SpendingLimits> {
     const response = await axios.get(`${this.backendUrl}/spending_limits`, {
-      params: { token: this.token },
+      headers: { Authorization: `Bearer ${this.token}` },
     })
 
     return response.data
@@ -98,7 +98,7 @@ class BackendService {
 
   async getCategoryExpansions(): Promise<CategoryExpansions> {
     const response = await axios.get(`${this.backendUrl}/category_expansions`, {
-      params: { token: this.token },
+      headers: { Authorization: `Bearer ${this.token}` },
     })
 
     return response.data
