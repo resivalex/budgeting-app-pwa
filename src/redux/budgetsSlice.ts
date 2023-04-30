@@ -15,11 +15,17 @@ export type Budget = {
 interface BudgetsState {
   budgets: Budget[]
   focusedBudgetName: string
+  budgetMonthFirstDay: string
+  availableMonths: string[]
 }
+
+const currentMonthFirstDay = new Date().toISOString().split('T')[0]
 
 const initialState: BudgetsState = {
   budgets: [],
   focusedBudgetName: '',
+  budgetMonthFirstDay: currentMonthFirstDay,
+  availableMonths: [currentMonthFirstDay],
 }
 
 export const budgetsSlice = createSlice({
@@ -32,10 +38,17 @@ export const budgetsSlice = createSlice({
     setFocusedBudgetName: (state, action: PayloadAction<string>) => {
       state.focusedBudgetName = action.payload
     },
+    setBudgetMonthFirstDay: (state, action: PayloadAction<string>) => {
+      state.budgetMonthFirstDay = action.payload
+    },
+    setAvailableMonths: (state, action: PayloadAction<string[]>) => {
+      state.availableMonths = action.payload
+    },
   },
 })
 
-export const { setBudgets, setFocusedBudgetName } = budgetsSlice.actions
+export const { setBudgets, setFocusedBudgetName, setBudgetMonthFirstDay, setAvailableMonths } =
+  budgetsSlice.actions
 
 export function useBudgetsSelector(selector: (state: BudgetsState) => any) {
   return useSelector((state: RootState) => selector(state.budgets))

@@ -1,11 +1,19 @@
 import { useDispatch } from 'react-redux'
 import { convertToLocaleTime } from './date-utils'
-import { Budget, setBudgets, setFocusedBudgetName, useBudgetsSelector } from './redux/budgetsSlice'
+import {
+  Budget,
+  setBudgets,
+  setFocusedBudgetName,
+  setBudgetMonthFirstDay,
+  setAvailableMonths,
+  useBudgetsSelector,
+} from './redux/budgetsSlice'
 import { AppState, useAppSelector } from './redux/appSlice'
 import { useEffect } from 'react'
 import BackendService, { SpendingLimits, CurrencyConfig } from './BackendService'
 import Budgets from './Budgets'
 import { TransactionDTO } from './Transaction'
+import _ from 'lodash'
 
 type ConversionMapType = { [targetCurrency: string]: number }
 
@@ -127,12 +135,27 @@ function calculateBudgets(
   )
 }
 
+function getAvailableMonths(spendingLimits: SpendingLimits) {
+  const availableMonths: string[] = []
+  spendingLimits.limits.forEach((spendingLimit) => {
+    spendingLimit.monthLimits.forEach((monthLimit) => {
+      if (!availableMonths.includes(monthLimit.date)) {
+        availableMonths.push(monthLimit.date)
+      }
+    })
+  })
+
+  return _.sortBy(availableMonths, (date) => new Date(date).getTime())
+}
+
 export default function BudgetsContainer({ onTransactionRemove }: Props) {
   const dispatch = useDispatch()
   const categories: string[] = useAppSelector((state) => state.categories)
   const transactions = useAppSelector((state: AppState) => state.transactions)
   const budgets: any[] = useBudgetsSelector((state) => state.budgets)
   const focusedBudgetName = useBudgetsSelector((state) => state.focusedBudgetName)
+  const selectedMonth = useBudgetsSelector((state) => state.budgetMonthFirstDay)
+  const availableMonths = useBudgetsSelector((state) => state.availableMonths)
 
   useEffect(() => {
     const config = JSON.parse(window.localStorage.config)
@@ -146,13 +169,15 @@ export default function BudgetsContainer({ onTransactionRemove }: Props) {
         categories,
         spendingLimits,
         currencyConfig,
-        new Date().toISOString().split('T')[0]
+        selectedMonth
       )
+      const availableMonths = getAvailableMonths(spendingLimits)
       dispatch(setBudgets(budgets))
+      dispatch(setAvailableMonths(availableMonths))
     }
 
     void requestBudgetsFromBackend(backendService)
-  }, [dispatch, categories, transactions])
+  }, [dispatch, categories, transactions, selectedMonth])
 
   function handleFocus(budgetName: string) {
     dispatch(setFocusedBudgetName(budgetName))
@@ -163,6 +188,9 @@ export default function BudgetsContainer({ onTransactionRemove }: Props) {
   return (
     <Budgets
       budgets={budgets}
+      selectedMonth={selectedMonth}
+      availableMonths={availableMonths}
+      onMonthSelect={(month) => dispatch(setBudgetMonthFirstDay(month))}
       onFocus={handleFocus}
       focusedBudget={focusedBudget}
       onTransactionRemove={onTransactionRemove}
