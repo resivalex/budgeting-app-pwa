@@ -20,11 +20,16 @@ export interface CurrencyConfig {
   conversionRates: ConversionRate[]
 }
 
-export interface SpendingLimit {
-  name: string
+export interface MonthSpendingLimit {
+  date: string
   currency: string
   amount: number
+}
+
+export interface SpendingLimit {
+  name: string
   categories: string[]
+  monthLimits: MonthSpendingLimit[]
 }
 
 export interface SpendingLimits {
@@ -93,7 +98,18 @@ class BackendService {
       headers: { Authorization: `Bearer ${this.token}` },
     })
 
-    return response.data
+    const data = response.data
+    return {
+      limits: data.limits.map((limit: any) => ({
+        name: limit.name,
+        categories: limit.categories,
+        monthLimits: limit.month_limits.map((monthLimit: any) => ({
+          date: monthLimit.date,
+          currency: monthLimit.currency,
+          amount: monthLimit.amount,
+        })),
+      })),
+    }
   }
 
   async getCategoryExpansions(): Promise<CategoryExpansions> {
