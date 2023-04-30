@@ -15,7 +15,7 @@ import Budgets from './Budgets'
 import { TransactionDTO } from './Transaction'
 import _ from 'lodash'
 
-type ConversionMapType = { [targetCurrency: string]: number }
+type ConversionMapType = { [sourceCurrency: string]: { [targetCurrency: string]: number } }
 
 interface Props {
   onTransactionRemove: (id: string) => void
@@ -50,7 +50,7 @@ function calculateBudget(
       budget.transactions.push(transaction)
       const sign = transaction.type === 'expense' ? 1 : -1
       budget.spentAmount +=
-        sign * parseFloat(transaction.amount) * conversionMap[transaction.currency]
+        sign * parseFloat(transaction.amount) * conversionMap[transaction.currency][budget.currency]
     }
   })
 
@@ -68,9 +68,24 @@ function calculateBudgets(
     return []
   }
   const currencyConfig = monthCurrencyConfig.config
-  const conversionMap: ConversionMapType = { [currencyConfig.mainCurrency]: 1 }
+  const conversionMap: ConversionMapType = {
+    [currencyConfig.mainCurrency]: { [currencyConfig.mainCurrency]: 1 },
+  }
   currencyConfig.conversionRates.forEach((conversionRate) => {
-    conversionMap[conversionRate.currency] = conversionRate.rate
+    conversionMap[currencyConfig.mainCurrency][conversionRate.currency] = 1 / conversionRate.rate
+  })
+  currencyConfig.conversionRates.forEach((conversionRate) => {
+    conversionMap[conversionRate.currency] = {
+      [conversionRate.currency]: 1,
+      [currencyConfig.mainCurrency]: conversionRate.rate,
+    }
+    currencyConfig.conversionRates.forEach((anotherConversionRate) => {
+      if (anotherConversionRate.currency === conversionRate.currency) {
+        return
+      }
+      conversionMap[conversionRate.currency][anotherConversionRate.currency] =
+        conversionRate.rate / anotherConversionRate.rate
+    })
   })
 
   const monthDateObject = new Date(monthDate)
@@ -118,7 +133,8 @@ function calculateBudgets(
     amount: 0,
   }
   monthSpendingLimits.forEach((spendingLimit: MonthSpendingLimit) => {
-    totalLimit.amount += spendingLimit.amount
+    totalLimit.amount +=
+      spendingLimit.amount * conversionMap[spendingLimit.currency][currencyConfig.mainCurrency]
     totalLimit.categories = totalLimit.categories.concat(spendingLimit.categories)
   })
 
@@ -131,9 +147,6 @@ function calculateBudgets(
 
   return [totalLimit, ...monthSpendingLimits, restLimit].map(
     (spendingLimit: MonthSpendingLimit) => {
-      if (spendingLimit.currency !== currencyConfig.mainCurrency) {
-        throw new Error('Limit must be in main currency')
-      }
       return calculateBudget(monthTransactions, spendingLimit, conversionMap)
     }
   )
