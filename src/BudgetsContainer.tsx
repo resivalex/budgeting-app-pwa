@@ -10,7 +10,7 @@ import {
 } from './redux/budgetsSlice'
 import { AppState, useAppSelector } from './redux/appSlice'
 import { useEffect } from 'react'
-import BackendService, { SpendingLimits, CurrencyConfig } from './BackendService'
+import BackendService, { SpendingLimits } from './BackendService'
 import Budgets from './Budgets'
 import { TransactionDTO } from './Transaction'
 import _ from 'lodash'
@@ -61,9 +61,13 @@ function calculateBudgets(
   transactions: TransactionDTO[],
   categories: string[],
   spendingLimits: SpendingLimits,
-  currencyConfig: CurrencyConfig,
   monthDate: string
 ): Budget[] {
+  const monthCurrencyConfig = spendingLimits.monthCurrencyConfigs.find((c) => c.date === monthDate)
+  if (!monthCurrencyConfig) {
+    return []
+  }
+  const currencyConfig = monthCurrencyConfig.config
   const conversionMap: ConversionMapType = { [currencyConfig.mainCurrency]: 1 }
   currencyConfig.conversionRates.forEach((conversionRate) => {
     conversionMap[conversionRate.currency] = conversionRate.rate
@@ -162,15 +166,8 @@ export default function BudgetsContainer({ onTransactionRemove }: Props) {
     const backendService = new BackendService(config.backendUrl, config.backendToken)
 
     async function requestBudgetsFromBackend(backendService: BackendService) {
-      const currencyConfig = await backendService.getCurrencyConfig()
       const spendingLimits = await backendService.getSpendingLimits()
-      const budgets = calculateBudgets(
-        transactions,
-        categories,
-        spendingLimits,
-        currencyConfig,
-        selectedMonth
-      )
+      const budgets = calculateBudgets(transactions, categories, spendingLimits, selectedMonth)
       const availableMonths = getAvailableMonths(spendingLimits)
       dispatch(setBudgets(budgets))
       dispatch(setAvailableMonths(availableMonths))

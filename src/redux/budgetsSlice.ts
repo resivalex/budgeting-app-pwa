@@ -19,7 +19,7 @@ interface BudgetsState {
   availableMonths: string[]
 }
 
-const currentMonthFirstDay = new Date().toISOString().split('T')[0]
+const currentMonthFirstDay = new Date().toISOString().slice(0, 7) + '-01'
 
 const initialState: BudgetsState = {
   budgets: [],

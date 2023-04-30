@@ -32,8 +32,14 @@ export interface SpendingLimit {
   monthLimits: MonthSpendingLimit[]
 }
 
+export interface MonthCurrencyConfig {
+  date: string
+  config: CurrencyConfig
+}
+
 export interface SpendingLimits {
   limits: SpendingLimit[]
+  monthCurrencyConfigs: MonthCurrencyConfig[]
 }
 
 export interface CategoryExpansion {
@@ -80,19 +86,6 @@ class BackendService {
     }
   }
 
-  async getCurrencyConfig(): Promise<CurrencyConfig> {
-    const response = await axios.get(`${this.backendUrl}/currency_config`, {
-      headers: { Authorization: `Bearer ${this.token}` },
-    })
-
-    const data = response.data
-
-    return {
-      mainCurrency: data.main_currency,
-      conversionRates: data.conversion_rates,
-    }
-  }
-
   async getSpendingLimits(): Promise<SpendingLimits> {
     const response = await axios.get(`${this.backendUrl}/spending_limits`, {
       headers: { Authorization: `Bearer ${this.token}` },
@@ -108,6 +101,13 @@ class BackendService {
           currency: monthLimit.currency,
           amount: monthLimit.amount,
         })),
+      })),
+      monthCurrencyConfigs: data.month_currency_configs.map((monthCurrencyConfig: any) => ({
+        date: monthCurrencyConfig.date,
+        config: {
+          mainCurrency: monthCurrencyConfig.config.main_currency,
+          conversionRates: monthCurrencyConfig.config.conversion_rates,
+        },
       })),
     }
   }
