@@ -1,54 +1,8 @@
 import axios from 'axios'
+import { ConfigDataDTO, SpendingLimitsDTO, CategoryExpansionsDTO } from '../types'
 
-export interface ConfigData {
-  backendUrl: string
-  backendToken: string
-  dbUrl: string
-}
-
-export interface SettingsData {
+interface SettingsData {
   transactionsUploadedAt: string
-}
-
-export interface ConversionRate {
-  currency: string
-  rate: number
-}
-
-export interface CurrencyConfig {
-  mainCurrency: string
-  conversionRates: ConversionRate[]
-}
-
-export interface MonthSpendingLimit {
-  date: string
-  currency: string
-  amount: number
-}
-
-export interface SpendingLimit {
-  name: string
-  categories: string[]
-  monthLimits: MonthSpendingLimit[]
-}
-
-export interface MonthCurrencyConfig {
-  date: string
-  config: CurrencyConfig
-}
-
-export interface SpendingLimits {
-  limits: SpendingLimit[]
-  monthCurrencyConfigs: MonthCurrencyConfig[]
-}
-
-export interface CategoryExpansion {
-  name: string
-  expandedName: string
-}
-
-export interface CategoryExpansions {
-  expansions: CategoryExpansion[]
 }
 
 class BackendService {
@@ -60,7 +14,7 @@ class BackendService {
     this.token = token
   }
 
-  async getConfig(password: string): Promise<ConfigData> {
+  async getConfig(password: string): Promise<ConfigDataDTO> {
     try {
       const response = await axios.get(`${this.backendUrl}/config`, {
         params: { password: password },
@@ -86,7 +40,7 @@ class BackendService {
     }
   }
 
-  async getSpendingLimits(): Promise<SpendingLimits> {
+  async getSpendingLimits(): Promise<SpendingLimitsDTO> {
     const response = await axios.get(`${this.backendUrl}/spending_limits`, {
       headers: { Authorization: `Bearer ${this.token}` },
     })
@@ -112,7 +66,7 @@ class BackendService {
     }
   }
 
-  async getCategoryExpansions(): Promise<CategoryExpansions> {
+  async getCategoryExpansions(): Promise<CategoryExpansionsDTO> {
     const response = await axios.get(`${this.backendUrl}/category_expansions`, {
       headers: { Authorization: `Bearer ${this.token}` },
     })

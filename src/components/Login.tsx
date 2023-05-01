@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import BackendService, { ConfigData } from '../services/BackendService'
+import { ConfigDataDTO } from '../types'
+import { BackendService } from '../services'
 
 interface Props {
   onSuccessfulLogin: () => void
@@ -28,7 +29,7 @@ export default function Login({ onSuccessfulLogin }: Props) {
     e.preventDefault()
     try {
       const backendService = new BackendService(backendUrl)
-      const config: ConfigData = await backendService.getConfig(password)
+      const config: ConfigDataDTO = await backendService.getConfig(password)
 
       window.localStorage.config = JSON.stringify(config)
       onLoginSuccess()

@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { TransactionDTO, AccountDetailsDTO } from '../types'
+import { TransactionDTO, AccountDetailsDTO, CategoryExpansionsDTO } from '../types'
 import { convertToLocaleTime, convertToUtcTime } from '../utils/date-utils'
 import { v4 as uuidv4 } from 'uuid'
 import TransactionForm from './TransactionForm'
@@ -20,7 +20,6 @@ import { useAppSelector } from '../redux/appSlice'
 import _ from 'lodash'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { CategoryExpansions } from '../services/BackendService'
 
 interface Props {
   transactionId?: string
@@ -40,7 +39,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const transaction = useAppSelector((state) => state.transactions).find(
     (t: TransactionDTO) => t._id === transactionId
   )
-  const categoryExpansions: CategoryExpansions = window.localStorage.categoryExpansions
+  const categoryExpansions: CategoryExpansionsDTO = window.localStorage.categoryExpansions
     ? JSON.parse(window.localStorage.categoryExpansions)
     : { expansions: [] }
   const categoryNameToExtendedMap: { [name: string]: string } = {}

@@ -12,8 +12,7 @@ import {
   AppState,
 } from '../redux/appSlice'
 import App from './App'
-import DbService from '../services/DbService'
-import BackendService from '../services/BackendService'
+import { DbService, BackendService } from '../services'
 import { TransactionDTO } from '../types'
 
 type ConfigType = {

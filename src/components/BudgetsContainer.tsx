@@ -9,9 +9,9 @@ import {
 } from '../redux/budgetsSlice'
 import { AppState, useAppSelector } from '../redux/appSlice'
 import { useEffect } from 'react'
-import BackendService, { SpendingLimits } from '../services/BackendService'
+import { BackendService } from '../services'
 import Budgets from './Budgets'
-import { TransactionDTO, BudgetDTO } from '../types'
+import { TransactionDTO, BudgetDTO, SpendingLimitsDTO } from '../types'
 import _ from 'lodash'
 
 type ConversionMapType = { [sourceCurrency: string]: { [targetCurrency: string]: number } }
@@ -59,7 +59,7 @@ function calculateBudget(
 function calculateBudgets(
   transactions: TransactionDTO[],
   categories: string[],
-  spendingLimits: SpendingLimits,
+  spendingLimits: SpendingLimitsDTO,
   monthDate: string
 ): BudgetDTO[] {
   const monthCurrencyConfig = spendingLimits.monthCurrencyConfigs.find((c) => c.date === monthDate)
@@ -151,7 +151,7 @@ function calculateBudgets(
   )
 }
 
-function getAvailableMonths(spendingLimits: SpendingLimits) {
+function getAvailableMonths(spendingLimits: SpendingLimitsDTO) {
   const availableMonths: string[] = []
   spendingLimits.limits.forEach((spendingLimit) => {
     spendingLimit.monthLimits.forEach((monthLimit) => {
