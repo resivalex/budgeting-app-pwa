@@ -3,7 +3,6 @@ import { AccountDetailsDTO } from '@/types'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '@/utils'
 
 interface Props {
-  transactions: any[]
   accountDetails: AccountDetailsDTO[]
 }
 

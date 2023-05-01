@@ -30,7 +30,6 @@ export default function AppContainer() {
   const isLoading = useAppSelector((state: AppState) => state.isLoading)
   const offlineMode = useAppSelector((state: AppState) => state.offlineMode)
   const lastNotificationText = useAppSelector((state: AppState) => state.lastNotificationText)
-  const accountDetails = useAppSelector((state: AppState) => state.accountDetails)
   const isInitialized = useAppSelector((state: AppState) => state.isInitialized)
   const dbServiceRef = useRef<DbService | null>(null)
 
@@ -103,8 +102,20 @@ export default function AppContainer() {
       window.localStorage.categoryExpansions = JSON.stringify(categoryExpansions)
     }
 
+    async function loadAccountProperties() {
+      if (!window.localStorage.config) {
+        return
+      }
+      const config: ConfigType = JSON.parse(window.localStorage.config)
+      const backendService = new BackendService(config.backendUrl, config.backendToken)
+      const accountProperties = await backendService.getAccountProperties()
+
+      window.localStorage.accountProperties = JSON.stringify(accountProperties)
+    }
+
     void loadTransactions()
     void loadCategoryExpansions()
+    void loadAccountProperties()
   }, [isAuthenticated, dispatch])
 
   async function addTransaction(t: TransactionDTO) {
@@ -183,7 +194,6 @@ export default function AppContainer() {
       onSuccessfulLogin={handleSuccessfulLogin}
       onCloseError={handleCloseError}
       onDismissNotification={handleDismissNotification}
-      accountDetails={accountDetails}
     />
   )
 }

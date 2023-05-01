@@ -4,11 +4,11 @@ import Status from './Status'
 import NotFound from './NotFound'
 import Notification from './Notification'
 import Menu from './Menu'
-import Home from '../Home'
+import { HomeContainer } from '@/components/Home'
 import { TransactionFormContainer } from '@/components/TransactionForm'
 import { BudgetsContainer } from '../Budgets'
 import Login from '../Login'
-import { TransactionDTO, AccountDetailsDTO } from '@/types'
+import { TransactionDTO } from '@/types'
 import { appVersion } from '@/version'
 import { TransactionsPageContainer } from '../Transactions'
 
@@ -26,7 +26,6 @@ interface AppProps {
   onSuccessfulLogin: () => void
   onCloseError: () => void
   onDismissNotification: () => void
-  accountDetails: AccountDetailsDTO[]
 }
 
 export default function App(props: AppProps) {
@@ -44,7 +43,6 @@ export default function App(props: AppProps) {
     onSuccessfulLogin,
     onCloseError,
     onDismissNotification,
-    accountDetails,
   } = props
 
   return (
@@ -77,10 +75,7 @@ export default function App(props: AppProps) {
             }}
           >
             <Routes>
-              <Route
-                path="/"
-                element={<Home transactions={transactions} accountDetails={accountDetails} />}
-              />
+              <Route path="/" element={<HomeContainer />} />
               <Route
                 path="/transactions"
                 element={

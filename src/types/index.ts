@@ -4,6 +4,7 @@ import { BudgetDTO } from './BudgetDTO'
 import { SpendingLimitsDTO } from './SpendingLimitsDTO'
 import { ConfigDataDTO } from './ConfigDataDTO'
 import { CategoryExpansionsDTO } from './CategoryExpansionsDTO'
+import { AccountPropertiesDTO } from './AccountPropertiesDTO'
 
 export type {
   TransactionDTO,
@@ -12,4 +13,5 @@ export type {
   SpendingLimitsDTO,
   ConfigDataDTO,
   CategoryExpansionsDTO,
+  AccountPropertiesDTO,
 }

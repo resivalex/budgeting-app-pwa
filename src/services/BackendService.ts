@@ -1,5 +1,10 @@
 import axios from 'axios'
-import { ConfigDataDTO, SpendingLimitsDTO, CategoryExpansionsDTO } from '@/types'
+import {
+  ConfigDataDTO,
+  SpendingLimitsDTO,
+  CategoryExpansionsDTO,
+  AccountPropertiesDTO,
+} from '@/types'
 
 interface SettingsData {
   transactionsUploadedAt: string
@@ -41,7 +46,7 @@ class BackendService {
   }
 
   async getSpendingLimits(): Promise<SpendingLimitsDTO> {
-    const response = await axios.get(`${this.backendUrl}/spending_limits`, {
+    const response = await axios.get(`${this.backendUrl}/spending-limits`, {
       headers: { Authorization: `Bearer ${this.token}` },
     })
 
@@ -67,7 +72,15 @@ class BackendService {
   }
 
   async getCategoryExpansions(): Promise<CategoryExpansionsDTO> {
-    const response = await axios.get(`${this.backendUrl}/category_expansions`, {
+    const response = await axios.get(`${this.backendUrl}/category-expansions`, {
+      headers: { Authorization: `Bearer ${this.token}` },
+    })
+
+    return response.data
+  }
+
+  async getAccountProperties(): Promise<AccountPropertiesDTO> {
+    const response = await axios.get(`${this.backendUrl}/account-properties`, {
       headers: { Authorization: `Bearer ${this.token}` },
     })
 
