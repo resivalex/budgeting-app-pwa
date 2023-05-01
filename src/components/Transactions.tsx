@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import Transaction, { TransactionDTO } from './Transaction'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
-import { convertToLocaleTime } from '../date-utils'
+import { convertToLocaleTime } from '../utils/date-utils'
 import dayjs from 'dayjs'
 
 interface Props {

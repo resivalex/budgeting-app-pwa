@@ -1,5 +1,5 @@
 import { Budget } from '../redux/budgetsSlice'
-import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '../finance-utils'
+import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '../utils/finance-utils'
 import TransactionsContainer from './TransactionsContainer'
 
 interface Props {

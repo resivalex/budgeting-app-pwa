@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { convertToLocaleTime } from '../date-utils'
+import { convertToLocaleTime } from '../utils/date-utils'
 import {
   Budget,
   setBudgets,
