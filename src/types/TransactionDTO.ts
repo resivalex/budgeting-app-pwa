@@ -1,4 +1,4 @@
-export default interface TransactionDTO {
+export interface TransactionDTO {
   _id: string
   datetime: string
   account: string

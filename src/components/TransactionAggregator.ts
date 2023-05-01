@@ -1,11 +1,5 @@
 import _ from 'lodash'
-import { TransactionDTO } from '../types'
-
-export type AccountDetails = {
-  account: string
-  currency: string
-  balance: number
-}
+import { TransactionDTO, AccountDetailsDTO } from '../types'
 
 type BalanceChange = {
   account: string
@@ -46,7 +40,7 @@ export default class TransactionAggregator {
     this.transactions = transactions
   }
 
-  getAccountDetails(): AccountDetails[] {
+  getAccountDetails(): AccountDetailsDTO[] {
     const accountsStat = this.transactions.reduce((accountCurrencies: any, transaction: any) => {
       if (!accountCurrencies[transaction.account]) {
         accountCurrencies[transaction.account] = {

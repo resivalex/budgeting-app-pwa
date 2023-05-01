@@ -9,7 +9,7 @@ import Login from './Login'
 import Menu from './Menu'
 import Notification from './Notification'
 import { TransactionDTO } from '../types'
-import { AccountDetails } from './TransactionAggregator'
+import { AccountDetailsDTO } from '../types'
 import { appVersion } from '../version'
 import TransactionsPageContainer from './TransactionPageContainer'
 
@@ -27,7 +27,7 @@ interface AppProps {
   onSuccessfulLogin: () => void
   onCloseError: () => void
   onDismissNotification: () => void
-  accountDetails: AccountDetails[]
+  accountDetails: AccountDetailsDTO[]
 }
 
 export default function App(props: AppProps) {

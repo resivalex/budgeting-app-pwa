@@ -1,8 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { TransactionDTO } from '../types'
+import { TransactionDTO, AccountDetailsDTO } from '../types'
 import { convertToLocaleTime, convertToUtcTime } from '../utils/date-utils'
 import { v4 as uuidv4 } from 'uuid'
-import { AccountDetails } from './TransactionAggregator'
 import TransactionForm from './TransactionForm'
 import {
   setType,
@@ -31,7 +30,7 @@ interface Props {
 export default function TransactionFormContainer({ onApply }: Props) {
   const dispatch = useDispatch()
   const transactionForm = useSelector(selectTransactionForm)
-  const accounts: AccountDetails[] = useAppSelector((state) => state.accountDetails)
+  const accounts: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
   const categories: string[] = useAppSelector((state) => state.categories)
   const currencies: string[] = useAppSelector((state) => state.currencies)
   const payees: string[] = useAppSelector((state) => state.payees)

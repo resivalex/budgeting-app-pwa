@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { RootState } from './store'
-import TransactionAggregator, { AccountDetails } from '../components/TransactionAggregator'
+import TransactionAggregator from '../components/TransactionAggregator'
+import { AccountDetailsDTO } from '../types'
 
 export type AppState = {
   isInitialized: boolean
@@ -11,7 +12,7 @@ export type AppState = {
   isLoading: boolean
   offlineMode: boolean
   lastNotificationText: string
-  accountDetails: AccountDetails[]
+  accountDetails: AccountDetailsDTO[]
   categories: string[]
   currencies: string[]
   payees: string[]

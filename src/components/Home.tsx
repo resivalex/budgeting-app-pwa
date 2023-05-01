@@ -1,10 +1,10 @@
 import React from 'react'
-import { AccountDetails } from './TransactionAggregator'
+import { AccountDetailsDTO } from '../types'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '../utils/finance-utils'
 
 interface Props {
   transactions: any[]
-  accountDetails: AccountDetails[]
+  accountDetails: AccountDetailsDTO[]
 }
 
 export default function Home({ accountDetails }: Props) {
