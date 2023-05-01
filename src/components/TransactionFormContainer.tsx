@@ -21,7 +21,7 @@ import { useAppSelector } from '../redux/appSlice'
 import _ from 'lodash'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { CategoryExpansions } from '../BackendService'
+import { CategoryExpansions } from '../services/BackendService'
 
 interface Props {
   transactionId?: string

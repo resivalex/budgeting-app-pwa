@@ -10,7 +10,7 @@ import {
 } from '../redux/budgetsSlice'
 import { AppState, useAppSelector } from '../redux/appSlice'
 import { useEffect } from 'react'
-import BackendService, { SpendingLimits } from '../BackendService'
+import BackendService, { SpendingLimits } from '../services/BackendService'
 import Budgets from './Budgets'
 import { TransactionDTO } from './Transaction'
 import _ from 'lodash'
