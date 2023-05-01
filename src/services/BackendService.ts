@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ConfigDataDTO, SpendingLimitsDTO, CategoryExpansionsDTO } from '../types'
+import { ConfigDataDTO, SpendingLimitsDTO, CategoryExpansionsDTO } from '@/types'
 
 interface SettingsData {
   transactionsUploadedAt: string

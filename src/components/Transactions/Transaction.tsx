@@ -2,12 +2,11 @@ import React from 'react'
 import classNames from 'classnames'
 // @ts-ignore
 import Measure from 'react-measure'
-import { convertToLocaleTime } from '../utils/date-utils'
+import { convertToLocaleTime, convertCurrencyCodeToSymbol, formatFinancialAmount } from '@/utils'
 import { useLongPress, LongPressDetectEvents } from 'use-long-press'
-import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '../utils/finance-utils'
 import dayjs from 'dayjs'
 import ruLocale from 'dayjs/locale/ru'
-import { TransactionDTO } from '../types'
+import { TransactionDTO } from '@/types'
 
 dayjs.locale(ruLocale)
 

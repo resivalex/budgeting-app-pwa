@@ -1,6 +1,6 @@
-import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '../utils/finance-utils'
-import TransactionsContainer from './TransactionsContainer'
-import { BudgetDTO } from '../types'
+import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '@/utils'
+import { TransactionsContainer } from '@/components/Transactions'
+import { BudgetDTO } from '@/types'
 
 interface Props {
   budget: BudgetDTO

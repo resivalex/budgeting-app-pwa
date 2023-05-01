@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { TransactionDTO, AccountDetailsDTO, CategoryExpansionsDTO } from '../types'
-import { convertToLocaleTime, convertToUtcTime } from '../utils/date-utils'
+import { TransactionDTO, AccountDetailsDTO, CategoryExpansionsDTO } from '@/types'
+import { convertToLocaleTime, convertToUtcTime } from '@/utils'
 import { v4 as uuidv4 } from 'uuid'
 import TransactionForm from './TransactionForm'
 import {
@@ -15,8 +15,8 @@ import {
   setDatetime,
   selectTransactionForm,
   reset,
-} from '../redux/transactionFormSlice'
-import { useAppSelector } from '../redux/appSlice'
+} from '@/redux/transactionFormSlice'
+import { useAppSelector } from '@/redux/appSlice'
 import _ from 'lodash'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'

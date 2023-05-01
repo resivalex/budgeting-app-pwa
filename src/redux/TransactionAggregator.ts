@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { TransactionDTO, AccountDetailsDTO } from '../types'
+import { TransactionDTO, AccountDetailsDTO } from '@/types'
 
 type BalanceChange = {
   account: string

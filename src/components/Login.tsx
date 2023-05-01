@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { ConfigDataDTO } from '../types'
-import { BackendService } from '../services'
+import { ConfigDataDTO } from '@/types'
+import { BackendService } from '@/services'
 
 interface Props {
   onSuccessfulLogin: () => void

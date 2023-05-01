@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store'
 import { useSelector } from 'react-redux'
-import { BudgetDTO } from '../types'
+import { BudgetDTO } from '@/types'
 
 interface BudgetsState {
   budgets: BudgetDTO[]

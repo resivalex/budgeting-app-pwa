@@ -3,7 +3,7 @@ import Budget from './Budget'
 import BudgetInfoModal from './BudgetInfoModal'
 import Select from 'react-select'
 import dayjs from 'dayjs'
-import { BudgetDTO } from '../types'
+import { BudgetDTO } from '@/types'
 
 interface Props {
   budgets: BudgetDTO[]

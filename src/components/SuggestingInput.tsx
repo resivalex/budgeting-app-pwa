@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
-import { reactSelectSmallStyles } from '../utils/react-select-styles'
+import { reactSelectSmallStyles } from '@/utils'
 
 type OptionType = {
   value: string

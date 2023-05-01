@@ -10,10 +10,10 @@ import {
   setLastNotificationText,
   useAppSelector,
   AppState,
-} from '../../redux/appSlice'
+} from '@/redux/appSlice'
 import App from './App'
-import { DbService, BackendService } from '../../services'
-import { TransactionDTO } from '../../types'
+import { DbService, BackendService } from '@/services'
+import { TransactionDTO } from '@/types'
 
 type ConfigType = {
   backendUrl: string

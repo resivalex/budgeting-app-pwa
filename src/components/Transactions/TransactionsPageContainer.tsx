@@ -1,5 +1,5 @@
-import { useTransactionFiltersSelect } from '../redux/transactionFiltersSlice'
-import { TransactionDTO } from '../types'
+import { useTransactionFiltersSelect } from '@/redux/transactionFiltersSlice'
+import { TransactionDTO } from '@/types'
 import TransactionsPage from './TransactionsPage'
 
 interface Props {

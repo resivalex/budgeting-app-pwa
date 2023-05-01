@@ -1,17 +1,17 @@
 import { useDispatch } from 'react-redux'
-import { convertToLocaleTime } from '../utils/date-utils'
+import { convertToLocaleTime } from '@/utils'
 import {
   setBudgets,
   setFocusedBudgetName,
   setBudgetMonthFirstDay,
   setAvailableMonths,
   useBudgetsSelector,
-} from '../redux/budgetsSlice'
-import { AppState, useAppSelector } from '../redux/appSlice'
+} from '@/redux/budgetsSlice'
+import { AppState, useAppSelector } from '@/redux/appSlice'
 import { useEffect } from 'react'
-import { BackendService } from '../services'
+import { BackendService } from '@/services'
 import Budgets from './Budgets'
-import { TransactionDTO, BudgetDTO, SpendingLimitsDTO } from '../types'
+import { TransactionDTO, BudgetDTO, SpendingLimitsDTO } from '@/types'
 import _ from 'lodash'
 
 type ConversionMapType = { [sourceCurrency: string]: { [targetCurrency: string]: number } }

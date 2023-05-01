@@ -1,4 +1,4 @@
-import { TransactionDTO } from '../types'
+import { TransactionDTO } from '@/types'
 import TransactionsContainer from './TransactionsContainer'
 import TransactionFiltersContainer from './TransactionFiltersContainer'
 

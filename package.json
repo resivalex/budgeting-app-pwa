@@ -24,10 +24,12 @@
     "axios": "^1.2.2",
     "bulma": "^0.9.4",
     "classnames": "^2.3.2",
+    "customize-cra": "^1.0.0",
     "dayjs": "^1.11.7",
     "lodash": "^4.17.21",
     "pouchdb": "^8.0.0",
     "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
     "react-datetime-picker": "^5.0.2",
     "react-dom": "^18.2.0",
     "react-measure": "^2.5.2",
@@ -57,10 +59,10 @@
     "workbox-streams": "^6.5.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [

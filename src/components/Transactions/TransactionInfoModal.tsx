@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { convertToLocaleTime } from '../utils/date-utils'
-import { TransactionDTO } from '../types'
-import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '../utils/finance-utils'
+import { convertToLocaleTime, convertCurrencyCodeToSymbol, formatFinancialAmount } from '@/utils'
+import { TransactionDTO } from '@/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 

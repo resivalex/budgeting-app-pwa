@@ -1,6 +1,6 @@
 import React from 'react'
 import BudgetProgressBar from './BudgetProgressBar'
-import { convertCurrencyCodeToSymbol, formatFinancialAmountRounded } from '../utils/finance-utils'
+import { convertCurrencyCodeToSymbol, formatFinancialAmountRounded } from '@/utils'
 import { LongPressDetectEvents, useLongPress } from 'use-long-press'
 
 interface Props {

@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react'
 import Transaction from './Transaction'
-import { TransactionDTO } from '../types'
+import { TransactionDTO } from '@/types'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
-import { convertToLocaleTime } from '../utils/date-utils'
+import { convertToLocaleTime } from '@/utils'
 import dayjs from 'dayjs'
 
 interface Props {

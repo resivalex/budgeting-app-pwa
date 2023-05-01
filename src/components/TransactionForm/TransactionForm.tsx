@@ -1,10 +1,9 @@
 import React from 'react'
 import DateTimePicker from 'react-datetime-picker'
-import { convertCurrencyCodeToSymbol } from '../utils/finance-utils'
+import { convertCurrencyCodeToSymbol, reactSelectSmallStyles } from '@/utils'
 import Select from 'react-select'
-import SuggestingInput from './SuggestingInput'
-import { reactSelectSmallStyles } from '../utils/react-select-styles'
-import { AccountDetailsDTO } from '../types'
+import SuggestingInput from '@/components/SuggestingInput'
+import { AccountDetailsDTO } from '@/types'
 
 interface Props {
   type: 'income' | 'expense' | 'transfer'

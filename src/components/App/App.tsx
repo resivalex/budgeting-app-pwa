@@ -5,12 +5,12 @@ import NotFound from './NotFound'
 import Notification from './Notification'
 import Menu from './Menu'
 import Home from '../Home'
-import TransactionFormContainer from '../TransactionFormContainer'
-import BudgetsContainer from '../BudgetsContainer'
+import { TransactionFormContainer } from '@/components/TransactionForm'
+import { BudgetsContainer } from '../Budgets'
 import Login from '../Login'
-import { TransactionDTO, AccountDetailsDTO } from '../../types'
-import { appVersion } from '../../version'
-import TransactionsPageContainer from '../TransactionPageContainer'
+import { TransactionDTO, AccountDetailsDTO } from '@/types'
+import { appVersion } from '@/version'
+import { TransactionsPageContainer } from '../Transactions'
 
 interface AppProps {
   isAuthenticated: boolean

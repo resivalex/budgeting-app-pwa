@@ -1,6 +1,6 @@
 import React from 'react'
-import { AccountDetailsDTO } from '../types'
-import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '../utils/finance-utils'
+import { AccountDetailsDTO } from '@/types'
+import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '@/utils'
 
 interface Props {
   transactions: any[]
