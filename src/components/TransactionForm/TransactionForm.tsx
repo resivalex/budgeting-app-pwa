@@ -1,9 +1,13 @@
 import React from 'react'
 import DateTimePicker from 'react-datetime-picker'
-import { convertCurrencyCodeToSymbol, reactSelectSmallStyles } from '@/utils'
+import {
+  convertCurrencyCodeToSymbol,
+  reactSelectSmallStyles,
+  reactSelectColorStyles,
+} from '@/utils'
 import Select from 'react-select'
 import SuggestingInput from '@/components/SuggestingInput'
-import { AccountDetailsDTO } from '@/types'
+import { ColoredAccountDetailsDTO } from '@/types'
 
 interface Props {
   type: 'income' | 'expense' | 'transfer'
@@ -24,7 +28,7 @@ interface Props {
   onAccountChange: (account: string) => void
   onDatetimeChange: (datetime: Date | null) => void
   onSave: () => void
-  accounts: AccountDetailsDTO[]
+  accounts: ColoredAccountDetailsDTO[]
   categories: string[]
   currencies: string[]
   onCurrencyChange: (currency: string) => void
@@ -69,6 +73,7 @@ function TransactionForm({
   const accountOptions = accounts.map((a) => ({
     value: a.account,
     label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
+    color: a.color,
   }))
   const categoryOptions = categories.map((c) => ({ value: c, label: c }))
 
@@ -133,7 +138,7 @@ function TransactionForm({
             }}
             options={accountOptions}
             isSearchable={false}
-            styles={reactSelectSmallStyles}
+            styles={reactSelectColorStyles}
           />
         </div>
       </div>

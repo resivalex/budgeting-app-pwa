@@ -1,6 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { TransactionDTO, AccountDetailsDTO, CategoryExpansionsDTO } from '@/types'
-import { convertToLocaleTime, convertToUtcTime } from '@/utils'
+import {
+  TransactionDTO,
+  AccountDetailsDTO,
+  CategoryExpansionsDTO,
+  AccountPropertiesDTO,
+  ColoredAccountDetailsDTO
+} from '@/types'
+import {convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties} from '@/utils'
 import { v4 as uuidv4 } from 'uuid'
 import TransactionForm from './TransactionForm'
 import {
@@ -29,7 +35,7 @@ interface Props {
 export default function TransactionFormContainer({ onApply }: Props) {
   const dispatch = useDispatch()
   const transactionForm = useSelector(selectTransactionForm)
-  const accounts: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
+  const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
   const categories: string[] = useAppSelector((state) => state.categories)
   const currencies: string[] = useAppSelector((state) => state.currencies)
   const payees: string[] = useAppSelector((state) => state.payees)
@@ -48,6 +54,14 @@ export default function TransactionFormContainer({ onApply }: Props) {
     categoryNameToExtendedMap[e.name] = e.expandedName
     categoryNameFromExtendedMap[e.expandedName] = e.name
   })
+
+  const accountProperties: AccountPropertiesDTO = window.localStorage.accountProperties
+    ? JSON.parse(window.localStorage.accountProperties)
+    : { accounts: [] }
+  const accounts: ColoredAccountDetailsDTO[] = mergeAccountDetailsAndProperties(
+    accountDetails,
+    accountProperties
+  )
 
   useEffect(() => {
     if (transactionId) {

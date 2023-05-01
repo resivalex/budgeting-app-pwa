@@ -4,7 +4,8 @@ import {
   formatFinancialAmount,
   formatFinancialAmountRounded,
 } from './finance-utils'
-import { reactSelectSmallStyles } from './react-select-styles'
+import { reactSelectSmallStyles, reactSelectColorStyles } from './react-select-styles'
+import { mergeAccountDetailsAndProperties } from './account-coloring'
 
 export {
   convertToLocaleTime,
@@ -13,4 +14,6 @@ export {
   formatFinancialAmount,
   formatFinancialAmountRounded,
   reactSelectSmallStyles,
+  mergeAccountDetailsAndProperties,
+  reactSelectColorStyles,
 }
