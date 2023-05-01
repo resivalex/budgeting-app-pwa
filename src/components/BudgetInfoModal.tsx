@@ -1,9 +1,9 @@
-import { Budget } from '../redux/budgetsSlice'
 import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '../utils/finance-utils'
 import TransactionsContainer from './TransactionsContainer'
+import { BudgetDTO } from '../types'
 
 interface Props {
-  budget: Budget
+  budget: BudgetDTO
   onClose: () => void
   onTransactionRemove: (id: string) => void
 }

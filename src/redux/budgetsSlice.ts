@@ -1,19 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store'
 import { useSelector } from 'react-redux'
-import { TransactionDTO } from '../types'
-
-export type Budget = {
-  name: string
-  currency: string
-  amount: number
-  categories: string[]
-  transactions: TransactionDTO[]
-  spentAmount: number
-}
+import { BudgetDTO } from '../types'
 
 interface BudgetsState {
-  budgets: Budget[]
+  budgets: BudgetDTO[]
   focusedBudgetName: string
   budgetMonthFirstDay: string
   availableMonths: string[]
@@ -32,7 +23,7 @@ export const budgetsSlice = createSlice({
   name: 'budgets',
   initialState,
   reducers: {
-    setBudgets: (state, action: PayloadAction<Budget[]>) => {
+    setBudgets: (state, action: PayloadAction<BudgetDTO[]>) => {
       state.budgets = action.payload
     },
     setFocusedBudgetName: (state, action: PayloadAction<string>) => {

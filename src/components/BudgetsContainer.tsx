@@ -1,7 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { convertToLocaleTime } from '../utils/date-utils'
 import {
-  Budget,
   setBudgets,
   setFocusedBudgetName,
   setBudgetMonthFirstDay,
@@ -12,7 +11,7 @@ import { AppState, useAppSelector } from '../redux/appSlice'
 import { useEffect } from 'react'
 import BackendService, { SpendingLimits } from '../services/BackendService'
 import Budgets from './Budgets'
-import { TransactionDTO } from '../types'
+import { TransactionDTO, BudgetDTO } from '../types'
 import _ from 'lodash'
 
 type ConversionMapType = { [sourceCurrency: string]: { [targetCurrency: string]: number } }
@@ -33,7 +32,7 @@ function calculateBudget(
   spendingLimit: MonthSpendingLimit,
   conversionMap: ConversionMapType
 ) {
-  const budget: Budget = {
+  const budget: BudgetDTO = {
     name: spendingLimit.name,
     currency: spendingLimit.currency,
     amount: spendingLimit.amount,
@@ -62,7 +61,7 @@ function calculateBudgets(
   categories: string[],
   spendingLimits: SpendingLimits,
   monthDate: string
-): Budget[] {
+): BudgetDTO[] {
   const monthCurrencyConfig = spendingLimits.monthCurrencyConfigs.find((c) => c.date === monthDate)
   if (!monthCurrencyConfig) {
     return []

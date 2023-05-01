@@ -1,17 +1,17 @@
 import React from 'react'
-import { Budget as BudgetType } from '../redux/budgetsSlice'
 import Budget from './Budget'
 import BudgetInfoModal from './BudgetInfoModal'
 import Select from 'react-select'
 import dayjs from 'dayjs'
+import { BudgetDTO } from '../types'
 
 interface Props {
-  budgets: BudgetType[]
+  budgets: BudgetDTO[]
   selectedMonth: string
   availableMonths: string[]
   onMonthSelect: (month: string) => void
   onFocus: (name: string) => void
-  focusedBudget: BudgetType | null
+  focusedBudget: BudgetDTO | null
   onTransactionRemove: (id: string) => void
 }
 
