@@ -25,6 +25,4 @@ yarn-error.log*
 
 .idea
 
-money-flow/
 deploy.sh
-config.json
