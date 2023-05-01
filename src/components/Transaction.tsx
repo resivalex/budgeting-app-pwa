@@ -7,20 +7,9 @@ import { useLongPress, LongPressDetectEvents } from 'use-long-press'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '../utils/finance-utils'
 import dayjs from 'dayjs'
 import ruLocale from 'dayjs/locale/ru'
+import { TransactionDTO } from '../types'
 
 dayjs.locale(ruLocale)
-
-export interface TransactionDTO {
-  _id: string
-  datetime: string
-  account: string
-  category: string
-  type: 'income' | 'expense' | 'transfer'
-  amount: string
-  currency: string
-  payee: string
-  comment: string
-}
 
 interface Props {
   t: TransactionDTO

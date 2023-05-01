@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
-import Transaction, { TransactionDTO } from './Transaction'
+import Transaction from './Transaction'
+import { TransactionDTO } from '../types'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
 import { convertToLocaleTime } from '../utils/date-utils'

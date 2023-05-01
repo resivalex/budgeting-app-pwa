@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { TransactionDTO } from './Transaction'
+import { TransactionDTO } from '../types'
 import { convertToLocaleTime, convertToUtcTime } from '../utils/date-utils'
 import { v4 as uuidv4 } from 'uuid'
 import { AccountDetails } from './TransactionAggregator'

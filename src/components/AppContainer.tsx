@@ -14,7 +14,7 @@ import {
 import App from './App'
 import DbService from '../services/DbService'
 import BackendService from '../services/BackendService'
-import { TransactionDTO } from './Transaction'
+import { TransactionDTO } from '../types'
 
 type ConfigType = {
   backendUrl: string

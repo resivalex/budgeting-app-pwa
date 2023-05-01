@@ -12,7 +12,7 @@ import { AppState, useAppSelector } from '../redux/appSlice'
 import { useEffect } from 'react'
 import BackendService, { SpendingLimits } from '../services/BackendService'
 import Budgets from './Budgets'
-import { TransactionDTO } from './Transaction'
+import { TransactionDTO } from '../types'
 import _ from 'lodash'
 
 type ConversionMapType = { [sourceCurrency: string]: { [targetCurrency: string]: number } }
