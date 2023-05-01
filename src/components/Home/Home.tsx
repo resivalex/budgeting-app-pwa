@@ -1,25 +1,30 @@
 import React from 'react'
-import { AccountDetailsDTO } from '@/types'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '@/utils'
 
-interface Props {
-  accountDetails: AccountDetailsDTO[]
+interface Account {
+  name: string
+  currency: string
+  balance: number
+  color: string
 }
 
-export default function Home({ accountDetails }: Props) {
+interface Props {
+  accounts: Account[]
+}
+
+export default function Home({ accounts }: Props) {
   return (
     <div className="box">
       <div>
-        {accountDetails.map((accountDetail, index) => (
-          <div key={index} className="box my-2">
+        {accounts.map(({ name, currency, balance, color }, index) => (
+          <div key={index} className="box my-2" style={{ backgroundColor: color }}>
             <div className="columns is-mobile">
               <div className="column is-flex-grow-1 has-text-left-tablet">
-                <h3 className="title is-6">{accountDetail.account}</h3>
+                <h3 className="title is-6">{name}</h3>
               </div>
               <div className="column has-text-right">
                 <p>
-                  {formatFinancialAmount(accountDetail.balance)}{' '}
-                  {convertCurrencyCodeToSymbol(accountDetail.currency)}
+                  {formatFinancialAmount(balance)} {convertCurrencyCodeToSymbol(currency)}
                 </p>
               </div>
             </div>
