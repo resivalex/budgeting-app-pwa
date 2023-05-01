@@ -1,1 +1,1 @@
-export const appVersion = '20230501-1900'
+export const appVersion: string = process.env.REACT_APP_VERSION || 'unset'
