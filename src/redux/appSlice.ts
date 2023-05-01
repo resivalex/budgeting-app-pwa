@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { RootState } from './store'
-import TransactionAggregator from '../components/TransactionAggregator'
+import TransactionAggregator from './TransactionAggregator'
 import { AccountDetailsDTO } from '../types'
 
 export type AppState = {
