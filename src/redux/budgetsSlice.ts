@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store'
 import { useSelector } from 'react-redux'
-import { TransactionDTO } from '../Transaction'
+import { TransactionDTO } from '../components/Transaction'
 
 export type Budget = {
   name: string

@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider as ReduxProvider } from 'react-redux'
 import store from './redux/store'
-import AppContainer from './AppContainer'
+import AppContainer from './components/AppContainer'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(

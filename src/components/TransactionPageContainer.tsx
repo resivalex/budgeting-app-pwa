@@ -1,4 +1,4 @@
-import { useTransactionFiltersSelect } from './redux/transactionFiltersSlice'
+import { useTransactionFiltersSelect } from '../redux/transactionFiltersSlice'
 import { TransactionDTO } from './Transaction'
 import TransactionsPage from './TransactionsPage'
 

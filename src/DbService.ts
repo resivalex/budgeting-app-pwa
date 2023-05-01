@@ -1,6 +1,6 @@
 import createDBCallbacks from './dbCallbacks'
 import { initializeLocalPouchDB, initializeRemotePouchDB } from './dbInitialization'
-import { TransactionDTO } from './Transaction'
+import { TransactionDTO } from './components/Transaction'
 import _ from 'lodash'
 
 interface DbServiceProps {

@@ -10,7 +10,7 @@ import Menu from './Menu'
 import Notification from './Notification'
 import { TransactionDTO } from './Transaction'
 import { AccountDetails } from './TransactionAggregator'
-import { appVersion } from './version'
+import { appVersion } from '../version'
 import TransactionsPageContainer from './TransactionPageContainer'
 
 interface AppProps {

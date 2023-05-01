@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { RootState } from './store'
-import TransactionAggregator, { AccountDetails } from '../TransactionAggregator'
+import TransactionAggregator, { AccountDetails } from '../components/TransactionAggregator'
 
 export type AppState = {
   isInitialized: boolean

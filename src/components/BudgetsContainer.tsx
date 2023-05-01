@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { convertToLocaleTime } from './date-utils'
+import { convertToLocaleTime } from '../date-utils'
 import {
   Budget,
   setBudgets,
@@ -7,10 +7,10 @@ import {
   setBudgetMonthFirstDay,
   setAvailableMonths,
   useBudgetsSelector,
-} from './redux/budgetsSlice'
-import { AppState, useAppSelector } from './redux/appSlice'
+} from '../redux/budgetsSlice'
+import { AppState, useAppSelector } from '../redux/appSlice'
 import { useEffect } from 'react'
-import BackendService, { SpendingLimits } from './BackendService'
+import BackendService, { SpendingLimits } from '../BackendService'
 import Budgets from './Budgets'
 import { TransactionDTO } from './Transaction'
 import _ from 'lodash'

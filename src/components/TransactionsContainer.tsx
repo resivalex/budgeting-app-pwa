@@ -6,7 +6,7 @@ import {
   setTransactions,
   useTransactionsSelect,
   setFocusedTransactionId,
-} from './redux/transactionsSlice'
+} from '../redux/transactionsSlice'
 import { TransactionDTO } from './Transaction'
 
 interface Props {

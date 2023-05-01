@@ -1,5 +1,5 @@
 import React from 'react'
-import { Budget as BudgetType } from './redux/budgetsSlice'
+import { Budget as BudgetType } from '../redux/budgetsSlice'
 import Budget from './Budget'
 import BudgetInfoModal from './BudgetInfoModal'
 import Select from 'react-select'
