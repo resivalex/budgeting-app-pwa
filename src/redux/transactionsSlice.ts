@@ -23,10 +23,14 @@ export const budgetsSlice = createSlice({
     setFocusedTransactionId: (state, action: PayloadAction<string>) => {
       state.focusedTransactionId = action.payload
     },
+    resetFocusedTransactionId: (state) => {
+      state.focusedTransactionId = ''
+    },
   },
 })
 
-export const { setTransactions, setFocusedTransactionId } = budgetsSlice.actions
+export const { setTransactions, setFocusedTransactionId, resetFocusedTransactionId } =
+  budgetsSlice.actions
 
 export function useTransactionsSelect(selector: (state: TransactionsState) => any) {
   return useSelector((state: RootState) => selector(state.transactions))

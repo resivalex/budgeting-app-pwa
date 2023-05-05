@@ -6,6 +6,7 @@ import {
   setTransactions,
   useTransactionsSelect,
   setFocusedTransactionId,
+  resetFocusedTransactionId,
 } from '@/redux/transactionsSlice'
 import { TransactionDTO } from '@/types'
 
@@ -39,6 +40,7 @@ export default function TransactionsContainer({ transactions, onRemove }: Props)
       onRemove={onRemove}
       onEdit={handleEdit}
       onFocus={(id: string) => dispatch(setFocusedTransactionId(id))}
+      onUnfocus={() => dispatch(resetFocusedTransactionId())}
     />
   )
 }

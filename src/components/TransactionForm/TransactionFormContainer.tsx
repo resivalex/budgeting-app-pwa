@@ -4,9 +4,9 @@ import {
   AccountDetailsDTO,
   CategoryExpansionsDTO,
   AccountPropertiesDTO,
-  ColoredAccountDetailsDTO
+  ColoredAccountDetailsDTO,
 } from '@/types'
-import {convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties} from '@/utils'
+import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties } from '@/utils'
 import { v4 as uuidv4 } from 'uuid'
 import TransactionForm from './TransactionForm'
 import {
@@ -23,6 +23,8 @@ import {
   reset,
 } from '@/redux/transactionFormSlice'
 import { useAppSelector } from '@/redux/appSlice'
+import { setAccountName } from '@/redux/transactionFiltersSlice'
+import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 import _ from 'lodash'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -156,6 +158,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
       payee: type === 'transfer' ? payeeTransferAccount : transactionForm.payee,
       comment: transactionForm.comment,
     })
+    dispatch(setAccountName(account))
+    dispatch(resetFocusedTransactionId())
   }
 
   const expandedCategory = categoryNameToExtendedMap[category] || category

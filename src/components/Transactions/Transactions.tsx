@@ -12,6 +12,7 @@ interface Props {
   onRemove: (id: string) => void
   onEdit: (id: string) => void
   onFocus: (id: string) => void
+  onUnfocus: () => void
 }
 
 export default function Transactions({
@@ -20,6 +21,7 @@ export default function Transactions({
   onRemove,
   onEdit,
   onFocus,
+  onUnfocus,
 }: Props) {
   const [heights, setHeights] = useState<any>({})
   const [hasDateHeaderMap, setHasDateHeaderMap] = useState<any>({})
@@ -94,9 +96,9 @@ export default function Transactions({
       {focusedTransaction && (
         <TransactionInfoModal
           transaction={focusedTransaction}
-          onClose={() => onFocus('')}
+          onClose={() => onUnfocus()}
           onRemove={() => {
-            onFocus('')
+            onUnfocus()
             onRemove(focusedTransaction._id)
           }}
           onEdit={onEdit}
