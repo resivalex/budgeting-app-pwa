@@ -158,7 +158,9 @@ export default function TransactionFormContainer({ onApply }: Props) {
       payee: type === 'transfer' ? payeeTransferAccount : transactionForm.payee,
       comment: transactionForm.comment,
     })
-    dispatch(setAccountName(account))
+    if (!transactionId) {
+      dispatch(setAccountName(account))
+    }
     dispatch(resetFocusedTransactionId())
   }
 

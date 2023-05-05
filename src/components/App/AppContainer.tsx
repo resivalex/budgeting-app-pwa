@@ -14,6 +14,7 @@ import {
 import App from './App'
 import { DbService, BackendService } from '@/services'
 import { TransactionDTO } from '@/types'
+import _ from 'lodash'
 
 type ConfigType = {
   backendUrl: string
@@ -75,7 +76,10 @@ export default function AppContainer() {
       const dbService = new DbService({
         dbUrl: config.dbUrl,
         onLoading: (value) => dispatch(setIsLoading(value)),
-        onDocsRead: (docs) => dispatch(setTransactions(docs)),
+        onDocsRead: (docs) => {
+          const sortedDocs = _.sortBy(docs, (doc: TransactionDTO) => doc.datetime).reverse()
+          dispatch(setTransactions(sortedDocs))
+        },
         onError: (err) => dispatch(setError(err)),
         shouldReset: shouldReset,
       })
@@ -125,6 +129,14 @@ export default function AppContainer() {
     }
 
     await dbService.addTransaction(t)
+
+    const newTransactions = [...transactions, t]
+    const sortedTransactions = _.sortBy(
+      newTransactions,
+      (doc: TransactionDTO) => doc.datetime
+    ).reverse()
+    dispatch(setTransactions(sortedTransactions))
+
     dispatch(setLastNotificationText('Запись добавлена'))
     navigate('/transactions', { replace: true })
   }
@@ -136,6 +148,17 @@ export default function AppContainer() {
     }
 
     await dbService.replaceTransaction(t)
+
+    // replace transaction in redux store
+    const newTransactions = [...transactions]
+    const index = newTransactions.findIndex((transaction) => transaction._id === t._id)
+    newTransactions[index] = t
+    const sortedTransactions = _.sortBy(
+      newTransactions,
+      (doc: TransactionDTO) => doc.datetime
+    ).reverse()
+    dispatch(setTransactions(sortedTransactions))
+
     dispatch(setLastNotificationText('Запись изменена'))
     navigate('/transactions', { replace: true })
   }
@@ -147,6 +170,13 @@ export default function AppContainer() {
     }
 
     await dbService.removeTransaction(id)
+
+    // remove transaction from redux store
+    const newTransactions = [...transactions]
+    const index = newTransactions.findIndex((transaction) => transaction._id === id)
+    newTransactions.splice(index, 1)
+    dispatch(setTransactions(newTransactions))
+
     dispatch(setLastNotificationText('Запись удалена'))
   }
 

@@ -76,7 +76,6 @@ export default class DbService {
         .then((result: any) => {
           // Extract the documents from the result
           const docs = result.rows.map((row: any) => row.doc)
-          docs.sort((a: any, b: any) => (a.datetime > b.datetime ? -1 : 1))
           resolve(docs)
         })
         .catch((err: any) => {
