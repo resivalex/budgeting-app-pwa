@@ -65,6 +65,7 @@ export default function App(props: AppProps) {
           }}
         >
           <Menu handleLogout={onLogout} appVersion={appVersion} offlineMode={offlineMode} />
+          <Status isLoading={isLoading} error={error} onClose={onCloseError} />
           <div
             style={{
               width: '100%',
@@ -104,7 +105,6 @@ export default function App(props: AppProps) {
       ) : (
         <Login onSuccessfulLogin={onSuccessfulLogin} />
       )}
-      <Status isLoading={isLoading} error={error} onClose={onCloseError} />
     </div>
   )
 }

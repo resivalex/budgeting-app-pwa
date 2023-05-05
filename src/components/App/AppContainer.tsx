@@ -92,6 +92,11 @@ export default function AppContainer() {
           await dbService.reset()
         }
       }
+
+      const initialDocs = await dbService.readAllDocs()
+      const sortedDocs = _.sortBy(initialDocs, (doc: TransactionDTO) => doc.datetime).reverse()
+      dispatch(setTransactions(sortedDocs))
+
       await dbService.synchronize()
     }
 

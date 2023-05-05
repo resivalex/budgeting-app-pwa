@@ -14,6 +14,26 @@ export default function Status({ error, isLoading, onClose }: Props) {
     return null
   }
 
+  if (!error) {
+    return (
+      <progress
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          height: '5px',
+          zIndex: 1000,
+          borderRadius: 0,
+        }}
+        className="progress is-info"
+        max="100"
+      >
+        15%
+      </progress>
+    )
+  }
+
   return (
     <div className={classNames('modal', { 'is-active': visible })}>
       <div className="modal-background" style={{ backgroundColor: 'rgba(255, 255, 255)' }}></div>
