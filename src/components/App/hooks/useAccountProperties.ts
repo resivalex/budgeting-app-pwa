@@ -1,12 +1,8 @@
 import { useEffect } from 'react'
 import { BackendService } from '@/services'
 
-export function useAccountProperties(backendService: BackendService | null) {
+export function useAccountProperties(backendService: BackendService) {
   useEffect(() => {
-    if (!backendService) {
-      return
-    }
-
     async function loadAccountProperties() {
       const accountProperties = await (backendService as BackendService).getAccountProperties()
 
