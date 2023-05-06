@@ -1,28 +1,18 @@
 import { useEffect } from 'react'
 import { BackendService } from '@/services'
 
-type ConfigType = {
-  backendUrl: string
-  backendToken: string
-}
-
-export function useCategoryExpansions(config: ConfigType | null) {
+export function useCategoryExpansions(backendService: BackendService | null) {
   useEffect(() => {
-    if (!config) {
+    if (!backendService) {
       return
     }
-    const notNullConfig = config as ConfigType
 
     async function loadCategoryExpansions() {
-      const backendService = new BackendService(
-        notNullConfig.backendUrl,
-        notNullConfig.backendToken
-      )
-      const categoryExpansions = await backendService.getCategoryExpansions()
+      const categoryExpansions = await (backendService as BackendService).getCategoryExpansions()
 
       window.localStorage.categoryExpansions = JSON.stringify(categoryExpansions)
     }
 
     void loadCategoryExpansions()
-  }, [config])
+  }, [backendService])
 }

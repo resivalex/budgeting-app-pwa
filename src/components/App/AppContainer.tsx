@@ -36,6 +36,8 @@ export default function AppContainer() {
   const [hasFailedPush, setHasFailedPush] = useState(false)
   const pushIntervalRef = useRef<number | null>(null)
   const [config, setConfig] = useState<ConfigType | null>(null)
+  const [backendService, setBackendService] = useState<BackendService | null>(null)
+  const [dbService, setDbService] = useState<DbService | null>(null)
 
   useEffect(() => {
     const localStorageConfig: ConfigType | null = window.localStorage.config
@@ -50,31 +52,41 @@ export default function AppContainer() {
     }
   }, [config, dispatch])
 
-  useCategoryExpansions(config)
-  useAccountProperties(config)
-
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!config) {
       return
     }
+    const service = new BackendService(config.backendUrl, config.backendToken)
+    setBackendService(service)
+  }, [config])
+
+  useEffect(() => {
+    if (!config) {
+      return
+    }
+    const service = new DbService({
+      dbUrl: config.dbUrl,
+      onLoading: (value) => dispatch(setIsLoading(value)),
+    })
+    setDbService(service)
+  }, [config, dispatch])
+
+  useCategoryExpansions(backendService)
+  useAccountProperties(backendService)
+
+  useEffect(() => {
+    if (!backendService) {
+      return
+    }
+    if (!dbService) {
+      return
+    }
+    const nonNullBackendService = backendService as BackendService
+    const nonNullDbService = dbService as DbService
+
     async function loadTransactions() {
-      if (!config) {
-        return
-      }
-
-      const backendService = new BackendService(config.backendUrl, config.backendToken)
-
-      if (dbServiceRef.current) {
-        return
-      }
-      const dbService = new DbService({
-        dbUrl: config.dbUrl,
-        onLoading: (value) => dispatch(setIsLoading(value)),
-      })
-      dbServiceRef.current = dbService
-
       async function updateTransactionsFromLocalDb() {
-        const docs = await dbService.readAllDocs()
+        const docs = await nonNullDbService.readAllDocs()
         const sortedDocs = _.sortBy(docs, (doc: TransactionDTO) => doc.datetime).reverse()
         dispatch(setTransactions(sortedDocs))
       }
@@ -83,15 +95,15 @@ export default function AppContainer() {
 
       async function pullDataFromRemote() {
         try {
-          const checkSettings = await backendService.getSettings()
+          const checkSettings = await nonNullBackendService.getSettings()
 
           const dbChanged =
             window.localStorage.transactionsUploadedAt !== checkSettings.transactionsUploadedAt
           if (dbChanged) {
-            await dbService.reset()
+            await nonNullDbService.reset()
             window.localStorage.transactionsUploadedAt = checkSettings.transactionsUploadedAt
           }
-          if (await dbService.pullChanges()) {
+          if (await nonNullDbService.pullChanges()) {
             await updateTransactionsFromLocalDb()
           }
           dispatch(setOfflineMode(false))
@@ -110,7 +122,7 @@ export default function AppContainer() {
     }
 
     void loadTransactions()
-  }, [isAuthenticated, dispatch])
+  }, [backendService, dbService, dispatch])
 
   async function pushChangesWithRetry(dbService: DbService) {
     try {
