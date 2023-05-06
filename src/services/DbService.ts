@@ -1,7 +1,15 @@
 import createDBCallbacks from './dbCallbacks'
-import { initializeLocalPouchDB, initializeRemotePouchDB } from './dbInitialization'
 import { TransactionDTO } from '@/types'
 import _ from 'lodash'
+import PouchDB from 'pouchdb'
+
+function initializeLocalPouchDB() {
+  return new PouchDB('budgeting')
+}
+
+function initializeRemotePouchDB(dbUrl: string) {
+  return new PouchDB(dbUrl + '/budgeting')
+}
 
 interface DbServiceProps {
   dbUrl: string
