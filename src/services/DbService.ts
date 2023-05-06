@@ -1,6 +1,4 @@
-import createDBCallbacks from './dbCallbacks'
 import { TransactionDTO } from '@/types'
-import _ from 'lodash'
 import PouchDB from 'pouchdb'
 
 function initializeLocalPouchDB() {
@@ -15,31 +13,17 @@ interface DbServiceProps {
   dbUrl: string
   onLoading?: (isLoading: boolean) => void
   onDocsRead?: (docs: any[]) => void
-  onError?: (error: any) => void
-  shouldReset?: () => Promise<boolean>
 }
 
 export default class DbService {
   private readonly dbUrl: string
   private readonly onLoading: (isLoading: boolean) => void
-  private readonly onDocsRead: (docs: any[]) => void
-  private readonly onError: (error: any) => void
   private localDB: any
-  private remoteDB: any
-  private shouldReset: () => Promise<boolean>
-  private debouncedReadAllDocs: () => void
+  private readonly remoteDB: any
 
   constructor(props: DbServiceProps) {
     this.dbUrl = props.dbUrl
     this.onLoading = props.onLoading || (() => {})
-    this.onDocsRead = props.onDocsRead || (() => {})
-    this.onError = props.onError || (() => {})
-    this.shouldReset = props.shouldReset || (() => Promise.resolve(false))
-    this.debouncedReadAllDocs = _.debounce(this.readDocs, 1000, {
-      leading: false,
-      trailing: true,
-      maxWait: 5000,
-    })
 
     this.localDB = initializeLocalPouchDB()
     this.remoteDB = initializeRemotePouchDB(this.dbUrl)
@@ -51,22 +35,14 @@ export default class DbService {
   }
 
   async addTransaction(t: TransactionDTO) {
-    try {
-      await this.localDB.put(t)
-    } catch (err) {
-      this.onError(err)
-    }
+    await this.localDB.put(t)
   }
 
   async replaceTransaction(transaction: TransactionDTO) {
-    try {
-      const doc = await this.localDB.get(transaction._id)
-      const updatedDoc = { ...doc, ...transaction }
+    const doc = await this.localDB.get(transaction._id)
+    const updatedDoc = { ...doc, ...transaction }
 
-      await this.localDB.put(updatedDoc)
-    } catch (err) {
-      this.onError(err)
-    }
+    await this.localDB.put(updatedDoc)
   }
 
   async removeTransaction(id: string) {
@@ -76,55 +52,52 @@ export default class DbService {
 
   async readAllDocs(): Promise<any[]> {
     console.log('readAllDocs')
-    return new Promise((resolve, reject) => {
-      this.localDB
-        .allDocs({
-          include_docs: true,
+    const result = await this.localDB.allDocs({ include_docs: true })
+    return result.rows.map((row: any) => row.doc)
+  }
+
+  async pushChanges() {
+    console.log('pushChanges')
+    this.onLoading(true)
+    try {
+      await this.localDB.replicate.to(this.remoteDB, {
+        live: false,
+        retry: false,
+      })
+      console.log('pushChanges complete')
+    } catch (e) {
+      console.log('pushChanges error', e)
+    }
+    this.onLoading(false)
+  }
+
+  async pullChanges(): Promise<boolean> {
+    console.log('pullChanges')
+    this.onLoading(true)
+
+    let hasChanges = false
+
+    return new Promise<boolean>((resolve, reject) => {
+      this.localDB.replicate
+        .from(this.remoteDB, {
+          live: false,
+          retry: false,
         })
-        .then((result: any) => {
-          // Extract the documents from the result
-          const docs = result.rows.map((row: any) => row.doc)
-          resolve(docs)
+        .on('change', (info: any) => {
+          if (info.docs_read > 0) {
+            hasChanges = true
+          }
         })
-        .catch((err: any) => {
+        .on('complete', () => {
+          console.log('pullChanges complete')
+          this.onLoading(false)
+          resolve(hasChanges)
+        })
+        .on('error', (err: any) => {
+          console.log('pullChanges error')
+          this.onLoading(false)
           reject(err)
         })
     })
-  }
-
-  private async readDocs() {
-    try {
-      const docs = await this.readAllDocs()
-      this.onDocsRead(docs)
-    } catch (err) {
-      this.onError(err)
-    }
-  }
-
-  async synchronize() {
-    const dbCallbacks = createDBCallbacks(this.onLoading)
-
-    try {
-      this.localDB
-        .sync(this.remoteDB, {
-          live: true,
-          retry: true,
-        })
-        .on('change', dbCallbacks.handleDBChange)
-        .on('paused', async () => {
-          dbCallbacks.handleDBPaused()
-          if (await this.shouldReset()) {
-            await this.reset()
-            await this.synchronize()
-          }
-          this.debouncedReadAllDocs()
-        })
-        .on('active', dbCallbacks.handleDBActive)
-        .on('denied', dbCallbacks.handleDBDenied)
-        .on('complete', dbCallbacks.handleDBComplete)
-        .on('error', dbCallbacks.handleDBError)
-    } catch (err: any) {
-      this.onError(err.toString())
-    }
   }
 }

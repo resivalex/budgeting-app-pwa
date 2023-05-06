@@ -15,7 +15,6 @@ import { TransactionsPageContainer } from '../Transactions'
 interface AppProps {
   isAuthenticated: boolean
   transactions: any
-  error: string
   isLoading: boolean
   offlineMode: boolean
   lastNotificationText: string
@@ -24,7 +23,6 @@ interface AppProps {
   onEditTransaction: (transaction: TransactionDTO) => void
   onRemoveTransaction: (id: string) => void
   onSuccessfulLogin: () => void
-  onCloseError: () => void
   onDismissNotification: () => void
 }
 
@@ -32,7 +30,6 @@ export default function App(props: AppProps) {
   const {
     isAuthenticated,
     transactions,
-    error,
     isLoading,
     offlineMode,
     lastNotificationText,
@@ -41,7 +38,6 @@ export default function App(props: AppProps) {
     onEditTransaction,
     onRemoveTransaction,
     onSuccessfulLogin,
-    onCloseError,
     onDismissNotification,
   } = props
 
@@ -60,12 +56,11 @@ export default function App(props: AppProps) {
           style={{
             height: '100vh',
             display: 'flex',
-            flexDirection: 'column',
-            backgroundColor: offlineMode ? 'gray' : 'white',
+            flexDirection: 'column'
           }}
         >
           <Menu handleLogout={onLogout} appVersion={appVersion} offlineMode={offlineMode} />
-          <Status isLoading={isLoading} error={error} onClose={onCloseError} />
+          <Status isLoading={isLoading} />
           <div
             style={{
               width: '100%',
