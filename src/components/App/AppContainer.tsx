@@ -42,10 +42,13 @@ export default function AppContainer() {
       ? JSON.parse(window.localStorage.config)
       : null
     setConfig(localStorageConfig)
-    if (window.localStorage.config) {
+  }, [])
+
+  useEffect(() => {
+    if (config) {
       dispatch(setIsAuthenticated(true))
     }
-  }, [])
+  }, [config, dispatch])
 
   useCategoryExpansions(config)
   useAccountProperties(config)
