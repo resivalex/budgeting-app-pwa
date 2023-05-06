@@ -11,6 +11,7 @@ import {
   AppState,
 } from '@/redux/appSlice'
 import App from './App'
+import Login from './Login'
 import { DbService, BackendService } from '@/services'
 import { TransactionDTO } from '@/types'
 import _ from 'lodash'
@@ -232,9 +233,11 @@ export default function AppContainer() {
     handleSetLastNotificationText('')
   }
 
+  if (!isAuthenticated) {
+    return <Login onSuccessfulLogin={handleSuccessfulLogin} />
+  }
   return (
     <App
-      isAuthenticated={isAuthenticated}
       transactions={transactions}
       isLoading={isLoading || (isAuthenticated && !isInitialized)}
       offlineMode={offlineMode}
@@ -243,7 +246,6 @@ export default function AppContainer() {
       onAddTransaction={addTransaction}
       onEditTransaction={editTransaction}
       onRemoveTransaction={removeTransaction}
-      onSuccessfulLogin={handleSuccessfulLogin}
       onDismissNotification={handleDismissNotification}
     />
   )

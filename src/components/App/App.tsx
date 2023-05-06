@@ -7,13 +7,11 @@ import Menu from './Menu'
 import { HomeContainer } from '@/components/Home'
 import { TransactionFormContainer } from '@/components/TransactionForm'
 import { BudgetsContainer } from '../Budgets'
-import Login from '../Login'
 import { TransactionDTO } from '@/types'
 import { appVersion } from '@/version'
 import { TransactionsPageContainer } from '../Transactions'
 
 interface AppProps {
-  isAuthenticated: boolean
   transactions: any
   isLoading: boolean
   offlineMode: boolean
@@ -22,13 +20,11 @@ interface AppProps {
   onAddTransaction: (transaction: TransactionDTO) => void
   onEditTransaction: (transaction: TransactionDTO) => void
   onRemoveTransaction: (id: string) => void
-  onSuccessfulLogin: () => void
   onDismissNotification: () => void
 }
 
 export default function App(props: AppProps) {
   const {
-    isAuthenticated,
     transactions,
     isLoading,
     offlineMode,
@@ -37,7 +33,6 @@ export default function App(props: AppProps) {
     onAddTransaction,
     onEditTransaction,
     onRemoveTransaction,
-    onSuccessfulLogin,
     onDismissNotification,
   } = props
 
@@ -51,55 +46,48 @@ export default function App(props: AppProps) {
           onDismiss={onDismissNotification}
         />
       )}
-      {isAuthenticated ? (
+      <div
+        style={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Menu handleLogout={onLogout} appVersion={appVersion} offlineMode={offlineMode} />
+        <Status isLoading={isLoading} />
         <div
           style={{
-            height: '100vh',
+            width: '100%',
+            height: '100%',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            overflow: 'auto',
           }}
         >
-          <Menu handleLogout={onLogout} appVersion={appVersion} offlineMode={offlineMode} />
-          <Status isLoading={isLoading} />
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'auto',
-            }}
-          >
-            <Routes>
-              <Route path="/" element={<HomeContainer />} />
-              <Route
-                path="/transactions"
-                element={
-                  <TransactionsPageContainer
-                    transactions={transactions}
-                    onRemove={onRemoveTransaction}
-                  />
-                }
-              />
-              <Route
-                path="/budgets"
-                element={<BudgetsContainer onTransactionRemove={onRemoveTransaction} />}
-              />
-              <Route
-                path="/add"
-                element={<TransactionFormContainer onApply={onAddTransaction} />}
-              />
-              <Route
-                path="/transactions/:transactionId"
-                element={<TransactionFormContainer onApply={onEditTransaction} />}
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
+          <Routes>
+            <Route path="/" element={<HomeContainer />} />
+            <Route
+              path="/transactions"
+              element={
+                <TransactionsPageContainer
+                  transactions={transactions}
+                  onRemove={onRemoveTransaction}
+                />
+              }
+            />
+            <Route
+              path="/budgets"
+              element={<BudgetsContainer onTransactionRemove={onRemoveTransaction} />}
+            />
+            <Route path="/add" element={<TransactionFormContainer onApply={onAddTransaction} />} />
+            <Route
+              path="/transactions/:transactionId"
+              element={<TransactionFormContainer onApply={onEditTransaction} />}
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </div>
-      ) : (
-        <Login onSuccessfulLogin={onSuccessfulLogin} />
-      )}
+      </div>
     </div>
   )
 }
