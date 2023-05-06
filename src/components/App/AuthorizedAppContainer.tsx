@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -14,6 +14,7 @@ import { TransactionDTO } from '@/types'
 import _ from 'lodash'
 import { useCategoryExpansions } from './hooks/useCategoryExpansions'
 import { useAccountProperties } from './hooks/useAccountProperties'
+import { useInterval } from './hooks/useInterval'
 import { v4 as uuidv4 } from 'uuid'
 
 const instanceId = uuidv4()
@@ -32,8 +33,6 @@ export default function AppContainer({ backendService, dbService }: Props) {
   const lastNotificationText = useAppSelector((state: AppState) => state.lastNotificationText)
   const isInitialized = useAppSelector((state: AppState) => state.isInitialized)
   const [isFailedPush, setIsFailedPush] = useState(false)
-  const pushIntervalRef = useRef<NodeJS.Timer | null>(null)
-  const pullIntervalRef = useRef<NodeJS.Timer | null>(null)
 
   useCategoryExpansions(backendService)
   useAccountProperties(backendService)
@@ -67,21 +66,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
     }
   }
 
-  useEffect(() => {
-    void pullDataFromRemote()
-
-    const pullInterval = setInterval(pullDataFromRemote, 10000)
-    pullIntervalRef.current = pullInterval
-
-    return () => {
-      if (pullIntervalRef.current === pullInterval) {
-        clearInterval(pullInterval)
-        pullIntervalRef.current = null
-      }
-    }
-  }, [instanceId])
-
-  async function pushDbChanges() {
+  async function pushDbChangesToRemote() {
     try {
       await dbService.pushChanges()
       setIsFailedPush(false)
@@ -90,21 +75,15 @@ export default function AppContainer({ backendService, dbService }: Props) {
     }
   }
 
-  useEffect(() => {
-    const pushInterval = setInterval(() => {
-      if (isFailedPush) {
-        void pushDbChanges()
-      }
-    }, 10000)
-    pushIntervalRef.current = pushInterval
-
-    return () => {
-      if (pushIntervalRef.current === pushInterval) {
-        clearInterval(pushInterval)
-        pushIntervalRef.current = null
-      }
+  async function repeatFailedPushToRemote() {
+    if (!isFailedPush) {
+      return
     }
-  }, [instanceId])
+    void pushDbChangesToRemote()
+  }
+
+  useInterval(pullDataFromRemote, 10000, instanceId)
+  useInterval(repeatFailedPushToRemote, 10000, instanceId)
 
   async function addTransaction(t: TransactionDTO) {
     await dbService.addTransaction(t)
@@ -119,7 +98,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
     dispatch(setLastNotificationText('Запись добавлена'))
     navigate('/transactions', { replace: true })
 
-    await pushDbChanges()
+    await pushDbChangesToRemote()
   }
 
   async function editTransaction(t: TransactionDTO) {
@@ -138,7 +117,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
     dispatch(setLastNotificationText('Запись изменена'))
     navigate('/transactions', { replace: true })
 
-    await pushDbChanges()
+    await pushDbChangesToRemote()
   }
 
   async function removeTransaction(id: string) {
@@ -152,7 +131,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
 
     dispatch(setLastNotificationText('Запись удалена'))
 
-    await pushDbChanges()
+    await pushDbChangesToRemote()
   }
 
   const handleLogout = () => {
