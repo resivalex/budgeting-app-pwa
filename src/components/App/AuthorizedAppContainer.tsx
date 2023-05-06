@@ -1,19 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
-  setTransactions,
-  setOfflineMode,
-  setLastNotificationText,
-  useAppSelector,
   AppState,
+  setLastNotificationText,
+  setOfflineMode,
+  setTransactions,
+  useAppSelector,
 } from '@/redux/appSlice'
 import App from './App'
-import { DbService, BackendService } from '@/services'
+import { BackendService, DbService } from '@/services'
 import { TransactionDTO } from '@/types'
 import _ from 'lodash'
 import { useCategoryExpansions } from './hooks/useCategoryExpansions'
 import { useAccountProperties } from './hooks/useAccountProperties'
+import { v4 as uuidv4 } from 'uuid'
+
+const instanceId = uuidv4()
 
 interface Props {
   backendService: BackendService
@@ -28,72 +31,80 @@ export default function AppContainer({ backendService, dbService }: Props) {
   const offlineMode = useAppSelector((state: AppState) => state.offlineMode)
   const lastNotificationText = useAppSelector((state: AppState) => state.lastNotificationText)
   const isInitialized = useAppSelector((state: AppState) => state.isInitialized)
-  const [hasFailedPush, setHasFailedPush] = useState(false)
-  const pushIntervalRef = useRef<number | null>(null)
+  const [isFailedPush, setIsFailedPush] = useState(false)
+  const pushIntervalRef = useRef<NodeJS.Timer | null>(null)
+  const pullIntervalRef = useRef<NodeJS.Timer | null>(null)
 
   useCategoryExpansions(backendService)
   useAccountProperties(backendService)
 
+  const updateTransactionsFromLocalDb = useCallback(async () => {
+    const docs = await dbService.readAllDocs()
+    const sortedDocs = _.sortBy(docs, (doc: TransactionDTO) => doc.datetime).reverse()
+    dispatch(setTransactions(sortedDocs))
+  }, [dbService, dispatch])
+
   useEffect(() => {
-    async function loadTransactions() {
-      async function updateTransactionsFromLocalDb() {
-        const docs = await dbService.readAllDocs()
-        const sortedDocs = _.sortBy(docs, (doc: TransactionDTO) => doc.datetime).reverse()
-        dispatch(setTransactions(sortedDocs))
-      }
+    void updateTransactionsFromLocalDb()
+  }, [updateTransactionsFromLocalDb])
 
-      await updateTransactionsFromLocalDb()
-
-      async function pullDataFromRemote() {
-        try {
-          const checkSettings = await backendService.getSettings()
-
-          const dbChanged =
-            window.localStorage.transactionsUploadedAt !== checkSettings.transactionsUploadedAt
-          if (dbChanged) {
-            await dbService.reset()
-            window.localStorage.transactionsUploadedAt = checkSettings.transactionsUploadedAt
-          }
-          if (await dbService.pullChanges()) {
-            await updateTransactionsFromLocalDb()
-          }
-          dispatch(setOfflineMode(false))
-        } catch (error: any) {
-          dispatch(setOfflineMode(true))
-        }
-      }
-
-      await pullDataFromRemote()
-
-      const pullInterval = setInterval(pullDataFromRemote, 10000)
-
-      return () => {
-        clearInterval(pullInterval)
-      }
-    }
-
-    void loadTransactions()
-  }, [backendService, dbService, dispatch])
-
-  async function pushChangesWithRetry(dbService: DbService) {
+  async function pullDataFromRemote() {
     try {
-      await dbService.pushChanges()
-      setHasFailedPush(false)
-    } catch (error) {
-      setHasFailedPush(true)
+      const checkSettings = await backendService.getSettings()
+
+      const dbChanged =
+        window.localStorage.transactionsUploadedAt !== checkSettings.transactionsUploadedAt
+      if (dbChanged) {
+        await dbService.reset()
+        window.localStorage.transactionsUploadedAt = checkSettings.transactionsUploadedAt
+      }
+      if (await dbService.pullChanges()) {
+        await updateTransactionsFromLocalDb()
+      }
+      dispatch(setOfflineMode(false))
+    } catch (error: any) {
+      dispatch(setOfflineMode(true))
     }
   }
 
   useEffect(() => {
-    if (hasFailedPush && !pushIntervalRef.current) {
-      pushIntervalRef.current = window.setInterval(async () => {
-        await pushChangesWithRetry(dbService)
-      }, 10000)
-    } else if (!hasFailedPush && pushIntervalRef.current) {
-      clearInterval(pushIntervalRef.current)
-      pushIntervalRef.current = null
+    void pullDataFromRemote()
+
+    const pullInterval = setInterval(pullDataFromRemote, 10000)
+    pullIntervalRef.current = pullInterval
+
+    return () => {
+      if (pullIntervalRef.current === pullInterval) {
+        clearInterval(pullInterval)
+        pullIntervalRef.current = null
+      }
     }
-  }, [hasFailedPush, dbService])
+  }, [instanceId])
+
+  async function pushDbChanges() {
+    try {
+      await dbService.pushChanges()
+      setIsFailedPush(false)
+    } catch (error) {
+      setIsFailedPush(true)
+    }
+  }
+
+  useEffect(() => {
+    const pushInterval = setInterval(() => {
+      if (isFailedPush) {
+        void pushDbChanges()
+      }
+    }, 10000)
+    pushIntervalRef.current = pushInterval
+
+    return () => {
+      if (pushIntervalRef.current === pushInterval) {
+        clearInterval(pushInterval)
+        pushIntervalRef.current = null
+      }
+    }
+  }, [instanceId])
 
   async function addTransaction(t: TransactionDTO) {
     await dbService.addTransaction(t)
@@ -108,7 +119,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
     dispatch(setLastNotificationText('Запись добавлена'))
     navigate('/transactions', { replace: true })
 
-    await pushChangesWithRetry(dbService)
+    await pushDbChanges()
   }
 
   async function editTransaction(t: TransactionDTO) {
@@ -127,7 +138,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
     dispatch(setLastNotificationText('Запись изменена'))
     navigate('/transactions', { replace: true })
 
-    await pushChangesWithRetry(dbService)
+    await pushDbChanges()
   }
 
   async function removeTransaction(id: string) {
@@ -141,7 +152,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
 
     dispatch(setLastNotificationText('Запись удалена'))
 
-    await pushChangesWithRetry(dbService)
+    await pushDbChanges()
   }
 
   const handleLogout = () => {

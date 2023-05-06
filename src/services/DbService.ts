@@ -59,16 +59,22 @@ export default class DbService {
   async pushChanges() {
     console.log('pushChanges')
     this.onLoading(true)
-    try {
-      await this.localDB.replicate.to(this.remoteDB, {
-        live: false,
-        retry: false,
-      })
-      console.log('pushChanges complete')
-    } catch (e) {
-      console.log('pushChanges error', e)
-    }
-    this.onLoading(false)
+    return new Promise<boolean>((resolve, reject) => {
+      this.localDB.replicate
+        .to(this.remoteDB, {
+          live: false,
+          retry: false,
+        })
+        .on('complete', () => {
+          console.log('pushChanges complete')
+          this.onLoading(false)
+        })
+        .on('error', (err: any) => {
+          console.log('pushChanges error')
+          this.onLoading(false)
+          reject(err)
+        })
+    })
   }
 
   async pullChanges(): Promise<boolean> {
