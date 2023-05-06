@@ -239,7 +239,7 @@ export default function AppContainer() {
   return (
     <App
       transactions={transactions}
-      isLoading={isLoading || (isAuthenticated && !isInitialized)}
+      isLoading={isLoading || !isInitialized}
       offlineMode={offlineMode}
       lastNotificationText={lastNotificationText}
       onLogout={handleLogout}
