@@ -14,6 +14,8 @@ import App from './App'
 import { DbService, BackendService } from '@/services'
 import { TransactionDTO } from '@/types'
 import _ from 'lodash'
+import { useCategoryExpansions } from './hooks/useCategoryExpansions'
+import { useAccountProperties } from './hooks/useAccountProperties'
 
 type ConfigType = {
   backendUrl: string
@@ -33,22 +35,29 @@ export default function AppContainer() {
   const dbServiceRef = useRef<DbService | null>(null)
   const [hasFailedPush, setHasFailedPush] = useState(false)
   const pushIntervalRef = useRef<number | null>(null)
+  const [config, setConfig] = useState<ConfigType | null>(null)
 
   useEffect(() => {
+    const localStorageConfig: ConfigType | null = window.localStorage.config
+      ? JSON.parse(window.localStorage.config)
+      : null
+    setConfig(localStorageConfig)
     if (window.localStorage.config) {
       dispatch(setIsAuthenticated(true))
     }
-  }, [dispatch])
+  }, [])
+
+  useCategoryExpansions(config)
+  useAccountProperties(config)
 
   useEffect(() => {
     if (!isAuthenticated) {
       return
     }
     async function loadTransactions() {
-      if (!window.localStorage.config) {
+      if (!config) {
         return
       }
-      const config: ConfigType = JSON.parse(window.localStorage.config)
 
       const backendService = new BackendService(config.backendUrl, config.backendToken)
 
@@ -97,31 +106,7 @@ export default function AppContainer() {
       }
     }
 
-    async function loadCategoryExpansions() {
-      if (!window.localStorage.config) {
-        return
-      }
-      const config: ConfigType = JSON.parse(window.localStorage.config)
-      const backendService = new BackendService(config.backendUrl, config.backendToken)
-      const categoryExpansions = await backendService.getCategoryExpansions()
-
-      window.localStorage.categoryExpansions = JSON.stringify(categoryExpansions)
-    }
-
-    async function loadAccountProperties() {
-      if (!window.localStorage.config) {
-        return
-      }
-      const config: ConfigType = JSON.parse(window.localStorage.config)
-      const backendService = new BackendService(config.backendUrl, config.backendToken)
-      const accountProperties = await backendService.getAccountProperties()
-
-      window.localStorage.accountProperties = JSON.stringify(accountProperties)
-    }
-
     void loadTransactions()
-    void loadCategoryExpansions()
-    void loadAccountProperties()
   }, [isAuthenticated, dispatch])
 
   async function pushChangesWithRetry(dbService: DbService) {
