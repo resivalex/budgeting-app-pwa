@@ -178,7 +178,23 @@ export default function BudgetsContainer({ onTransactionRemove }: Props) {
     const backendService = new BackendService(config.backendUrl, config.backendToken)
 
     async function requestBudgetsFromBackend(backendService: BackendService) {
-      const spendingLimits = await backendService.getSpendingLimits()
+      async function getSpendingLimits(): Promise<SpendingLimitsDTO> {
+        try {
+          const spendingLimits = await backendService.getSpendingLimits()
+          localStorage.spendingLimits = JSON.stringify(spendingLimits)
+
+          return spendingLimits
+        } catch (error) {
+          if (!localStorage.spendingLimits) {
+            return { limits: [], monthCurrencyConfigs: [] }
+          }
+
+          return JSON.parse(localStorage.spendingLimits)
+        }
+      }
+
+      const spendingLimits = await getSpendingLimits()
+
       const budgets = calculateBudgets(transactions, categories, spendingLimits, selectedMonth)
       const availableMonths = getAvailableMonths(spendingLimits)
       dispatch(setBudgets(budgets))
