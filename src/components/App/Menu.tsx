@@ -4,11 +4,10 @@ import classNames from 'classnames'
 
 interface Props {
   handleLogout: () => void
-  offlineMode: boolean
   appVersion: string
 }
 
-const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
+const Menu: React.FC<Props> = ({ handleLogout, appVersion }) => {
   const [isMenuActive, setIsMenuActive] = useState(false)
   const menuRef: any = useRef(null)
   const burgerRef: any = useRef(null)
@@ -54,12 +53,6 @@ const Menu: React.FC<Props> = ({ handleLogout, offlineMode, appVersion }) => {
           <span></span>
           <span></span>
         </a>
-        {offlineMode && (
-          <div className="is-text">
-            <div>Оффлайн</div>
-            <div>режим</div>
-          </div>
-        )}
       </div>
       <div
         ref={menuRef}

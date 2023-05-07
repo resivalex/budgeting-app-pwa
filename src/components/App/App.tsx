@@ -10,6 +10,7 @@ import { BudgetsContainer } from '../Budgets'
 import { TransactionDTO } from '@/types'
 import { appVersion } from '@/version'
 import { TransactionsPageContainer } from '../Transactions'
+import OfflineOverlay from '@/components/App/OfflineOverlay'
 
 interface AppProps {
   transactions: any
@@ -53,7 +54,7 @@ export default function App(props: AppProps) {
           flexDirection: 'column',
         }}
       >
-        <Menu handleLogout={onLogout} appVersion={appVersion} offlineMode={offlineMode} />
+        <Menu handleLogout={onLogout} appVersion={appVersion} />
         <Status isLoading={isLoading} />
         <div
           style={{
@@ -87,6 +88,7 @@ export default function App(props: AppProps) {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
+        {!offlineMode && <OfflineOverlay />}
       </div>
     </div>
   )
