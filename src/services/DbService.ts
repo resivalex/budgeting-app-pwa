@@ -56,7 +56,7 @@ export default class DbService {
     return result.rows.map((row: any) => row.doc)
   }
 
-  async pushChanges() {
+  async pushChanges(): Promise<boolean> {
     console.log('pushChanges')
     this.onLoading(true)
     return new Promise<boolean>((resolve, reject) => {
@@ -68,6 +68,7 @@ export default class DbService {
         .on('complete', () => {
           console.log('pushChanges complete')
           this.onLoading(false)
+          resolve(true)
         })
         .on('error', (err: any) => {
           console.log('pushChanges error')
