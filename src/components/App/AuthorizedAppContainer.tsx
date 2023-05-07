@@ -1,20 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import {
-  AppState,
-  setLastNotificationText,
-  setOfflineMode,
-  setTransactions,
-  useAppSelector,
-} from '@/redux/appSlice'
+import { AppState, setLastNotificationText, setOfflineMode, useAppSelector } from '@/redux/appSlice'
 import App from './App'
 import { BackendService, DbService } from '@/services'
 import { TransactionDTO } from '@/types'
-import _ from 'lodash'
 import { useCategoryExpansions } from './hooks/useCategoryExpansions'
 import { useAccountProperties } from './hooks/useAccountProperties'
 import { useInterval } from './hooks/useInterval'
+import { useReduxTransactions } from './hooks/useReduxTransactions'
 import { v4 as uuidv4 } from 'uuid'
 
 const instanceId = uuidv4()
@@ -24,10 +18,9 @@ interface Props {
   dbService: DbService
 }
 
-export default function AppContainer({ backendService, dbService }: Props) {
+export default function AuthorizedAppContainer({ backendService, dbService }: Props) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const transactions = useAppSelector((state: AppState) => state.transactions)
   const isLoading = useAppSelector((state: AppState) => state.isLoading)
   const offlineMode = useAppSelector((state: AppState) => state.offlineMode)
   const lastNotificationText = useAppSelector((state: AppState) => state.lastNotificationText)
@@ -37,10 +30,17 @@ export default function AppContainer({ backendService, dbService }: Props) {
   useCategoryExpansions(backendService)
   useAccountProperties(backendService)
 
+  const {
+    transactions,
+    setReduxTransactions,
+    addReduxTransaction,
+    replaceReduxTransaction,
+    removeReduxTransaction,
+  } = useReduxTransactions()
+
   const updateTransactionsFromLocalDb = useCallback(async () => {
     const docs = await dbService.readAllDocs()
-    const sortedDocs = _.sortBy(docs, (doc: TransactionDTO) => doc.datetime).reverse()
-    dispatch(setTransactions(sortedDocs))
+    setReduxTransactions(docs)
   }, [dbService, dispatch])
 
   useEffect(() => {
@@ -88,12 +88,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
   async function addTransaction(t: TransactionDTO) {
     await dbService.addTransaction(t)
 
-    const newTransactions = [...transactions, t]
-    const sortedTransactions = _.sortBy(
-      newTransactions,
-      (doc: TransactionDTO) => doc.datetime
-    ).reverse()
-    dispatch(setTransactions(sortedTransactions))
+    addReduxTransaction(t)
 
     dispatch(setLastNotificationText('Запись добавлена'))
     navigate('/transactions', { replace: true })
@@ -104,15 +99,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
   async function editTransaction(t: TransactionDTO) {
     await dbService.replaceTransaction(t)
 
-    // replace transaction in redux store
-    const newTransactions = [...transactions]
-    const index = newTransactions.findIndex((transaction) => transaction._id === t._id)
-    newTransactions[index] = t
-    const sortedTransactions = _.sortBy(
-      newTransactions,
-      (doc: TransactionDTO) => doc.datetime
-    ).reverse()
-    dispatch(setTransactions(sortedTransactions))
+    replaceReduxTransaction(t)
 
     dispatch(setLastNotificationText('Запись изменена'))
     navigate('/transactions', { replace: true })
@@ -123,11 +110,7 @@ export default function AppContainer({ backendService, dbService }: Props) {
   async function removeTransaction(id: string) {
     await dbService.removeTransaction(id)
 
-    // remove transaction from redux store
-    const newTransactions = [...transactions]
-    const index = newTransactions.findIndex((transaction) => transaction._id === id)
-    newTransactions.splice(index, 1)
-    dispatch(setTransactions(newTransactions))
+    removeReduxTransaction(id)
 
     dispatch(setLastNotificationText('Запись удалена'))
 
