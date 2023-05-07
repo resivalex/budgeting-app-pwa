@@ -88,7 +88,7 @@ export default function App(props: AppProps) {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
-        {!offlineMode && <OfflineOverlay />}
+        {offlineMode && <OfflineOverlay />}
       </div>
     </div>
   )
