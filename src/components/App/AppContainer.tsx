@@ -17,10 +17,12 @@ export default function AppContainer() {
   const [config, setConfig] = useState<ConfigType | null>(null)
   const [backendService, setBackendService] = useState<BackendService | null>(null)
   const [dbService, setDbService] = useState<DbService | null>(null)
+  const isLoading = useAppSelector((state: AppState) => state.isLoading)
+  const isInitialized = useAppSelector((state: AppState) => state.isInitialized)
 
   useEffect(() => {
-    const localStorageConfig: ConfigType | null = window.localStorage.config
-      ? JSON.parse(window.localStorage.config)
+    const localStorageConfig: ConfigType | null = localStorage.config
+      ? JSON.parse(localStorage.config)
       : null
     setConfig(localStorageConfig)
   }, [isAuthenticated])
@@ -68,5 +70,11 @@ export default function AppContainer() {
   if (!dbService) {
     return null
   }
-  return <AuthorizedAppContainer backendService={backendService} dbService={dbService} />
+  return (
+    <AuthorizedAppContainer
+      backendService={backendService}
+      dbService={dbService}
+      isLoading={isLoading || !isInitialized}
+    />
+  )
 }

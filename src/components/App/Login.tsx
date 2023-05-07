@@ -31,7 +31,7 @@ export default function Login({ onSuccessfulLogin }: Props) {
       const backendService = new BackendService(backendUrl)
       const config: ConfigDataDTO = await backendService.getConfig(password)
 
-      window.localStorage.config = JSON.stringify(config)
+      localStorage.config = JSON.stringify(config)
       onLoginSuccess()
     } catch (err: any) {
       setError(err.message)

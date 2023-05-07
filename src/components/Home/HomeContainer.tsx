@@ -6,8 +6,8 @@ import Home from './Home'
 
 export default function HomeContainer() {
   const accountDetails = useAppSelector((state: AppState) => state.accountDetails)
-  const accountProperties: AccountPropertiesDTO = window.localStorage.accountProperties
-    ? JSON.parse(window.localStorage.accountProperties)
+  const accountProperties: AccountPropertiesDTO = localStorage.accountProperties
+    ? JSON.parse(localStorage.accountProperties)
     : { accounts: [] }
 
   const coloredAccounts: ColoredAccountDetailsDTO[] = mergeAccountDetailsAndProperties(

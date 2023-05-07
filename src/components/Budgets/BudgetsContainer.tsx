@@ -174,7 +174,7 @@ export default function BudgetsContainer({ onTransactionRemove }: Props) {
   const availableMonths = useBudgetsSelector((state) => state.availableMonths)
 
   useEffect(() => {
-    const config = JSON.parse(window.localStorage.config)
+    const config = JSON.parse(localStorage.config)
     const backendService = new BackendService(config.backendUrl, config.backendToken)
 
     async function requestBudgetsFromBackend(backendService: BackendService) {

@@ -6,7 +6,7 @@ export function useCategoryExpansions(backendService: BackendService) {
     async function loadCategoryExpansions() {
       const categoryExpansions = await (backendService as BackendService).getCategoryExpansions()
 
-      window.localStorage.categoryExpansions = JSON.stringify(categoryExpansions)
+      localStorage.categoryExpansions = JSON.stringify(categoryExpansions)
     }
 
     void loadCategoryExpansions()

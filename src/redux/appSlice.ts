@@ -8,7 +8,6 @@ export type AppState = {
   isInitialized: boolean
   isAuthenticated: boolean
   transactions: any[]
-  error: string
   isLoading: boolean
   offlineMode: boolean
   lastNotificationText: string
@@ -23,7 +22,6 @@ const initialState: AppState = {
   isInitialized: false,
   isAuthenticated: false,
   transactions: [],
-  error: '',
   isLoading: false,
   offlineMode: false,
   lastNotificationText: '',
@@ -53,9 +51,6 @@ const appSlice = createSlice({
       state.payees = transactionAggregator.getRecentPayees()
       state.comments = transactionAggregator.getRecentComments()
     },
-    setError: (state, action: PayloadAction<string>) => {
-      state.error = action.payload
-    },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload
     },
@@ -71,7 +66,6 @@ const appSlice = createSlice({
 export const {
   setIsAuthenticated,
   setTransactions,
-  setError,
   setIsLoading,
   setOfflineMode,
   setLastNotificationText,

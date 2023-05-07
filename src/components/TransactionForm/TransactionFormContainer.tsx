@@ -47,8 +47,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const transaction = useAppSelector((state) => state.transactions).find(
     (t: TransactionDTO) => t._id === transactionId
   )
-  const categoryExpansions: CategoryExpansionsDTO = window.localStorage.categoryExpansions
-    ? JSON.parse(window.localStorage.categoryExpansions)
+  const categoryExpansions: CategoryExpansionsDTO = localStorage.categoryExpansions
+    ? JSON.parse(localStorage.categoryExpansions)
     : { expansions: [] }
   const categoryNameToExtendedMap: { [name: string]: string } = {}
   const categoryNameFromExtendedMap: { [extendedName: string]: string } = {}
@@ -57,8 +57,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
     categoryNameFromExtendedMap[e.expandedName] = e.name
   })
 
-  const accountProperties: AccountPropertiesDTO = window.localStorage.accountProperties
-    ? JSON.parse(window.localStorage.accountProperties)
+  const accountProperties: AccountPropertiesDTO = localStorage.accountProperties
+    ? JSON.parse(localStorage.accountProperties)
     : { accounts: [] }
   const accounts: ColoredAccountDetailsDTO[] = mergeAccountDetailsAndProperties(
     accountDetails,

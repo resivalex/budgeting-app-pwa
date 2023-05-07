@@ -6,7 +6,7 @@ export function useAccountProperties(backendService: BackendService) {
     async function loadAccountProperties() {
       const accountProperties = await (backendService as BackendService).getAccountProperties()
 
-      window.localStorage.accountProperties = JSON.stringify(accountProperties)
+      localStorage.accountProperties = JSON.stringify(accountProperties)
     }
 
     void loadAccountProperties()
