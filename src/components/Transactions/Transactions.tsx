@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import TransactionTile from './TransactionTile'
+import { TransactionTile } from './Transaction'
 import { TransactionDTO } from '@/types'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'

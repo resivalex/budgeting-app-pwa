@@ -1,6 +1,6 @@
 import { TransactionDTO } from '@/types'
 import TransactionsContainer from './TransactionsContainer'
-import TransactionFiltersContainer from './TransactionFiltersContainer'
+import { TransactionFiltersContainer } from './TransactionFilters'
 
 interface Props {
   transactions: TransactionDTO[]
