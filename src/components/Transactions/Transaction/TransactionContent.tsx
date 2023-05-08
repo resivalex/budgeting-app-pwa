@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '@/utils'
 import dayjs from 'dayjs'
@@ -29,6 +29,12 @@ export default function TransactionContent({
   currency,
   localTime,
 }: Props) {
+  const [showTime, setShowTime] = useState(false)
+
+  const toggleShowTime = () => {
+    setShowTime(!showTime)
+  }
+
   return (
     <div className="is-flex is-justify-content-space-between is-flex-grow-1">
       <div>
@@ -52,14 +58,17 @@ export default function TransactionContent({
             'has-text-danger': type === 'expense',
           })}
           style={{ whiteSpace: 'nowrap' }}
+          onClick={toggleShowTime}
         >
           {type === 'expense' && '-'}
           {type === 'income' && '+'}
           {formatFinancialAmount(parseFloat(amount))} {convertCurrencyCodeToSymbol(currency)}
         </div>
-        <div className="is-size-7">
-          <div className="has-text-grey">{localTime}</div>
-        </div>
+        {showTime && (
+          <div className="is-size-7">
+            <div className="has-text-grey">{localTime}</div>
+          </div>
+        )}
       </div>
     </div>
   )
