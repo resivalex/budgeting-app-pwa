@@ -3,6 +3,8 @@ import classNames from 'classnames'
 import { convertCurrencyCodeToSymbol, formatFinancialAmount } from '@/utils'
 import dayjs from 'dayjs'
 import ruLocale from 'dayjs/locale/ru'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRightLong } from '@fortawesome/free-solid-svg-icons'
 
 dayjs.locale(ruLocale)
 
@@ -31,8 +33,16 @@ export default function TransactionContent({
     <div className="is-flex is-justify-content-space-between is-flex-grow-1">
       <div>
         <div className="has-text-weight-semibold">{category}</div>
-        <div>{account}</div>
-        <div className="is-size-7 has-text-weight-semibold">{payee}</div>
+        {type === 'transfer' ? (
+            <div className="has-text-weight-semibold">
+              {account} <FontAwesomeIcon icon={faArrowRightLong} /> {payee}
+            </div>
+        ) : (
+          <>
+            <div>{account}</div>
+            <div className="is-size-7 has-text-weight-semibold">{payee}</div>
+          </>
+        )}
         <div className="is-size-7">{comment}</div>
       </div>
       <div className="has-text-right">

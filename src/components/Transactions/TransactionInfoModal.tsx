@@ -27,6 +27,13 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove, o
     }
   }
 
+  function translateType(type: string) {
+    if (type === 'expense') return 'Расход'
+    if (type === 'income') return 'Доход'
+    if (type === 'transfer') return 'Перевод'
+    return type
+  }
+
   return (
     <div className="modal is-active">
       <div className="modal-background" onClick={onClose}></div>
@@ -46,7 +53,7 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove, o
             <strong>Категория:</strong> {category}
           </p>
           <p>
-            <strong>Тип:</strong> {type}
+            <strong>Тип:</strong> {translateType(type)}
           </p>
           <p>
             <strong>Сумма:</strong> {formatFinancialAmount(parseFloat(amount))}{' '}
