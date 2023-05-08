@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import Transaction from './Transaction'
+import TransactionTile from './TransactionTile'
 import { TransactionDTO } from '@/types'
 import { List, AutoSizer } from 'react-virtualized'
 import TransactionInfoModal from './TransactionInfoModal'
@@ -55,7 +55,7 @@ export default function Transactions({
     const transaction = transactions[index]
     return (
       <div key={key} style={style}>
-        <Transaction
+        <TransactionTile
           key={index}
           t={transaction}
           hasDateHeader={hasDateHeaderMap[transaction._id]}
