@@ -16,16 +16,18 @@ export default function Transactions({
     label: accountName,
   }))
   return (
-    <Select
-      className="basic-single"
-      classNamePrefix="select"
-      value={accountOptions.find((option) => option.value === filterAccountName)}
-      onChange={(selectedOption) => {
-        if (!selectedOption) return
-        onFilterAccountNameChange(selectedOption.value)
-      }}
-      options={accountOptions}
-      isSearchable={false}
-    />
+    <div className="px-2 pb-1">
+      <Select
+        className="basic-single"
+        classNamePrefix="select"
+        value={accountOptions.find((option) => option.value === filterAccountName)}
+        onChange={(selectedOption) => {
+          if (!selectedOption) return
+          onFilterAccountNameChange(selectedOption.value)
+        }}
+        options={accountOptions}
+        isSearchable={false}
+      />
+    </div>
   )
 }

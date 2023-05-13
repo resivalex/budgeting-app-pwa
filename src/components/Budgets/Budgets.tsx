@@ -31,18 +31,20 @@ export default function Budgets({
 
   return (
     <>
-      <Select
-        className="basic-single"
-        classNamePrefix="select"
-        value={monthOptions.find((option) => option.value === selectedMonth)}
-        onChange={(selectedOption) => {
-          if (!selectedOption) return
-          onMonthSelect(selectedOption.value)
-        }}
-        options={monthOptions}
-        isSearchable={false}
-      />
-      <div className="box" style={{ flex: 1, overflow: 'scroll' }}>
+      <div className="px-2 pb-1">
+        <Select
+          className="basic-single"
+          classNamePrefix="select"
+          value={monthOptions.find((option) => option.value === selectedMonth)}
+          onChange={(selectedOption) => {
+            if (!selectedOption) return
+            onMonthSelect(selectedOption.value)
+          }}
+          options={monthOptions}
+          isSearchable={false}
+        />
+      </div>
+      <div className="box py-0" style={{ flex: 1, overflow: 'scroll' }}>
         {budgets.map((budget, index) => (
           <Budget
             key={index}
