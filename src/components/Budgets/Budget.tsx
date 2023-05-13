@@ -21,7 +21,7 @@ function outputAmountDifference(
   if (spentAmount > totalAmount) {
     return (
       <>
-        <span className="has-text-weight-bold" style={{ color: '#8f2626' }}>
+        <span style={{ color: '#8f2626' }}>
           -{formatFinancialAmountRounded(spentAmount - totalAmount)} {currencySymbol}
         </span>
       </>
@@ -30,7 +30,7 @@ function outputAmountDifference(
   if (spentAmount < 0) {
     return (
       <>
-        <span className="has-text-weight-bold" style={{ color: '#23672e' }}>
+        <span style={{ color: '#23672e' }}>
           +{formatFinancialAmountRounded(-spentAmount)} {currencySymbol}
         </span>
       </>
@@ -39,7 +39,7 @@ function outputAmountDifference(
   if (spentAmount <= totalAmount) {
     return (
       <>
-        <span className="has-text-weight-bold">
+        <span>
           {formatFinancialAmountRounded(totalAmount - spentAmount)} {currencySymbol}
         </span>
       </>
@@ -69,18 +69,18 @@ export default function Budget({
       <div className="is-flex is-align-content-stretch">
         <div
           className="marker is-align-self-stretch mr-1"
-          style={{ backgroundColor: color, width: 10, borderBottomLeftRadius: 5 }}
+          style={{ backgroundColor: color, width: 5, borderBottomLeftRadius: 5 }}
         ></div>
         <div className="is-flex-grow-1 py-2 px-1">
           <div className="is-flex is-justify-content-space-between pb-1">
-            <div className="has-text-weight-bold is-flex pr-1">{name}</div>
-            <div className="has-text-weight-bold is-flex pl-1" style={{ color: '#c7c7c7' }}>
+            <div className="is-flex pr-1">{name}</div>
+            <div className="is-flex pl-1" style={{ color: '#c7c7c7' }}>
               {formatFinancialAmountRounded(totalAmount)} {currencySymbol}
             </div>
           </div>
           <BudgetProgressBar totalAmount={totalAmount} spentAmount={spentAmount} />
           <div className="is-flex is-justify-content-space-between pt-1">
-            <div className="has-text-weight-bold is-flex pr-1">
+            <div className="is-flex pr-1">
               {formatFinancialAmountRounded(spentAmount)} {currencySymbol}
             </div>
             <div className="is-flex pl-1">
