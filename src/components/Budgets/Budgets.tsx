@@ -44,7 +44,7 @@ export default function Budgets({
           isSearchable={false}
         />
       </div>
-      <div className="box py-0" style={{ flex: 1, overflow: 'scroll' }}>
+      <div className="box py-0 px-2" style={{ flex: 1, overflow: 'scroll' }}>
         {budgets.map((budget, index) => (
           <Budget
             key={index}
