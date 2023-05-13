@@ -22,6 +22,7 @@ export function useSyncService(
 
   useEffect(() => {
     void loadTransactionsFromLocal()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function pullDataFromRemote() {

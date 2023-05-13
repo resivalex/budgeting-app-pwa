@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export function useInterval(callback: () => void, delay: number, ...dependencies: any) {
+export function useInterval(callback: () => void, delay: number, dependency: any) {
   const intervalRef = useRef<NodeJS.Timer | null>(null)
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export function useInterval(callback: () => void, delay: number, ...dependencies
         intervalRef.current = null
       }
     }
-  }, [callback, delay, ...dependencies])
+  }, [callback, delay, dependency])
 
   return intervalRef
 }
