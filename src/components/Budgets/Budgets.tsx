@@ -52,6 +52,7 @@ export default function Budgets({
             spentAmount={budget.spentAmount}
             currency={budget.currency}
             name={budget.name}
+            color={budget.color}
             onLongPress={() => onFocus(budget.name)}
           />
         ))}

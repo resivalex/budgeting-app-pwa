@@ -22,6 +22,7 @@ interface Props {
 
 interface MonthSpendingLimit {
   name: string
+  color: string
   categories: string[]
   currency: string
   amount: number
@@ -30,10 +31,12 @@ interface MonthSpendingLimit {
 function calculateBudget(
   transactions: TransactionDTO[],
   spendingLimit: MonthSpendingLimit,
-  conversionMap: ConversionMapType
+  conversionMap: ConversionMapType,
+  color: string
 ) {
   const budget: BudgetDTO = {
     name: spendingLimit.name,
+    color: color,
     currency: spendingLimit.currency,
     amount: spendingLimit.amount,
     categories: spendingLimit.categories,
@@ -118,6 +121,7 @@ function calculateBudgets(
       const spendingLimitMonthLimit = spendingLimitMonthLimits[0]
       return {
         name: spendingLimit.name,
+        color: spendingLimit.color,
         categories: spendingLimit.categories,
         currency: spendingLimitMonthLimit.currency,
         amount: spendingLimitMonthLimit.amount,
@@ -127,6 +131,7 @@ function calculateBudgets(
 
   const totalLimit: MonthSpendingLimit = {
     name: 'ОБЩИЙ',
+    color: '#b6b6b6',
     categories: [],
     currency: currencyConfig.mainCurrency,
     amount: 0,
@@ -139,6 +144,7 @@ function calculateBudgets(
 
   const restLimit: MonthSpendingLimit = {
     name: 'Другое',
+    color: '#b6b6b6',
     currency: currencyConfig.mainCurrency,
     amount: 0,
     categories: categories.filter((category) => !totalLimit.categories.includes(category)),
@@ -146,7 +152,7 @@ function calculateBudgets(
 
   return [totalLimit, ...monthSpendingLimits, restLimit].map(
     (spendingLimit: MonthSpendingLimit) => {
-      return calculateBudget(monthTransactions, spendingLimit, conversionMap)
+      return calculateBudget(monthTransactions, spendingLimit, conversionMap, spendingLimit.color)
     }
   )
 }

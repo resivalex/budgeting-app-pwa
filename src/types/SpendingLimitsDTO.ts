@@ -16,6 +16,7 @@ interface MonthSpendingLimit {
 
 interface SpendingLimit {
   name: string
+  color: string
   categories: string[]
   monthLimits: MonthSpendingLimit[]
 }

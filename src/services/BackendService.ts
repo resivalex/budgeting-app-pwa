@@ -54,6 +54,7 @@ class BackendService {
     return {
       limits: data.limits.map((limit: any) => ({
         name: limit.name,
+        color: limit.color,
         categories: limit.categories,
         monthLimits: limit.month_limits.map((monthLimit: any) => ({
           date: monthLimit.date,

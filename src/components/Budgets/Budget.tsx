@@ -5,6 +5,7 @@ import { LongPressDetectEvents, useLongPress } from 'use-long-press'
 
 interface Props {
   name: string
+  color: string
   totalAmount: number
   spentAmount: number
   currency: string
@@ -46,7 +47,14 @@ function outputAmountDifference(
   }
 }
 
-export default function Budget({ totalAmount, spentAmount, currency, name, onLongPress }: Props) {
+export default function Budget({
+  totalAmount,
+  spentAmount,
+  currency,
+  name,
+  color,
+  onLongPress,
+}: Props) {
   const longPressBind = useLongPress(onLongPress, {
     onFinish: onLongPress,
     threshold: 500,
@@ -57,20 +65,28 @@ export default function Budget({ totalAmount, spentAmount, currency, name, onLon
   const currencySymbol = convertCurrencyCodeToSymbol(currency)
 
   return (
-    <div {...longPressBind()} className="box my-2 py-2">
-      <div className="is-flex is-justify-content-space-between pb-1">
-        <div className="has-text-weight-bold is-flex pr-1">{name}</div>
-        <div className="has-text-weight-bold is-flex pl-1" style={{ color: '#c7c7c7' }}>
-          {formatFinancialAmountRounded(totalAmount)} {currencySymbol}
-        </div>
-      </div>
-      <BudgetProgressBar totalAmount={totalAmount} spentAmount={spentAmount} />
-      <div className="is-flex is-justify-content-space-between pt-1">
-        <div className="has-text-weight-bold is-flex pr-1">
-          {formatFinancialAmountRounded(spentAmount)} {currencySymbol}
-        </div>
-        <div className="is-flex pl-1">
-          {outputAmountDifference(totalAmount, spentAmount, currency, currencySymbol)}
+    <div {...longPressBind()} className="box my-2 py-0 pr-2 pl-0">
+      <div className="is-flex is-align-content-stretch">
+        <div
+          className="marker is-align-self-stretch mr-1"
+          style={{ backgroundColor: color, width: 10, borderBottomLeftRadius: 5 }}
+        ></div>
+        <div className="is-flex-grow-1 py-2 px-1">
+          <div className="is-flex is-justify-content-space-between pb-1">
+            <div className="has-text-weight-bold is-flex pr-1">{name}</div>
+            <div className="has-text-weight-bold is-flex pl-1" style={{ color: '#c7c7c7' }}>
+              {formatFinancialAmountRounded(totalAmount)} {currencySymbol}
+            </div>
+          </div>
+          <BudgetProgressBar totalAmount={totalAmount} spentAmount={spentAmount} />
+          <div className="is-flex is-justify-content-space-between pt-1">
+            <div className="has-text-weight-bold is-flex pr-1">
+              {formatFinancialAmountRounded(spentAmount)} {currencySymbol}
+            </div>
+            <div className="is-flex pl-1">
+              {outputAmountDifference(totalAmount, spentAmount, currency, currencySymbol)}
+            </div>
+          </div>
         </div>
       </div>
     </div>
