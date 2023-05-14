@@ -180,6 +180,35 @@ function PayeeTransferAccountFormInput({
   )
 }
 
+function CategoryFormInput({
+  category,
+  onCategoryChange,
+  categoryOptions,
+}: {
+  category: string
+  onCategoryChange: (category: string) => void
+  categoryOptions: { value: string; label: string }[]
+}) {
+  return (
+    <div className="field">
+      <div className="is-size-7">Категория</div>
+      <div className="control">
+        <Select
+          className="basic-single"
+          classNamePrefix="select"
+          value={categoryOptions.find((option) => option.value === category)}
+          onChange={(selectedOption) => {
+            if (!selectedOption) return
+            onCategoryChange(selectedOption.value)
+          }}
+          options={categoryOptions}
+          styles={reactSelectSmallStyles}
+        />
+      </div>
+    </div>
+  )
+}
+
 function StepByStepTransactionForm({
   type,
   onTypeChange,
@@ -242,22 +271,11 @@ function StepByStepTransactionForm({
         />
       ) : (
         <>
-          <div className="field">
-            <div className="is-size-7">Категория</div>
-            <div className="control">
-              <Select
-                className="basic-single"
-                classNamePrefix="select"
-                value={categoryOptions.find((option) => option.value === category)}
-                onChange={(selectedOption) => {
-                  if (!selectedOption) return
-                  onCategoryChange(selectedOption.value)
-                }}
-                options={categoryOptions}
-                styles={reactSelectSmallStyles}
-              />
-            </div>
-          </div>
+          <CategoryFormInput
+            category={category}
+            onCategoryChange={onCategoryChange}
+            categoryOptions={categoryOptions}
+          />
           <div className="field">
             <div className="is-size-7">{type === 'expense' ? 'Получатель' : 'Плательщик'}</div>
             <div className="control">
