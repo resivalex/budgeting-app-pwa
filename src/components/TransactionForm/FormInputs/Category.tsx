@@ -22,6 +22,7 @@ export default function Category({ category, onCategoryChange, categoryOptions }
           }}
           options={categoryOptions}
           styles={reactSelectSmallStyles}
+          placeholder="Выберите из списка..."
         />
       </div>
     </div>

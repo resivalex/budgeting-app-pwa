@@ -20,6 +20,8 @@ import {
   setPayeeTransferAccount,
   setComment,
   setDatetime,
+  setPayeeSuggestions,
+  setCommentSuggestions,
   selectTransactionForm,
   reset,
 } from '@/redux/transactionFormSlice'
@@ -29,6 +31,7 @@ import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 import _ from 'lodash'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import TransactionAggregator from '@/redux/TransactionAggregator'
 
 interface Props {
   transactionId?: string
@@ -42,6 +45,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const categories: string[] = useAppSelector((state) => state.categories)
   const currencies: string[] = useAppSelector((state) => state.currencies)
   const payees: string[] = useAppSelector((state) => state.payees)
+  const transactions: TransactionDTO[] = useAppSelector((state) => state.transactions)
   const comments: string[] = useAppSelector((state) => state.comments)
   const navigate = useNavigate()
   const { transactionId } = useParams()
@@ -105,9 +109,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   )
     ? transactionForm.account
     : currencyAccounts[0].account
-  const category = _.includes(categories, transactionForm.category)
-    ? transactionForm.category
-    : categories[0]
+  const category = _.includes(categories, transactionForm.category) ? transactionForm.category : ''
   let payeeTransferAccount = transactionForm.payeeTransferAccount
   if (
     !_.includes(
@@ -183,6 +185,11 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onCategoryChange={(category: string) => {
         const fixedCategory = categoryNameFromExtendedMap[category] || category
         dispatch(setCategory(fixedCategory))
+        const transactionAggregator = new TransactionAggregator(transactions)
+        const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(fixedCategory)
+        dispatch(setPayeeSuggestions(payeeSuggestions))
+        const commentSuggestions = transactionAggregator.getRecentCommentsByCategory(fixedCategory)
+        dispatch(setCommentSuggestions(commentSuggestions))
       }}
       payee={transactionForm.payee}
       onPayeeChange={(payee: string) => dispatch(setPayee(payee))}
@@ -199,8 +206,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
       currencies={availableCurrencies}
       onCurrencyChange={(currency: string) => dispatch(setCurrency(currency))}
       isValid={isValid}
-      payees={payees}
-      comments={comments}
+      payees={category ? transactionForm.payeeSuggestions : payees}
+      comments={category ? transactionForm.commentSuggestions : comments}
     />
   )
 }

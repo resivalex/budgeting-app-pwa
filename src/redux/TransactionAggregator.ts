@@ -115,11 +115,49 @@ export default class TransactionAggregator {
     return result
   }
 
+  getRecentPayeesByCategory(category: string) {
+    const payeesSet: { [name: string]: boolean } = {}
+    const result = []
+    const sortedTransactions = _.sortBy(this.transactions, (t) => -new Date(t.datetime).getTime())
+    const orderedTransactions = [
+      ...sortedTransactions.filter((t) => t.category === category),
+      ...sortedTransactions.filter((t) => t.category !== category),
+    ]
+
+    for (const transaction of orderedTransactions) {
+      if (transaction.type !== 'transfer' && transaction.payee && !payeesSet[transaction.payee]) {
+        payeesSet[transaction.payee] = true
+        result.push(transaction.payee)
+      }
+    }
+
+    return result
+  }
+
   getRecentComments() {
     const commentsSet: { [name: string]: boolean } = {}
     const result = []
     const sortedTransactions = _.sortBy(this.transactions, (t) => -new Date(t.datetime).getTime())
     for (const transaction of sortedTransactions) {
+      if (transaction.comment && !commentsSet[transaction.comment]) {
+        commentsSet[transaction.comment] = true
+        result.push(transaction.comment)
+      }
+    }
+
+    return result
+  }
+
+  getRecentCommentsByCategory(category: string) {
+    const commentsSet: { [name: string]: boolean } = {}
+    const result = []
+    const sortedTransactions = _.sortBy(this.transactions, (t) => -new Date(t.datetime).getTime())
+    const orderedTransactions = [
+      ...sortedTransactions.filter((t) => t.category === category),
+      ...sortedTransactions.filter((t) => t.category !== category),
+    ]
+
+    for (const transaction of orderedTransactions) {
       if (transaction.comment && !commentsSet[transaction.comment]) {
         commentsSet[transaction.comment] = true
         result.push(transaction.comment)

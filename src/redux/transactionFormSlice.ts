@@ -11,6 +11,8 @@ interface TransactionFormState {
   payeeTransferAccount: string
   comment: string
   datetime: string
+  payeeSuggestions: string[]
+  commentSuggestions: string[]
 }
 
 function generateInitialState(): TransactionFormState {
@@ -24,6 +26,8 @@ function generateInitialState(): TransactionFormState {
     payeeTransferAccount: '',
     comment: '',
     datetime: new Date().toISOString(),
+    payeeSuggestions: [],
+    commentSuggestions: [],
   }
 }
 
@@ -68,6 +72,12 @@ export const transactionFormSlice = createSlice({
     setDatetime: (state, action: PayloadAction<string>) => {
       state.datetime = action.payload
     },
+    setPayeeSuggestions: (state, action: PayloadAction<string[]>) => {
+      state.payeeSuggestions = action.payload
+    },
+    setCommentSuggestions: (state, action: PayloadAction<string[]>) => {
+      state.commentSuggestions = action.payload
+    },
     reset: () => {
       return generateInitialState()
     },
@@ -84,6 +94,8 @@ export const {
   setPayeeTransferAccount,
   setComment,
   setDatetime,
+  setPayeeSuggestions,
+  setCommentSuggestions,
   reset,
 } = transactionFormSlice.actions
 
