@@ -1,4 +1,3 @@
-import React from 'react'
 import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {

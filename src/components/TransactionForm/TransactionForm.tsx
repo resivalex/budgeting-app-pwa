@@ -1,13 +1,16 @@
-import React from 'react'
-import DateTimePicker from 'react-datetime-picker'
-import {
-  convertCurrencyCodeToSymbol,
-  reactSelectSmallStyles,
-  reactSelectColorStyles,
-} from '@/utils'
-import Select from 'react-select'
-import SuggestingInput from '@/components/SuggestingInput'
+import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
+import {
+  Type as TypeFormInput,
+  Currency as CurrencyFormInput,
+  Amount as AmountFormInput,
+  Account as AccountFormInput,
+  PayeeTransferAccount as PayeeTransferAccountFormInput,
+  Category as CategoryFormInput,
+  Payee as PayeeFormInput,
+  Comment as CommentFormInput,
+  Datetime as DatetimeFormInput,
+} from './FormInputs'
 
 interface Props {
   type: 'income' | 'expense' | 'transfer'
@@ -37,7 +40,7 @@ interface Props {
   comments: string[]
 }
 
-function TransactionForm({
+function StepByStepTransactionForm({
   type,
   onTypeChange,
   amount,
@@ -79,130 +82,36 @@ function TransactionForm({
 
   return (
     <div className="field p-2">
-      <div className="field">
-        <div className="is-size-7">Тип</div>
-        <div className="control">
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            value={typeOptions.find((option) => option.value === type)}
-            onChange={(selectedOption) => {
-              if (!selectedOption) return
-              onTypeChange(selectedOption.value as 'income' | 'expense' | 'transfer')
-            }}
-            options={typeOptions}
-            isSearchable={false}
-            styles={reactSelectSmallStyles}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="is-size-7">Валюта</div>
-        <div className="control">
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            value={currencyOptions.find((option) => option.value === currency)}
-            onChange={(selectedOption) => {
-              if (!selectedOption) return
-              onCurrencyChange(selectedOption.value)
-            }}
-            options={currencyOptions}
-            isSearchable={false}
-            styles={reactSelectSmallStyles}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="is-size-7">Сумма</div>
-        <div className="control">
-          <input
-            className="input is-small"
-            type="number"
-            placeholder="Amount"
-            value={amount}
-            onChange={(e) => onAmountChange(e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="is-size-7">Счёт</div>
-        <div className="control">
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            value={accountOptions.find((option) => option.value === account)}
-            onChange={(selectedOption) => {
-              if (!selectedOption) return
-              onAccountChange(selectedOption.value)
-            }}
-            options={accountOptions}
-            isSearchable={false}
-            styles={reactSelectColorStyles}
-          />
-        </div>
-      </div>
+      <TypeFormInput type={type} onTypeChange={onTypeChange} typeOptions={typeOptions} />
+      <CurrencyFormInput
+        currency={currency}
+        onCurrencyChange={onCurrencyChange}
+        currencyOptions={currencyOptions}
+      />
+      <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
+      <AccountFormInput
+        account={account}
+        onAccountChange={onAccountChange}
+        accountOptions={accountOptions}
+      />
       {type === 'transfer' ? (
-        <div className="field">
-          <div className="is-size-7">Перевод на счёт</div>
-          <div className="control">
-            <Select
-              className="basic-single"
-              classNamePrefix="select"
-              value={accountOptions.find((option) => option.value === payeeTransferAccount)}
-              onChange={(selectedOption) => {
-                if (!selectedOption) return
-                onPayeeTransferAccountChange(selectedOption.value)
-              }}
-              options={accountOptions}
-              isSearchable={false}
-              styles={reactSelectSmallStyles}
-            />
-          </div>
-        </div>
+        <PayeeTransferAccountFormInput
+          payeeTransferAccount={payeeTransferAccount}
+          onPayeeTransferAccountChange={onPayeeTransferAccountChange}
+          accountOptions={accountOptions}
+        />
       ) : (
         <>
-          <div className="field">
-            <div className="is-size-7">Категория</div>
-            <div className="control">
-              <Select
-                className="basic-single"
-                classNamePrefix="select"
-                value={categoryOptions.find((option) => option.value === category)}
-                onChange={(selectedOption) => {
-                  if (!selectedOption) return
-                  onCategoryChange(selectedOption.value)
-                }}
-                options={categoryOptions}
-                styles={reactSelectSmallStyles}
-              />
-            </div>
-          </div>
-          <div className="field">
-            <div className="is-size-7">{type === 'expense' ? 'Получатель' : 'Плательщик'}</div>
-            <div className="control">
-              <SuggestingInput value={payee} suggestions={payees} onChange={onPayeeChange} />
-            </div>
-          </div>
+          <CategoryFormInput
+            category={category}
+            onCategoryChange={onCategoryChange}
+            categoryOptions={categoryOptions}
+          />
+          <PayeeFormInput payee={payee} onPayeeChange={onPayeeChange} payees={payees} type={type} />
         </>
       )}
-      <div className="field">
-        <div className="is-size-7">Комментарий</div>
-        <div className="control">
-          <SuggestingInput suggestions={comments} value={comment} onChange={onCommentChange} />
-        </div>
-      </div>
-      <div className="field">
-        <div className="is-size-7">Дата и время</div>
-        <div className="control">
-          <DateTimePicker
-            onChange={onDatetimeChange}
-            value={datetime}
-            format="y-MM-dd HH:mm:ss"
-            disableClock
-          />
-        </div>
-      </div>
+      <CommentFormInput comment={comment} onCommentChange={onCommentChange} comments={comments} />
+      <DatetimeFormInput datetime={datetime} onDatetimeChange={onDatetimeChange} />
       <div className="field">
         <div className="control">
           <button className="button is-info" onClick={onSave} disabled={!isValid}>
@@ -214,4 +123,4 @@ function TransactionForm({
   )
 }
 
-export default TransactionForm
+export default StepByStepTransactionForm
