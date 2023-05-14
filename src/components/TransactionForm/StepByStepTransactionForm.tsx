@@ -230,6 +230,25 @@ function PayeeFormInput({
   )
 }
 
+function CommentFormInput({
+  comment,
+  onCommentChange,
+  comments,
+}: {
+  comment: string
+  onCommentChange: (comment: string) => void
+  comments: string[]
+}) {
+  return (
+    <div className="field">
+      <div className="is-size-7">Комментарий</div>
+      <div className="control">
+        <SuggestingInput suggestions={comments} value={comment} onChange={onCommentChange} />
+      </div>
+    </div>
+  )
+}
+
 function StepByStepTransactionForm({
   type,
   onTypeChange,
@@ -297,20 +316,10 @@ function StepByStepTransactionForm({
             onCategoryChange={onCategoryChange}
             categoryOptions={categoryOptions}
           />
-          <PayeeFormInput
-            payee={payee}
-            onPayeeChange={onPayeeChange}
-            payees={payees}
-            type={type}
-          />
+          <PayeeFormInput payee={payee} onPayeeChange={onPayeeChange} payees={payees} type={type} />
         </>
       )}
-      <div className="field">
-        <div className="is-size-7">Комментарий</div>
-        <div className="control">
-          <SuggestingInput suggestions={comments} value={comment} onChange={onCommentChange} />
-        </div>
-      </div>
+      <CommentFormInput comment={comment} onCommentChange={onCommentChange} comments={comments} />
       <div className="field">
         <div className="is-size-7">Дата и время</div>
         <div className="control">
