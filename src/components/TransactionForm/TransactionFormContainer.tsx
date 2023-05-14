@@ -9,6 +9,7 @@ import {
 import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties } from '@/utils'
 import { v4 as uuidv4 } from 'uuid'
 import TransactionForm from './TransactionForm'
+import StepByStepTransactionForm from './StepByStepTransactionForm'
 import {
   setType,
   setAmount,
@@ -167,8 +168,11 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const expandedCategory = categoryNameToExtendedMap[category] || category
   const expandedCategories = categories.map((c) => categoryNameToExtendedMap[c] || c)
 
+  const isStepByStep = true
+  const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
+
   return (
-    <TransactionForm
+    <TransactionFormComponent
       type={type}
       onTypeChange={(type: 'income' | 'expense' | 'transfer') => dispatch(setType(type))}
       amount={transactionForm.amount}
