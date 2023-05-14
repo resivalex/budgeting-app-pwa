@@ -40,7 +40,7 @@ interface Props {
   comments: string[]
 }
 
-function StepByStepTransactionForm({
+function TransactionForm({
   type,
   onTypeChange,
   amount,
@@ -123,4 +123,4 @@ function StepByStepTransactionForm({
   )
 }
 
-export default StepByStepTransactionForm
+export default TransactionForm
