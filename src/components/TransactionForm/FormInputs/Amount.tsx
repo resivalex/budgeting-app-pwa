@@ -11,7 +11,7 @@ export default function Amount({ amount, onAmountChange }: Props) {
         <input
           className="input is-small"
           type="number"
-          placeholder="Amount"
+          placeholder="Сумма"
           value={amount}
           onChange={(e) => onAmountChange(e.target.value)}
         />
