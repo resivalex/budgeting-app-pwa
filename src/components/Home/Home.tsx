@@ -14,7 +14,7 @@ interface Props {
 
 export default function Home({ accounts }: Props) {
   return (
-    <div className="box">
+    <div className="box py-0 px-2">
       <div>
         {accounts.map(({ name, currency, balance, color }, index) => (
           <div key={index} className="box my-2" style={{ backgroundColor: color }}>
