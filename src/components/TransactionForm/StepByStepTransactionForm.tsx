@@ -37,6 +37,119 @@ interface Props {
   comments: string[]
 }
 
+function TypeFormInput({
+  type,
+  onTypeChange,
+  typeOptions,
+}: {
+  type: 'expense' | 'income' | 'transfer'
+  onTypeChange: (type: 'expense' | 'income' | 'transfer') => void
+  typeOptions: { value: string; label: string }[]
+}) {
+  return (
+    <div className="field">
+      <div className="is-size-7">Тип</div>
+      <div className="control">
+        <Select
+          className="basic-single"
+          classNamePrefix="select"
+          value={typeOptions.find((option) => option.value === type)}
+          onChange={(selectedOption) => {
+            if (!selectedOption) return
+            onTypeChange(selectedOption.value as 'income' | 'expense' | 'transfer')
+          }}
+          options={typeOptions}
+          isSearchable={false}
+          styles={reactSelectSmallStyles}
+        />
+      </div>
+    </div>
+  )
+}
+
+function CurrencyFormInput({
+  currency,
+  onCurrencyChange,
+  currencyOptions,
+}: {
+  currency: string
+  onCurrencyChange: (currency: string) => void
+  currencyOptions: { value: string; label: string }[]
+}) {
+  return (
+    <div className="field">
+      <div className="is-size-7">Валюта</div>
+      <div className="control">
+        <Select
+          className="basic-single"
+          classNamePrefix="select"
+          value={currencyOptions.find((option) => option.value === currency)}
+          onChange={(selectedOption) => {
+            if (!selectedOption) return
+            onCurrencyChange(selectedOption.value)
+          }}
+          options={currencyOptions}
+          isSearchable={false}
+          styles={reactSelectSmallStyles}
+        />
+      </div>
+    </div>
+  )
+}
+
+function AmountFormInput({
+  amount,
+  onAmountChange,
+}: {
+  amount: string
+  onAmountChange: (amount: string) => void
+}) {
+  return (
+    <div className="field">
+      <div className="is-size-7">Сумма</div>
+      <div className="control">
+        <input
+          className="input is-small"
+          type="number"
+          placeholder="Amount"
+          value={amount}
+          onChange={(e) => onAmountChange(e.target.value)}
+        />
+      </div>
+    </div>
+  )
+}
+
+function AccountFormInput({
+  account,
+  onAccountChange,
+  accountOptions,
+}: {
+  account: string
+  onAccountChange: (account: string) => void
+  accountOptions: { value: string; label: string; color: string }[]
+}) {
+  return (
+    <div className="field">
+      <div className="is-size-7">Счёт</div>
+      <div className="control">
+        <Select
+          className="basic-single"
+          classNamePrefix="select"
+          value={accountOptions.find((option) => option.value === account)}
+          onChange={(selectedOption) => {
+            if (!selectedOption) return
+            onAccountChange(selectedOption.value)
+          }}
+          options={accountOptions}
+          isSearchable={false}
+          styles={reactSelectColorStyles}
+        />
+      </div>
+    </div>
+  )
+}
+
 function StepByStepTransactionForm({
   type,
   onTypeChange,
@@ -79,69 +192,18 @@ function StepByStepTransactionForm({
 
   return (
     <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
-      <div className="field">
-        <div className="is-size-7">Тип</div>
-        <div className="control">
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            value={typeOptions.find((option) => option.value === type)}
-            onChange={(selectedOption) => {
-              if (!selectedOption) return
-              onTypeChange(selectedOption.value as 'income' | 'expense' | 'transfer')
-            }}
-            options={typeOptions}
-            isSearchable={false}
-            styles={reactSelectSmallStyles}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="is-size-7">Валюта</div>
-        <div className="control">
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            value={currencyOptions.find((option) => option.value === currency)}
-            onChange={(selectedOption) => {
-              if (!selectedOption) return
-              onCurrencyChange(selectedOption.value)
-            }}
-            options={currencyOptions}
-            isSearchable={false}
-            styles={reactSelectSmallStyles}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="is-size-7">Сумма</div>
-        <div className="control">
-          <input
-            className="input is-small"
-            type="number"
-            placeholder="Amount"
-            value={amount}
-            onChange={(e) => onAmountChange(e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="field">
-        <div className="is-size-7">Счёт</div>
-        <div className="control">
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            value={accountOptions.find((option) => option.value === account)}
-            onChange={(selectedOption) => {
-              if (!selectedOption) return
-              onAccountChange(selectedOption.value)
-            }}
-            options={accountOptions}
-            isSearchable={false}
-            styles={reactSelectColorStyles}
-          />
-        </div>
-      </div>
+      <TypeFormInput type={type} onTypeChange={onTypeChange} typeOptions={typeOptions} />
+      <CurrencyFormInput
+        currency={currency}
+        onCurrencyChange={onCurrencyChange}
+        currencyOptions={currencyOptions}
+      />
+      <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
+      <AccountFormInput
+        account={account}
+        onAccountChange={onAccountChange}
+        accountOptions={accountOptions}
+      />
       {type === 'transfer' ? (
         <div className="field">
           <div className="is-size-7">Перевод на счёт</div>
