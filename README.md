@@ -3,12 +3,12 @@
 The Budgeting App is your friendly companion for handling finances. This user-friendly application built with React allows you to manage your budget and track your expenses easily.
 
 ## What's Inside? 📦
-- [What's this App all About?](#about)
-- [What can this App do?](#features)
-- [How do I Get Started?](#getting-started)
-- [How to Use?](#usage)
-- [Who can Help?](#contribute)
-- [What about the Legal Stuff?](#license)
+- [What's this App all About?](#about-)
+- [What can this App do?](#features-)
+- [How do I Get Started?](#getting-started-)
+- [How to Use?](#usage-)
+- [Who can Help?](#contribute-)
+- [What about the Legal Stuff?](#license-)
 
 ## About 🤔
 
@@ -29,7 +29,7 @@ Here's what the Budgeting App can do for you:
 Follow these simple steps to get the Budgeting App running on your computer:
 
 1. Copy the repository: `git clone https://github.com/resivalex/budgeting-app-pwa.git`
-2. Enter the project directory: `cd budgeting-app`
+2. Enter the project directory: `cd budgeting-app-pwa`
 3. Install what's necessary: `yarn install`
 
 ## Usage 👨‍💻
@@ -56,7 +56,7 @@ Remember to stick to the existing code style and include tests if necessary.
 
 ## License 📝
 
-The Budgeting App is free and open-source, thanks to the [MIT License](LICENSE.txt).
+The Budgeting App is free and open-source, thanks to the [MIT License](LICENSE).
 
 ---
 
