@@ -150,6 +150,36 @@ function AccountFormInput({
   )
 }
 
+function PayeeTransferAccountFormInput({
+  payeeTransferAccount,
+  onPayeeTransferAccountChange,
+  accountOptions,
+}: {
+  payeeTransferAccount: string
+  onPayeeTransferAccountChange: (payeeTransferAccount: string) => void
+  accountOptions: { value: string; label: string; color: string }[]
+}) {
+  return (
+    <div className="field">
+      <div className="is-size-7">Перевод на счёт</div>
+      <div className="control">
+        <Select
+          className="basic-single"
+          classNamePrefix="select"
+          value={accountOptions.find((option) => option.value === payeeTransferAccount)}
+          onChange={(selectedOption) => {
+            if (!selectedOption) return
+            onPayeeTransferAccountChange(selectedOption.value)
+          }}
+          options={accountOptions}
+          isSearchable={false}
+          styles={reactSelectColorStyles}
+        />
+      </div>
+    </div>
+  )
+}
+
 function StepByStepTransactionForm({
   type,
   onTypeChange,
@@ -205,23 +235,11 @@ function StepByStepTransactionForm({
         accountOptions={accountOptions}
       />
       {type === 'transfer' ? (
-        <div className="field">
-          <div className="is-size-7">Перевод на счёт</div>
-          <div className="control">
-            <Select
-              className="basic-single"
-              classNamePrefix="select"
-              value={accountOptions.find((option) => option.value === payeeTransferAccount)}
-              onChange={(selectedOption) => {
-                if (!selectedOption) return
-                onPayeeTransferAccountChange(selectedOption.value)
-              }}
-              options={accountOptions}
-              isSearchable={false}
-              styles={reactSelectSmallStyles}
-            />
-          </div>
-        </div>
+        <PayeeTransferAccountFormInput
+          payeeTransferAccount={payeeTransferAccount}
+          onPayeeTransferAccountChange={onPayeeTransferAccountChange}
+          accountOptions={accountOptions}
+        />
       ) : (
         <>
           <div className="field">
