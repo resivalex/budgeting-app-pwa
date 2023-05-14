@@ -9,6 +9,7 @@ interface Props {
   totalAmount: number
   spentAmount: number
   currency: string
+  commonBudgetsExpectationRatio: number | null
   onLongPress: () => void
 }
 
@@ -53,6 +54,7 @@ export default function Budget({
   currency,
   name,
   color,
+  commonBudgetsExpectationRatio,
   onLongPress,
 }: Props) {
   const longPressBind = useLongPress(onLongPress, {
@@ -78,7 +80,11 @@ export default function Budget({
               {formatFinancialAmountRounded(totalAmount)} {currencySymbol}
             </div>
           </div>
-          <BudgetProgressBar totalAmount={totalAmount} spentAmount={spentAmount} />
+          <BudgetProgressBar
+            totalAmount={totalAmount}
+            spentAmount={spentAmount}
+            externalRatio={commonBudgetsExpectationRatio}
+          />
           <div className="is-flex is-justify-content-space-between pt-1">
             <div className="is-flex pr-1">
               {formatFinancialAmountRounded(spentAmount)} {currencySymbol}

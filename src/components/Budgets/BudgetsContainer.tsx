@@ -170,6 +170,29 @@ function getAvailableMonths(spendingLimits: SpendingLimitsDTO) {
   return _.sortBy(availableMonths, (date) => new Date(date).getTime())
 }
 
+function calculateExpectationRatioByCurrentDate(selectedMonth: string) {
+  const currentDate = new Date()
+  const selectedMonthDate = new Date(selectedMonth)
+
+  if (currentDate.getMonth() !== selectedMonthDate.getMonth()) {
+    return null
+  }
+  const selectedMonthFirstDay = new Date(
+    selectedMonthDate.getFullYear(),
+    selectedMonthDate.getMonth(),
+    1
+  )
+  const selectedMonthLastDay = new Date(
+    selectedMonthDate.getFullYear(),
+    selectedMonthDate.getMonth() + 1,
+    0
+  )
+  const millisecondsInMonth = selectedMonthLastDay.getTime() - selectedMonthFirstDay.getTime()
+  const millisecondsFromSelectedMonth = currentDate.getTime() - selectedMonthFirstDay.getTime()
+
+  return millisecondsFromSelectedMonth / millisecondsInMonth
+}
+
 export default function BudgetsContainer({ onTransactionRemove }: Props) {
   const dispatch = useDispatch()
   const categories: string[] = useAppSelector((state) => state.categories)
@@ -215,6 +238,7 @@ export default function BudgetsContainer({ onTransactionRemove }: Props) {
   }
 
   const focusedBudget = budgets.find((budget) => budget.name === focusedBudgetName) || null
+  const commonBudgetsExpectationRatio = calculateExpectationRatioByCurrentDate(selectedMonth)
 
   return (
     <Budgets
@@ -224,6 +248,7 @@ export default function BudgetsContainer({ onTransactionRemove }: Props) {
       onMonthSelect={(month) => dispatch(setBudgetMonthFirstDay(month))}
       onFocus={handleFocus}
       focusedBudget={focusedBudget}
+      commonBudgetsExpectationRatio={commonBudgetsExpectationRatio}
       onTransactionRemove={onTransactionRemove}
     />
   )

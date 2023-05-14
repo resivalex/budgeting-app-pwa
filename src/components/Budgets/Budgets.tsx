@@ -12,6 +12,7 @@ interface Props {
   onMonthSelect: (month: string) => void
   onFocus: (name: string) => void
   focusedBudget: BudgetDTO | null
+  commonBudgetsExpectationRatio: number | null
   onTransactionRemove: (id: string) => void
 }
 
@@ -22,6 +23,7 @@ export default function Budgets({
   onMonthSelect,
   onFocus,
   focusedBudget,
+  commonBudgetsExpectationRatio,
   onTransactionRemove,
 }: Props) {
   const monthOptions = availableMonths.map((month) => ({
@@ -53,6 +55,7 @@ export default function Budgets({
             currency={budget.currency}
             name={budget.name}
             color={budget.color}
+            commonBudgetsExpectationRatio={commonBudgetsExpectationRatio}
             onLongPress={() => onFocus(budget.name)}
           />
         ))}
