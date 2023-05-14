@@ -209,6 +209,27 @@ function CategoryFormInput({
   )
 }
 
+function PayeeFormInput({
+  payee,
+  onPayeeChange,
+  payees,
+  type,
+}: {
+  payee: string
+  onPayeeChange: (payee: string) => void
+  payees: string[]
+  type: 'expense' | 'income' | 'transfer'
+}) {
+  return (
+    <div className="field">
+      <div className="is-size-7">{type === 'expense' ? 'Получатель' : 'Плательщик'}</div>
+      <div className="control">
+        <SuggestingInput value={payee} suggestions={payees} onChange={onPayeeChange} />
+      </div>
+    </div>
+  )
+}
+
 function StepByStepTransactionForm({
   type,
   onTypeChange,
@@ -276,12 +297,12 @@ function StepByStepTransactionForm({
             onCategoryChange={onCategoryChange}
             categoryOptions={categoryOptions}
           />
-          <div className="field">
-            <div className="is-size-7">{type === 'expense' ? 'Получатель' : 'Плательщик'}</div>
-            <div className="control">
-              <SuggestingInput value={payee} suggestions={payees} onChange={onPayeeChange} />
-            </div>
-          </div>
+          <PayeeFormInput
+            payee={payee}
+            onPayeeChange={onPayeeChange}
+            payees={payees}
+            type={type}
+          />
         </>
       )}
       <div className="field">
