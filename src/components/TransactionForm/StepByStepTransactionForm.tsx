@@ -1,7 +1,7 @@
 import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
-  Type as TypeFormInput,
+  TypeStep as TypeFormInput,
   Currency as CurrencyFormInput,
   Amount as AmountFormInput,
   Account as AccountFormInput,
@@ -67,11 +67,6 @@ function StepByStepTransactionForm({
   payees,
   comments,
 }: Props) {
-  const typeOptions = [
-    { value: 'expense', label: 'Расход' },
-    { value: 'income', label: 'Доход' },
-    { value: 'transfer', label: 'Перевод' },
-  ]
   const currencyOptions = currencies.map((c) => ({ value: c, label: c }))
   const accountOptions = accounts.map((a) => ({
     value: a.account,
@@ -82,7 +77,7 @@ function StepByStepTransactionForm({
 
   return (
     <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
-      <TypeFormInput type={type} onTypeChange={onTypeChange} typeOptions={typeOptions} />
+      <TypeFormInput value={type} onChange={onTypeChange} />
       <CurrencyFormInput
         currency={currency}
         onCurrencyChange={onCurrencyChange}
