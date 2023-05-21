@@ -2,7 +2,7 @@ import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
   TypeStep as TypeFormInput,
-  Currency as CurrencyFormInput,
+  CurrencyStep as CurrencyFormInput,
   Amount as AmountFormInput,
   Account as AccountFormInput,
   PayeeTransferAccount as PayeeTransferAccountFormInput,
@@ -78,11 +78,7 @@ function StepByStepTransactionForm({
   return (
     <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
       <TypeFormInput value={type} onChange={onTypeChange} />
-      <CurrencyFormInput
-        currency={currency}
-        onCurrencyChange={onCurrencyChange}
-        currencyOptions={currencyOptions}
-      />
+      <CurrencyFormInput value={currency} onChange={onCurrencyChange} options={currencyOptions} />
       <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
       <AccountFormInput
         account={account}

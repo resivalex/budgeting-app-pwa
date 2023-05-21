@@ -1,8 +1,11 @@
+import { reactSelectSmallStyles } from '@/utils'
+import Select from 'react-select'
 import styled from 'styled-components'
 
 interface Props {
   value: string
-  onChange: (type: 'income' | 'expense' | 'transfer') => void
+  onChange: (currency: string) => void
+  options: { value: string; label: string }[]
 }
 
 const Option = styled.div<{ isActive: boolean }>`
@@ -37,19 +40,19 @@ const Container = styled.div`
   }
 `
 
-export default function TypeStep({ value, onChange }: Props) {
+export default function CurrencyStep({ value, onChange, options }: Props) {
   return (
     <div className="field">
       <Container tabIndex={0}>
-        <Option isActive={value === 'expense'} onClick={() => onChange('expense')}>
-          Расход
-        </Option>
-        <Option isActive={value === 'income'} onClick={() => onChange('income')}>
-          Доход
-        </Option>
-        <Option isActive={value === 'transfer'} onClick={() => onChange('transfer')}>
-          Перевод
-        </Option>
+        {options.map((option) => (
+          <Option
+            key={option.value}
+            isActive={value === option.value}
+            onClick={() => onChange(option.value)}
+          >
+            {option.label}
+          </Option>
+        ))}
       </Container>
     </div>
   )
