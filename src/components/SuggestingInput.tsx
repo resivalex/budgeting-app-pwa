@@ -52,6 +52,7 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
       value={selectedOption}
       inputValue={inputValue}
       styles={reactSelectSmallStyles}
+      noOptionsMessage={() => null}
     />
   )
 }
