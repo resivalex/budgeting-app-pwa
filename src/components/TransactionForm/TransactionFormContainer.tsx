@@ -169,7 +169,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const expandedCategory = categoryNameToExtendedMap[category] || category
   const expandedCategories = categories.map((c) => categoryNameToExtendedMap[c] || c)
 
-  const isStepByStep = true
+  const isStepByStep = false
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
 
   return (

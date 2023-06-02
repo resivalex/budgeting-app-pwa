@@ -1,4 +1,4 @@
-import SuggestingInput from '@/components/SuggestingInput'
+import SuggestingInput2 from '@/components/SuggestingInput2'
 
 interface Props {
   comment: string
@@ -11,7 +11,7 @@ export default function Comment({ comment, onCommentChange, comments }: Props) {
     <div className="field">
       <div className="is-size-7">Комментарий</div>
       <div className="control">
-        <SuggestingInput suggestions={comments} value={comment} onChange={onCommentChange} />
+        <SuggestingInput2 suggestions={comments} value={comment} onChange={onCommentChange} />
       </div>
     </div>
   )
