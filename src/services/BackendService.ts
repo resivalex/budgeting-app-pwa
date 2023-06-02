@@ -87,6 +87,19 @@ class BackendService {
 
     return response.data
   }
+
+  async getExportingCsvString(): Promise<string> {
+    try {
+      const response = await axios.get(`${this.backendUrl}/exporting`, {
+        responseType: 'blob',
+        headers: { Authorization: `Bearer ${this.token}` },
+      })
+
+      return response.data
+    } catch (err) {
+      throw new Error('Failed to export CSV.')
+    }
+  }
 }
 
 export default BackendService

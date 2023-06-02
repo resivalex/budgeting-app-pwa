@@ -4,10 +4,11 @@ import classNames from 'classnames'
 
 interface Props {
   handleLogout: () => void
+  handleExport: () => void
   appVersion: string
 }
 
-const Menu: React.FC<Props> = ({ handleLogout, appVersion }) => {
+const Menu: React.FC<Props> = ({ handleLogout, handleExport, appVersion }) => {
   const [isMenuActive, setIsMenuActive] = useState(false)
   const menuRef: any = useRef(null)
   const burgerRef: any = useRef(null)
@@ -99,6 +100,9 @@ const Menu: React.FC<Props> = ({ handleLogout, appVersion }) => {
             Новая запись
           </Link>
           <div className="has-text-grey m-3">Версия: {appVersion}</div>
+          <button onClick={handleExport} className="button is-info mt-1 ml-3">
+            Экспорт
+          </button>
           <button onClick={handleLogout} className="button is-danger mt-1 ml-3">
             Выйти
           </button>

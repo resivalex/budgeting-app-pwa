@@ -60,9 +60,23 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
     setLastNotificationText('Запись удалена')
   }
 
-  const handleLogout = () => {
+  function handleLogout() {
     localStorage.removeItem('config')
     window.location.reload()
+  }
+
+  async function handleExport() {
+    const csvString = await backendService.getExportingCsvString()
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.setAttribute('href', url)
+    const isoDate = new Date().toISOString().slice(0, 10)
+    link.setAttribute('download', `${isoDate}.csv`)
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   return (
@@ -71,6 +85,7 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
       isLoading={isLoading}
       offlineMode={offlineMode}
       lastNotificationText={lastNotificationText}
+      onExport={handleExport}
       onLogout={handleLogout}
       onAddTransaction={addTransaction}
       onEditTransaction={editTransaction}

@@ -17,6 +17,7 @@ interface AppProps {
   isLoading: boolean
   offlineMode: boolean
   lastNotificationText: string
+  onExport: () => void
   onLogout: () => void
   onAddTransaction: (transaction: TransactionDTO) => void
   onEditTransaction: (transaction: TransactionDTO) => void
@@ -30,6 +31,7 @@ export default function App(props: AppProps) {
     isLoading,
     offlineMode,
     lastNotificationText,
+    onExport,
     onLogout,
     onAddTransaction,
     onEditTransaction,
@@ -54,7 +56,7 @@ export default function App(props: AppProps) {
           flexDirection: 'column',
         }}
       >
-        <Menu handleLogout={onLogout} appVersion={appVersion} />
+        <Menu handleExport={onExport} handleLogout={onLogout} appVersion={appVersion} />
         <Status isLoading={isLoading} />
         <div
           style={{
