@@ -15,7 +15,9 @@ const Input = styled.input`
 const Suggestions = styled.div`
   position: absolute;
   width: 100%;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  max-height: 200px; // Set the maximum height you prefer
+  overflow-y: auto; // Enable vertical scrolling
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   z-index: 1;
   background-color: white;
 `
