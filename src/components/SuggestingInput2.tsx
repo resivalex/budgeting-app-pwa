@@ -39,12 +39,15 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const filteredSuggestions = inputValue
-    ? suggestions.filter((suggestion) =>
-        suggestion.toLowerCase().includes(inputValue.toLowerCase())
-      )
-    : suggestions
+  // Filter suggestions based on input value
+  const getFilteredSuggestions = () =>
+    inputValue
+      ? suggestions.filter((suggestion) =>
+          suggestion.toLowerCase().includes(inputValue.toLowerCase())
+        )
+      : suggestions
 
+  // Handle outside click to close suggestions
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
@@ -78,7 +81,7 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
       <Input type="text" value={inputValue} onChange={handleChange} onFocus={handleFocus} />
       {showSuggestions && (
         <Suggestions>
-          {filteredSuggestions.map((suggestion, index) => (
+          {getFilteredSuggestions().map((suggestion, index) => (
             <Suggestion key={index} onClick={() => handleSuggestionClick(suggestion)}>
               {suggestion}
             </Suggestion>
