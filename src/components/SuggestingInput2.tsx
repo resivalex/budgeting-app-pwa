@@ -1,4 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+`
+
+const Input = styled.input`
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+`
+
+const Suggestions = styled.div`
+  position: absolute;
+  width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  background-color: white;
+`
+
+const Suggestion = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`
 
 interface SuggestingInputProps {
   suggestions: string[]
@@ -46,17 +74,17 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   }
 
   return (
-    <div ref={inputRef}>
-      <input type="text" value={inputValue} onChange={handleChange} onFocus={handleFocus} />
+    <Wrapper ref={inputRef}>
+      <Input type="text" value={inputValue} onChange={handleChange} onFocus={handleFocus} />
       {showSuggestions && (
-        <div>
+        <Suggestions>
           {filteredSuggestions.map((suggestion, index) => (
-            <div key={index} onClick={() => handleSuggestionClick(suggestion)}>
+            <Suggestion key={index} onClick={() => handleSuggestionClick(suggestion)}>
               {suggestion}
-            </div>
+            </Suggestion>
           ))}
-        </div>
+        </Suggestions>
       )}
-    </div>
+    </Wrapper>
   )
 }
