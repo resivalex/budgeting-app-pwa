@@ -142,11 +142,10 @@ export default function TransactionFormContainer({ onApply }: Props) {
     transactionForm.datetime &&
     transactionForm.amount &&
     account &&
-    category &&
+    (type === 'transfer' || category) &&
     type &&
     currency &&
-    (type !== 'transfer' || payeeTransferAccount) &&
-    payeeTransferAccount
+    (type !== 'transfer' || payeeTransferAccount)
   )
 
   const handleSave = () => {
@@ -170,7 +169,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const expandedCategory = categoryNameToExtendedMap[category] || category
   const expandedCategories = categories.map((c) => categoryNameToExtendedMap[c] || c)
 
-  const isStepByStep = false
+  const isStepByStep = true
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
 
   return (
