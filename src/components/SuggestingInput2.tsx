@@ -8,26 +8,30 @@ const Wrapper = styled.div`
 
 const Input = styled.input`
   width: 100%;
+  height: 30px;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`
+
+const Suggestion = styled.div`
+  padding: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f1f1f1;
+  }
 `
 
 const Suggestions = styled.div`
   position: absolute;
   width: 100%;
-  max-height: 200px; // Set the maximum height you prefer
-  overflow-y: auto; // Enable vertical scrolling
+  max-height: 200px;
+  overflow-y: auto;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   z-index: 1;
   background-color: white;
-`
-
-const Suggestion = styled.div`
-  padding: 10px;
-  cursor: pointer;
-  &:hover {
-    background-color: #f1f1f1;
-  }
+  border-radius: 5px;
 `
 
 interface SuggestingInputProps {
