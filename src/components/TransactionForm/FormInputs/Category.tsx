@@ -1,29 +1,17 @@
-import { reactSelectSmallStyles } from '@/utils'
-import Select from 'react-select'
+import ChoosingInput from '@/components/ChoosingInput'
 
 interface Props {
   category: string
-  onCategoryChange: (category: string) => void
   categoryOptions: { value: string; label: string }[]
+  onCategoryChange: (category: string) => void
 }
 
-export default function Category({ category, onCategoryChange, categoryOptions }: Props) {
+export default function Category({ category, categoryOptions, onCategoryChange }: Props) {
   return (
     <div className="field">
       <div className="is-size-7">Категория</div>
       <div className="control">
-        <Select
-          className="basic-single"
-          classNamePrefix="select"
-          value={categoryOptions.find((option) => option.value === category)}
-          onChange={(selectedOption) => {
-            if (!selectedOption) return
-            onCategoryChange(selectedOption.value)
-          }}
-          options={categoryOptions}
-          styles={reactSelectSmallStyles}
-          placeholder="Выберите из списка..."
-        />
+        <ChoosingInput value={category} options={categoryOptions} onChange={onCategoryChange} />
       </div>
     </div>
   )
