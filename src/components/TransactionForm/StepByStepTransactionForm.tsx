@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
@@ -40,6 +41,27 @@ interface Props {
   comments: string[]
 }
 
+const typeStep = 'type'
+const currencyStep = 'currency'
+const amountStep = 'amount'
+const accountStep = 'account'
+const categoryStep = 'category'
+const payeeStep = 'payee'
+const payeeTransferAccountStep = 'payeeTransferAccount'
+const commentStep = 'comment'
+const datetimeStep = 'datetime'
+const stepNames = [
+  typeStep,
+  currencyStep,
+  amountStep,
+  accountStep,
+  categoryStep,
+  payeeStep,
+  payeeTransferAccountStep,
+  commentStep,
+  datetimeStep,
+]
+
 function StepByStepTransactionForm({
   type,
   onTypeChange,
@@ -67,6 +89,8 @@ function StepByStepTransactionForm({
   payees,
   comments,
 }: Props) {
+  const [currentStep, setCurrentStep] = useState(typeStep)
+
   const currencyOptions = currencies.map((currency) => ({
     value: currency,
     label: currency,
@@ -81,34 +105,127 @@ function StepByStepTransactionForm({
     label: category,
   }))
 
-  return (
-    <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
-      <TypeFormInput value={type} onChange={onTypeChange} />
+  function renderTypeStep() {
+    return (
+      <TypeFormInput
+        value={type}
+        isExpanded={currentStep === typeStep}
+        onChange={onTypeChange}
+        onExpand={() => setCurrentStep(typeStep)}
+      />
+    )
+  }
+
+  function renderCurrencyStep() {
+    if (currentStep !== currencyStep) {
+      return <div onClick={() => setCurrentStep(currencyStep)}>Currency: {currency}</div>
+    }
+
+    return (
       <CurrencyFormInput value={currency} onChange={onCurrencyChange} options={currencyOptions} />
-      <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
+    )
+  }
+
+  function renderAmountStep() {
+    if (currentStep !== amountStep) {
+      return <div onClick={() => setCurrentStep(amountStep)}>Amount: {amount}</div>
+    }
+
+    return <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
+  }
+
+  function renderAccountStep() {
+    if (currentStep !== accountStep) {
+      return <div onClick={() => setCurrentStep(accountStep)}>Account: {account}</div>
+    }
+
+    return (
       <AccountFormInput
         account={account}
         onAccountChange={onAccountChange}
         accountOptions={accountOptions}
       />
+    )
+  }
+
+  function renderCategoryStep() {
+    if (currentStep !== categoryStep) {
+      return <div onClick={() => setCurrentStep(categoryStep)}>Category: {category}</div>
+    }
+
+    return (
+      <CategoryFormInput
+        category={category}
+        onCategoryChange={onCategoryChange}
+        categoryOptions={categoryOptions}
+      />
+    )
+  }
+
+  function renderPayeeStep() {
+    if (currentStep !== payeeStep) {
+      return <div onClick={() => setCurrentStep(payeeStep)}>Payee: {payee}</div>
+    }
+
+    return (
+      <PayeeFormInput payee={payee} onPayeeChange={onPayeeChange} payees={payees} type={type} />
+    )
+  }
+
+  function renderPayeeTransferAccountStep() {
+    if (currentStep !== payeeTransferAccountStep) {
+      return (
+        <div onClick={() => setCurrentStep(payeeTransferAccountStep)}>
+          Payee Transfer Account: {payeeTransferAccount}
+        </div>
+      )
+    }
+
+    return (
+      <PayeeTransferAccountFormInput
+        payeeTransferAccount={payeeTransferAccount}
+        onPayeeTransferAccountChange={onPayeeTransferAccountChange}
+        accountOptions={accountOptions}
+      />
+    )
+  }
+
+  function renderCommentStep() {
+    if (currentStep !== commentStep) {
+      return <div onClick={() => setCurrentStep(commentStep)}>Comment: {comment}</div>
+    }
+
+    return (
+      <CommentFormInput comment={comment} onCommentChange={onCommentChange} comments={comments} />
+    )
+  }
+
+  function renderDatetimeStep() {
+    if (currentStep !== datetimeStep) {
+      return (
+        <div onClick={() => setCurrentStep(datetimeStep)}>Datetime: {datetime.toISOString()}</div>
+      )
+    }
+
+    return <DatetimeFormInput datetime={datetime} onDatetimeChange={onDatetimeChange} />
+  }
+
+  return (
+    <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
+      {renderTypeStep()}
+      {renderCurrencyStep()}
+      {renderAmountStep()}
+      {renderAccountStep()}
       {type === 'transfer' ? (
-        <PayeeTransferAccountFormInput
-          payeeTransferAccount={payeeTransferAccount}
-          onPayeeTransferAccountChange={onPayeeTransferAccountChange}
-          accountOptions={accountOptions}
-        />
+        renderPayeeTransferAccountStep()
       ) : (
         <>
-          <CategoryFormInput
-            category={category}
-            onCategoryChange={onCategoryChange}
-            categoryOptions={categoryOptions}
-          />
-          <PayeeFormInput payee={payee} onPayeeChange={onPayeeChange} payees={payees} type={type} />
+          {renderCategoryStep()}
+          {renderPayeeStep()}
         </>
       )}
-      <CommentFormInput comment={comment} onCommentChange={onCommentChange} comments={comments} />
-      <DatetimeFormInput datetime={datetime} onDatetimeChange={onDatetimeChange} />
+      {renderCommentStep()}
+      {renderDatetimeStep()}
       <div className="field">
         <div className="control">
           <button className="button is-info" onClick={onSave} disabled={!isValid}>

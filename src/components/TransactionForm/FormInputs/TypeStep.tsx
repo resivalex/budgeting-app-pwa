@@ -2,7 +2,9 @@ import styled from 'styled-components'
 
 interface Props {
   value: string
+  isExpanded: boolean
   onChange: (type: 'income' | 'expense' | 'transfer') => void
+  onExpand: () => void
 }
 
 const Option = styled.div<{ isActive: boolean }>`
@@ -37,7 +39,30 @@ const Container = styled.div`
   }
 `
 
-export default function TypeStep({ value, onChange }: Props) {
+export default function TypeStep({ value, isExpanded, onChange, onExpand }: Props) {
+  function renderSelectedOption() {
+    switch (value) {
+      case 'expense':
+        return 'Расход'
+      case 'income':
+        return 'Доход'
+      case 'transfer':
+        return 'Перевод'
+      default:
+        return null
+    }
+  }
+
+  if (!isExpanded) {
+    return (
+      <div className="field">
+        <Container tabIndex={0} onClick={onExpand}>
+          <Option isActive>{renderSelectedOption()}</Option>
+        </Container>
+      </div>
+    )
+  }
+
   return (
     <div className="field">
       <Container tabIndex={0}>
