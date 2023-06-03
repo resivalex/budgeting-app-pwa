@@ -42,18 +42,17 @@ interface SuggestingInputProps {
 }
 
 export default function SuggestingInput({ suggestions, value, onChange }: SuggestingInputProps) {
-  const [inputValue, setInputValue] = useState(value)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   // Filter suggestions based on input value
   function getFilteredSuggestions() {
-    if (!inputValue) {
+    if (!value) {
       return suggestions
     }
 
     return suggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(inputValue.toLowerCase())
+      suggestion.toLowerCase().includes(value.toLowerCase())
     )
   }
 
@@ -73,7 +72,6 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    setInputValue(value)
     onChange(value)
   }
 
@@ -82,14 +80,13 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   }
 
   const handleSuggestionClick = (suggestion: string) => {
-    setInputValue(suggestion)
     onChange(suggestion)
     setShowSuggestions(false)
   }
 
   return (
     <Wrapper ref={inputRef}>
-      <Input type="text" value={inputValue} onChange={handleChange} onFocus={handleFocus} />
+      <Input type="text" value={value} onChange={handleChange} onFocus={handleFocus} />
       {showSuggestions && (
         <Suggestions>
           {getFilteredSuggestions().map((suggestion, index) => (
