@@ -51,8 +51,8 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
       return suggestions
     }
 
-    return suggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(value.toLowerCase())
+    return suggestions.filter(
+      (suggestion) => suggestion.toLowerCase().includes(value.toLowerCase()) && suggestion !== value
     )
   }
 

@@ -49,13 +49,8 @@ interface ChoosingInputProps {
 export default function ChoosingInput({ value, onChange, options }: ChoosingInputProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [inputValue, setInputValue] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-
-  // Update the input value when the external value changes
-  useEffect(() => {
-    const option = options.find((option) => option.value === value)
-    setInputValue(option ? option.label : '')
-  }, [value])
 
   // Filter suggestions based on input value
   function getFilteredSuggestions() {
@@ -63,34 +58,61 @@ export default function ChoosingInput({ value, onChange, options }: ChoosingInpu
       return options
     }
 
-    return options.filter((option) => option.label.toLowerCase().includes(inputValue.toLowerCase()))
+    return options.filter(
+      (option) =>
+        option.label.toLowerCase().includes(inputValue.toLowerCase()) && option.label !== inputValue
+    )
   }
 
-  // Handle outside click to close suggestions
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInputValue(e.target.value)
   }
 
-  const handleFocus = () => {
-    setShowSuggestions(true)
+  const inputValueRef = useRef(inputValue)
+
+  // Store inputValue to check in setTimeout
+  useEffect(() => {
+    inputValueRef.current = inputValue
+  }, [inputValue])
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null
+    if (isFocused) {
+      const option = options.find((option) => option.value === value)
+      setInputValue(option ? option.label : '')
+      setShowSuggestions(true)
+    } else {
+      // Handle blur after suggestion click
+      timeoutId = setTimeout(() => {
+        const option = options.find((option) => option.label === inputValueRef.current)
+        if (option) {
+          onChange(option.value)
+        } else {
+          const previousOption = options.find((option) => option.value === value)
+          setInputValue(previousOption ? previousOption.label : '')
+        }
+        setShowSuggestions(false)
+      }, 100)
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [isFocused])
+
+  function handleFocus() {
+    setIsFocused(true)
+  }
+
+  function handleBlur() {
+    setIsFocused(false)
   }
 
   const handleSuggestionClick = (suggestionValue: string) => {
+    setInputValue(suggestionValue)
     onChange(suggestionValue)
-    setShowSuggestions(false)
   }
 
   return (
@@ -100,6 +122,7 @@ export default function ChoosingInput({ value, onChange, options }: ChoosingInpu
         value={inputValue}
         onChange={handleInputChange}
         onFocus={handleFocus}
+        onBlur={handleBlur}
         placeholder="Выберите из списка..."
       />
       {showSuggestions && (
