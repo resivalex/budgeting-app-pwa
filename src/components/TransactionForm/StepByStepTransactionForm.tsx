@@ -164,12 +164,15 @@ function StepByStepTransactionForm({
   }
 
   function renderPayeeStep() {
-    if (currentStep !== payeeStep) {
-      return <div onClick={() => setCurrentStep(payeeStep)}>Payee: {payee}</div>
-    }
-
     return (
-      <PayeeFormInput payee={payee} onPayeeChange={onPayeeChange} payees={payees} type={type} />
+      <PayeeFormInput
+        type={type}
+        payee={payee}
+        payees={payees}
+        isExpanded={currentStep === payeeStep}
+        onPayeeChange={onPayeeChange}
+        onExpand={() => setCurrentStep(payeeStep)}
+      />
     )
   }
 
