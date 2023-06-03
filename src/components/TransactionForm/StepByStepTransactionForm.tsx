@@ -7,7 +7,7 @@ import {
   AmountStep as AmountFormInput,
   AccountStep as AccountFormInput,
   PayeeTransferAccountStep as PayeeTransferAccountFormInput,
-  Category as CategoryFormInput,
+  CategoryStep as CategoryFormInput,
   Payee as PayeeFormInput,
   Comment as CommentFormInput,
   Datetime as DatetimeFormInput,
