@@ -15,6 +15,7 @@ import PayeeStep from './PayeeStep'
 import Comment from './Comment'
 import CommentStep from './CommentStep'
 import Datetime from './Datetime'
+import DatetimeStep from './DatetimeStep'
 
 export {
   Type,
@@ -34,4 +35,5 @@ export {
   Comment,
   CommentStep,
   Datetime,
+  DatetimeStep,
 }
