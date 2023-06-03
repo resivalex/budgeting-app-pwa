@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
+// Component Styles
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
 `
-
 const Input = styled.input`
   width: 100%;
   height: 30px;
@@ -14,7 +14,6 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 5px;
 `
-
 const Suggestion = styled.div`
   padding: 5px 10px;
   cursor: pointer;
@@ -23,7 +22,6 @@ const Suggestion = styled.div`
     background-color: #f1f1f1;
   }
 `
-
 const Suggestions = styled.div`
   position: absolute;
   width: 100%;
@@ -35,6 +33,7 @@ const Suggestions = styled.div`
   border-radius: 5px;
 `
 
+// Component Props
 interface Option {
   value: string
   label: string
@@ -46,88 +45,87 @@ interface ChoosingInputProps {
   options: Option[]
 }
 
+// Main Component
 export default function ChoosingInput({ value, onChange, options }: ChoosingInputProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  // Filter suggestions based on input value
-  function getFilteredSuggestions() {
-    if (!inputValue) {
-      return options
-    }
-
-    return options.filter(
-      (option) =>
-        option.label.toLowerCase().includes(inputValue.toLowerCase()) && option.label !== inputValue
-    )
-  }
-
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setInputValue(e.target.value)
-  }
 
   const inputValueRef = useRef(inputValue)
 
-  // Store inputValue to check in setTimeout
   useEffect(() => {
     inputValueRef.current = inputValue
   }, [inputValue])
 
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout | null = null
-    if (isFocused) {
-      const option = options.find((option) => option.value === value)
-      setInputValue(option ? option.label : '')
-      setShowSuggestions(true)
-    } else {
-      // Handle blur after suggestion click
-      timeoutId = setTimeout(() => {
-        const option = options.find((option) => option.label === inputValueRef.current)
-        if (option) {
-          onChange(option.value)
-        } else {
-          const previousOption = options.find((option) => option.value === value)
-          setInputValue(previousOption ? previousOption.label : '')
-        }
-        setShowSuggestions(false)
-      }, 100)
-    }
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value)
+  }, [])
 
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
-    }
+  const handleFocusChange = useCallback(() => {
+    isFocused ? updateInputOnFocus() : handleBlurAfterSuggestionClick()
   }, [isFocused])
 
-  function handleFocus() {
-    setIsFocused(true)
-  }
+  useEffect(() => {
+    handleFocusChange()
+  }, [handleFocusChange])
 
-  function handleBlur() {
-    setIsFocused(false)
-  }
+  const updateInputOnFocus = useCallback(() => {
+    const option = options.find((option) => option.value === value)
+    setInputValue(option ? option.label : '')
+    setShowSuggestions(true)
+  }, [options, value])
 
-  const handleSuggestionClick = (suggestionValue: string) => {
-    setInputValue(suggestionValue)
-    onChange(suggestionValue)
-  }
+  const handleBlurAfterSuggestionClick = useCallback(() => {
+    const blurTimeoutId = setTimeout(() => {
+      const option = options.find((option) => option.label === inputValueRef.current)
+      if (option) {
+        onChange(option.value)
+      } else {
+        revertToPreviousValue()
+      }
+      setShowSuggestions(false)
+    }, 100)
+
+    return () => clearTimeout(blurTimeoutId)
+  }, [options, onChange, value])
+
+  const revertToPreviousValue = useCallback(() => {
+    const previousOption = options.find((option) => option.value === value)
+    setInputValue(previousOption ? previousOption.label : '')
+  }, [options, value])
+
+  const handleSuggestionClick = useCallback(
+    (suggestionValue: string) => {
+      setInputValue(suggestionValue)
+      onChange(suggestionValue)
+    },
+    [onChange]
+  )
+
+  const filteredSuggestions = useMemo(() => {
+    return inputValue
+      ? options.filter((option) => {
+          return (
+            option.label.toLowerCase().includes(inputValue.toLowerCase()) &&
+            option.label !== inputValue
+          )
+        })
+      : options
+  }, [options, inputValue])
 
   return (
-    <Wrapper ref={inputRef}>
+    <Wrapper>
       <Input
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         placeholder="Выберите из списка..."
       />
       {showSuggestions && (
         <Suggestions>
-          {getFilteredSuggestions().map((option, index) => (
+          {filteredSuggestions.map((option, index) => (
             <Suggestion key={index} onClick={() => handleSuggestionClick(option.value)}>
               {option.label}
             </Suggestion>
