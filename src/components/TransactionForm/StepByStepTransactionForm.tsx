@@ -67,13 +67,19 @@ function StepByStepTransactionForm({
   payees,
   comments,
 }: Props) {
-  const currencyOptions = currencies.map((c) => ({ value: c, label: c }))
+  const currencyOptions = currencies.map((currency) => ({
+    value: currency,
+    label: currency,
+  }))
   const accountOptions = accounts.map((a) => ({
     value: a.account,
     label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
     color: a.color,
   }))
-  const categoryOptions = categories.map((c) => ({ value: c, label: c }))
+  const categoryOptions = categories.map((category) => ({
+    value: category,
+    label: category,
+  }))
 
   return (
     <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
