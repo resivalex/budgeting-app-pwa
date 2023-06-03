@@ -11,6 +11,7 @@ import PayeeTransferAccountStep from './PayeeTransferAccountStep'
 import Category from './Category'
 import CategoryStep from './CategoryStep'
 import Payee from './Payee'
+import PayeeStep from './PayeeStep'
 import Comment from './Comment'
 import Datetime from './Datetime'
 
@@ -28,6 +29,7 @@ export {
   Category,
   CategoryStep,
   Payee,
+  PayeeStep,
   Comment,
   Datetime,
 }
