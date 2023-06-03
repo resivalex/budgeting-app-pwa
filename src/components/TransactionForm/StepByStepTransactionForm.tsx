@@ -152,15 +152,13 @@ function StepByStepTransactionForm({
   }
 
   function renderCategoryStep() {
-    if (currentStep !== categoryStep) {
-      return <div onClick={() => setCurrentStep(categoryStep)}>Category: {category}</div>
-    }
-
     return (
       <CategoryFormInput
         category={category}
-        onCategoryChange={onCategoryChange}
         categoryOptions={categoryOptions}
+        isExpanded={currentStep === categoryStep}
+        onCategoryChange={onCategoryChange}
+        onExpand={() => setCurrentStep(categoryStep)}
       />
     )
   }
