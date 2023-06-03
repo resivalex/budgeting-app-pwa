@@ -10,7 +10,7 @@ import {
   CategoryStep as CategoryFormInput,
   PayeeStep as PayeeFormInput,
   CommentStep as CommentFormInput,
-  Datetime as DatetimeFormInput,
+  DatetimeStep as DatetimeFormInput,
 } from './FormInputs'
 
 interface Props {
@@ -201,13 +201,14 @@ function StepByStepTransactionForm({
   }
 
   function renderDatetimeStep() {
-    if (currentStep !== datetimeStep) {
-      return (
-        <div onClick={() => setCurrentStep(datetimeStep)}>Datetime: {datetime.toISOString()}</div>
-      )
-    }
-
-    return <DatetimeFormInput datetime={datetime} onDatetimeChange={onDatetimeChange} />
+    return (
+      <DatetimeFormInput
+        datetime={datetime}
+        isExpanded={currentStep === datetimeStep}
+        onDatetimeChange={onDatetimeChange}
+        onExpand={() => setCurrentStep(datetimeStep)}
+      />
+    )
   }
 
   return (
