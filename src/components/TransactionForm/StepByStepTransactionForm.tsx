@@ -5,7 +5,7 @@ import {
   TypeStep as TypeFormInput,
   CurrencyStep as CurrencyFormInput,
   AmountStep as AmountFormInput,
-  Account as AccountFormInput,
+  AccountStep as AccountFormInput,
   PayeeTransferAccount as PayeeTransferAccountFormInput,
   Category as CategoryFormInput,
   Payee as PayeeFormInput,
@@ -140,15 +140,13 @@ function StepByStepTransactionForm({
   }
 
   function renderAccountStep() {
-    if (currentStep !== accountStep) {
-      return <div onClick={() => setCurrentStep(accountStep)}>Account: {account}</div>
-    }
-
     return (
       <AccountFormInput
         account={account}
-        onAccountChange={onAccountChange}
         accountOptions={accountOptions}
+        isExpanded={currentStep === accountStep}
+        onAccountChange={onAccountChange}
+        onExpand={() => setCurrentStep(accountStep)}
       />
     )
   }

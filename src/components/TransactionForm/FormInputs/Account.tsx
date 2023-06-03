@@ -1,4 +1,3 @@
-// FormInputs/Account.tsx
 import { reactSelectColorStyles } from '@/utils'
 import Select from 'react-select'
 
