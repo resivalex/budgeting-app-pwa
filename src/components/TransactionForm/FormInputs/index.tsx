@@ -7,6 +7,7 @@ import AmountStep from './AmountStep'
 import Account from './Account'
 import AccountStep from './AccountStep'
 import PayeeTransferAccount from './PayeeTransferAccount'
+import PayeeTransferAccountStep from './PayeeTransferAccountStep'
 import Category from './Category'
 import Payee from './Payee'
 import Comment from './Comment'
@@ -22,6 +23,7 @@ export {
   Account,
   AccountStep,
   PayeeTransferAccount,
+  PayeeTransferAccountStep,
   Category,
   Payee,
   Comment,

@@ -6,7 +6,7 @@ import {
   CurrencyStep as CurrencyFormInput,
   AmountStep as AmountFormInput,
   AccountStep as AccountFormInput,
-  PayeeTransferAccount as PayeeTransferAccountFormInput,
+  PayeeTransferAccountStep as PayeeTransferAccountFormInput,
   Category as CategoryFormInput,
   Payee as PayeeFormInput,
   Comment as CommentFormInput,
@@ -176,19 +176,13 @@ function StepByStepTransactionForm({
   }
 
   function renderPayeeTransferAccountStep() {
-    if (currentStep !== payeeTransferAccountStep) {
-      return (
-        <div onClick={() => setCurrentStep(payeeTransferAccountStep)}>
-          Payee Transfer Account: {payeeTransferAccount}
-        </div>
-      )
-    }
-
     return (
       <PayeeTransferAccountFormInput
         payeeTransferAccount={payeeTransferAccount}
-        onPayeeTransferAccountChange={onPayeeTransferAccountChange}
         accountOptions={accountOptions}
+        isExpanded={currentStep === payeeTransferAccountStep}
+        onPayeeTransferAccountChange={onPayeeTransferAccountChange}
+        onExpand={() => setCurrentStep(payeeTransferAccountStep)}
       />
     )
   }
