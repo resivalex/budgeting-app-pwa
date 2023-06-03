@@ -117,12 +117,14 @@ function StepByStepTransactionForm({
   }
 
   function renderCurrencyStep() {
-    if (currentStep !== currencyStep) {
-      return <div onClick={() => setCurrentStep(currencyStep)}>Currency: {currency}</div>
-    }
-
     return (
-      <CurrencyFormInput value={currency} onChange={onCurrencyChange} options={currencyOptions} />
+      <CurrencyFormInput
+        value={currency}
+        options={currencyOptions}
+        isExpanded={currentStep === currencyStep}
+        onChange={onCurrencyChange}
+        onExpand={() => setCurrentStep(currencyStep)}
+      />
     )
   }
 

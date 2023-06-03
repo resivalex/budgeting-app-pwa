@@ -2,7 +2,9 @@ import styled from 'styled-components'
 
 interface Props {
   value: string
+  isExpanded: boolean
   onChange: (currency: string) => void
+  onExpand: () => void
   options: { value: string; label: string }[]
 }
 
@@ -38,7 +40,22 @@ const Container = styled.div`
   }
 `
 
-export default function CurrencyStep({ value, onChange, options }: Props) {
+export default function CurrencyStep({ value, isExpanded, onChange, onExpand, options }: Props) {
+  function renderSelectedOptionLabel() {
+    const selectedOption = options.find((option) => option.value === value)
+    return selectedOption ? selectedOption.label : null
+  }
+
+  if (!isExpanded) {
+    return (
+      <div className="field">
+        <Container tabIndex={0} onClick={onExpand}>
+          <Option isActive>{renderSelectedOptionLabel()}</Option>
+        </Container>
+      </div>
+    )
+  }
+
   return (
     <div className="field">
       <Container tabIndex={0}>
