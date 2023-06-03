@@ -3,6 +3,7 @@ import TypeStep from './TypeStep'
 import Currency from './Currency'
 import CurrencyStep from './CurrencyStep'
 import Amount from './Amount'
+import AmountStep from './AmountStep'
 import Account from './Account'
 import PayeeTransferAccount from './PayeeTransferAccount'
 import Category from './Category'
@@ -16,6 +17,7 @@ export {
   Currency,
   CurrencyStep,
   Amount,
+  AmountStep,
   Account,
   PayeeTransferAccount,
   Category,

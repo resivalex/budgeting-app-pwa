@@ -4,7 +4,7 @@ import { ColoredAccountDetailsDTO } from '@/types'
 import {
   TypeStep as TypeFormInput,
   CurrencyStep as CurrencyFormInput,
-  Amount as AmountFormInput,
+  AmountStep as AmountFormInput,
   Account as AccountFormInput,
   PayeeTransferAccount as PayeeTransferAccountFormInput,
   Category as CategoryFormInput,
@@ -129,11 +129,14 @@ function StepByStepTransactionForm({
   }
 
   function renderAmountStep() {
-    if (currentStep !== amountStep) {
-      return <div onClick={() => setCurrentStep(amountStep)}>Amount: {amount}</div>
-    }
-
-    return <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
+    return (
+      <AmountFormInput
+        amount={amount}
+        isExpanded={currentStep === amountStep}
+        onAmountChange={onAmountChange}
+        onExpand={() => setCurrentStep(amountStep)}
+      />
+    )
   }
 
   function renderAccountStep() {
