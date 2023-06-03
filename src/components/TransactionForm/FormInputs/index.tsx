@@ -13,6 +13,7 @@ import CategoryStep from './CategoryStep'
 import Payee from './Payee'
 import PayeeStep from './PayeeStep'
 import Comment from './Comment'
+import CommentStep from './CommentStep'
 import Datetime from './Datetime'
 
 export {
@@ -31,5 +32,6 @@ export {
   Payee,
   PayeeStep,
   Comment,
+  CommentStep,
   Datetime,
 }
