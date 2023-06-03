@@ -189,12 +189,14 @@ function StepByStepTransactionForm({
   }
 
   function renderCommentStep() {
-    if (currentStep !== commentStep) {
-      return <div onClick={() => setCurrentStep(commentStep)}>Comment: {comment}</div>
-    }
-
     return (
-      <CommentFormInput comment={comment} onCommentChange={onCommentChange} comments={comments} />
+      <CommentFormInput
+        comment={comment}
+        comments={comments}
+        isExpanded={currentStep === commentStep}
+        onCommentChange={onCommentChange}
+        onExpand={() => setCurrentStep(commentStep)}
+      />
     )
   }
 

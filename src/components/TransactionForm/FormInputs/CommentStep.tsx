@@ -1,15 +1,46 @@
+import styled from 'styled-components'
 import SuggestingInput2 from '@/components/SuggestingInput2'
 
 interface Props {
   comment: string
+  isExpanded: boolean
   onCommentChange: (comment: string) => void
+  onExpand: () => void
   comments: string[]
 }
 
-export default function CommentStep({ comment, onCommentChange, comments }: Props) {
+const CommentLabel = styled.div<{ isExpanded: boolean }>`
+  font-size: 1rem;
+  color: ${(props) => (props.isExpanded ? 'black' : 'gray')};
+`
+
+const SelectedComment = styled.div`
+  font-size: 0.8rem;
+`
+
+export default function CommentStep({
+  comment,
+  isExpanded,
+  onCommentChange,
+  onExpand,
+  comments,
+}: Props) {
+  if (!isExpanded) {
+    return (
+      <div className="field" onClick={onExpand}>
+        <CommentLabel className="is-size-7" isExpanded={isExpanded}>
+          Комментарий
+        </CommentLabel>
+        <SelectedComment>{comment || 'Add Comment'}</SelectedComment>
+      </div>
+    )
+  }
+
   return (
     <div className="field">
-      <div className="is-size-7">Комментарий</div>
+      <CommentLabel className="is-size-7" isExpanded={isExpanded}>
+        Комментарий
+      </CommentLabel>
       <div className="control">
         <SuggestingInput2 suggestions={comments} value={comment} onChange={onCommentChange} />
       </div>
