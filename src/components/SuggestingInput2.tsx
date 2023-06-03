@@ -46,12 +46,15 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   const inputRef = useRef<HTMLInputElement>(null)
 
   // Filter suggestions based on input value
-  const getFilteredSuggestions = () =>
-    inputValue
-      ? suggestions.filter((suggestion) =>
-          suggestion.toLowerCase().includes(inputValue.toLowerCase())
-        )
-      : suggestions
+  function getFilteredSuggestions() {
+    if (!inputValue) {
+      return suggestions
+    }
+
+    return suggestions.filter((suggestion) =>
+      suggestion.toLowerCase().includes(inputValue.toLowerCase())
+    )
+  }
 
   // Handle outside click to close suggestions
   useEffect(() => {
@@ -68,8 +71,9 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value)
-    onChange(e.target.value)
+    const value = e.target.value
+    setInputValue(value)
+    onChange(value)
   }
 
   const handleFocus = () => {
