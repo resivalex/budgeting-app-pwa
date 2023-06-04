@@ -45,8 +45,8 @@ interface ChoosingInputProps {
   options: Option[]
 }
 
-// Main Component
-export default function ChoosingInput({ value, onChange, options }: ChoosingInputProps) {
+// Custom Hook
+function useChoosingInput({ value, onChange, options }: ChoosingInputProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -112,6 +112,27 @@ export default function ChoosingInput({ value, onChange, options }: ChoosingInpu
         })
       : options
   }, [options, inputValue])
+
+  return {
+    inputValue,
+    handleInputChange,
+    setIsFocused,
+    showSuggestions,
+    handleSuggestionClick,
+    filteredSuggestions,
+  }
+}
+
+// Main Component
+export default function ChoosingInput(props: ChoosingInputProps) {
+  const {
+    inputValue,
+    handleInputChange,
+    setIsFocused,
+    showSuggestions,
+    handleSuggestionClick,
+    filteredSuggestions,
+  } = useChoosingInput(props)
 
   return (
     <Wrapper>
