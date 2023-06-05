@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -45,8 +45,7 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Filter suggestions based on input value
-  function getFilteredSuggestions() {
+  const filteredSuggestions = useMemo(() => {
     if (!value) {
       return suggestions
     }
@@ -54,21 +53,7 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
     return suggestions.filter(
       (suggestion) => suggestion.toLowerCase().includes(value.toLowerCase()) && suggestion !== value
     )
-  }
-
-  // Handle outside click to close suggestions
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+  }, [suggestions, value])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -79,18 +64,27 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
     setShowSuggestions(true)
   }
 
+  const handleBlur = () => {
+    setShowSuggestions(false)
+  }
+
   const handleSuggestionClick = (suggestion: string) => {
     onChange(suggestion)
-    setShowSuggestions(false)
   }
 
   return (
     <Wrapper ref={inputRef}>
-      <Input type="text" value={value} onChange={handleChange} onFocus={handleFocus} />
+      <Input
+        type="text"
+        value={value}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
       {showSuggestions && (
         <Suggestions>
-          {getFilteredSuggestions().map((suggestion, index) => (
-            <Suggestion key={index} onClick={() => handleSuggestionClick(suggestion)}>
+          {filteredSuggestions.map((suggestion, index) => (
+            <Suggestion key={index} onMouseDown={() => handleSuggestionClick(suggestion)}>
               {suggestion}
             </Suggestion>
           ))}

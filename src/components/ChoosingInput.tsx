@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import styled from 'styled-components'
 
 // Component Styles
@@ -49,58 +49,32 @@ interface ChoosingInputProps {
 function useChoosingInput({ value, onChange, options }: ChoosingInputProps) {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [isFocused, setIsFocused] = useState(false)
-
-  const inputValueRef = useRef(inputValue)
 
   useEffect(() => {
-    inputValueRef.current = inputValue
-  }, [inputValue])
+    setInputValue(value)
+  }, [value])
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
-  }, [])
+  }
 
-  const handleFocusChange = useCallback(() => {
-    isFocused ? updateInputOnFocus() : handleBlurAfterSuggestionClick()
-  }, [isFocused])
-
-  useEffect(() => {
-    handleFocusChange()
-  }, [handleFocusChange])
-
-  const updateInputOnFocus = useCallback(() => {
-    const option = options.find((option) => option.value === value)
-    setInputValue(option ? option.label : '')
+  const handleFocus = () => {
     setShowSuggestions(true)
-  }, [options, value])
+  }
 
-  const handleBlurAfterSuggestionClick = useCallback(() => {
-    const blurTimeoutId = setTimeout(() => {
-      const option = options.find((option) => option.label === inputValueRef.current)
-      if (option) {
-        onChange(option.value)
-      } else {
-        revertToPreviousValue()
-      }
-      setShowSuggestions(false)
-    }, 100)
+  const handleBlur = () => {
+    const option = options.find((option) => option.label === inputValue)
+    if (!option) {
+      setInputValue(value)
+    }
 
-    return () => clearTimeout(blurTimeoutId)
-  }, [options, onChange, value])
+    setShowSuggestions(false)
+  }
 
-  const revertToPreviousValue = useCallback(() => {
-    const previousOption = options.find((option) => option.value === value)
-    setInputValue(previousOption ? previousOption.label : '')
-  }, [options, value])
-
-  const handleSuggestionClick = useCallback(
-    (suggestionValue: string) => {
-      setInputValue(suggestionValue)
-      onChange(suggestionValue)
-    },
-    [onChange]
-  )
+  const handleSuggestionClick = (suggestionValue: string) => {
+    onChange(suggestionValue)
+    setInputValue(suggestionValue)
+  }
 
   const filteredSuggestions = useMemo(() => {
     return inputValue
@@ -115,11 +89,12 @@ function useChoosingInput({ value, onChange, options }: ChoosingInputProps) {
 
   return {
     inputValue,
-    handleInputChange,
-    setIsFocused,
     showSuggestions,
-    handleSuggestionClick,
     filteredSuggestions,
+    handleInputChange,
+    handleFocus,
+    handleBlur,
+    handleSuggestionClick,
   }
 }
 
@@ -127,11 +102,12 @@ function useChoosingInput({ value, onChange, options }: ChoosingInputProps) {
 export default function ChoosingInput(props: ChoosingInputProps) {
   const {
     inputValue,
-    handleInputChange,
-    setIsFocused,
     showSuggestions,
-    handleSuggestionClick,
     filteredSuggestions,
+    handleInputChange,
+    handleFocus,
+    handleBlur,
+    handleSuggestionClick,
   } = useChoosingInput(props)
 
   return (
@@ -140,14 +116,14 @@ export default function ChoosingInput(props: ChoosingInputProps) {
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         placeholder="Выберите из списка..."
       />
       {showSuggestions && (
         <Suggestions>
           {filteredSuggestions.map((option, index) => (
-            <Suggestion key={index} onClick={() => handleSuggestionClick(option.value)}>
+            <Suggestion key={index} onMouseDown={() => handleSuggestionClick(option.value)}>
               {option.label}
             </Suggestion>
           ))}

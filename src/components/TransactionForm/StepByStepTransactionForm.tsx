@@ -50,6 +50,7 @@ const payeeStep = 'payee'
 const payeeTransferAccountStep = 'payeeTransferAccount'
 const commentStep = 'comment'
 const datetimeStep = 'datetime'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stepNames = [
   typeStep,
   currencyStep,
