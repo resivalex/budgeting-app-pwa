@@ -1,21 +1,8 @@
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
-import { useAtom } from 'jotai'
-import {
-  typeAtom,
-  amountAtom,
-  currencyAtom,
-  categoryAtom,
-  accountAtom,
-  payeeTransferAccountAtom,
-  payeeAtom,
-  commentAtom,
-  datetimeAtom,
-  payeeSuggestionsAtom,
-  commentSuggestionsAtom,
-} from './atoms'
 import {
   TransactionDTO,
   AccountDetailsDTO,
@@ -38,17 +25,17 @@ interface Props {
 }
 
 export default function TransactionFormContainer({ onApply }: Props) {
-  const [type, setType] = useAtom(typeAtom)
-  const [amount, setAmount] = useAtom(amountAtom)
-  const [currency, setCurrency] = useAtom(currencyAtom)
-  const [category, setCategory] = useAtom(categoryAtom)
-  const [account, setAccount] = useAtom(accountAtom)
-  const [payeeTransferAccount, setPayeeTransferAccount] = useAtom(payeeTransferAccountAtom)
-  const [payee, setPayee] = useAtom(payeeAtom)
-  const [comment, setComment] = useAtom(commentAtom)
-  const [datetime, setDatetime] = useAtom(datetimeAtom)
-  const [payeeSuggestions, setPayeeSuggestions] = useAtom(payeeSuggestionsAtom)
-  const [commentSuggestions, setCommentSuggestions] = useAtom(commentSuggestionsAtom)
+  const [type, setType] = useState<'income' | 'expense' | 'transfer'>('expense')
+  const [amount, setAmount] = useState('')
+  const [currency, setCurrency] = useState('')
+  const [category, setCategory] = useState('')
+  const [account, setAccount] = useState('')
+  const [payeeTransferAccount, setPayeeTransferAccount] = useState('')
+  const [payee, setPayee] = useState('')
+  const [comment, setComment] = useState('')
+  const [datetime, setDatetime] = useState(new Date().toISOString())
+  const [payeeSuggestions, setPayeeSuggestions] = useState<string[]>([])
+  const [commentSuggestions, setCommentSuggestions] = useState<string[]>([])
 
   const dispatch = useDispatch()
   const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
