@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from './store'
 
 interface TransactionFormState {
-  type: 'income' | 'expense' | 'transfer'
   amount: string
   account: string
   currency: string
@@ -17,7 +16,6 @@ interface TransactionFormState {
 
 function generateInitialState(): TransactionFormState {
   return {
-    type: 'expense',
     amount: '',
     account: '',
     currency: '',
@@ -37,15 +35,15 @@ export const transactionFormSlice = createSlice({
   name: 'transactionForm',
   initialState,
   reducers: {
-    setType: (state, action: PayloadAction<'income' | 'expense' | 'transfer'>) => {
-      state.type = action.payload
-    },
     setAmount: (state, action: PayloadAction<string>) => {
       state.amount = action.payload
     },
-    setAccount: (state, action: PayloadAction<string>) => {
-      const account = action.payload
-      if (state.type === 'transfer' && state.payeeTransferAccount === account) {
+    setAccount: (
+      state,
+      action: PayloadAction<{ type: 'expense' | 'income' | 'transfer'; account: string }>
+    ) => {
+      const { type, account } = action.payload
+      if (type === 'transfer' && state.payeeTransferAccount === account) {
         state.payeeTransferAccount = state.account
       }
       state.account = account
@@ -59,9 +57,12 @@ export const transactionFormSlice = createSlice({
     setPayee: (state, action: PayloadAction<string>) => {
       state.payee = action.payload
     },
-    setPayeeTransferAccount: (state, action: PayloadAction<string>) => {
-      const account = action.payload
-      if (state.type === 'transfer' && state.account === account) {
+    setPayeeTransferAccount: (
+      state,
+      action: PayloadAction<{ type: 'expense' | 'income' | 'transfer'; account: string }>
+    ) => {
+      const { type, account } = action.payload
+      if (type === 'transfer' && state.account === account) {
         state.account = state.payeeTransferAccount
       }
       state.payeeTransferAccount = account
@@ -85,7 +86,6 @@ export const transactionFormSlice = createSlice({
 })
 
 export const {
-  setType,
   setAmount,
   setAccount,
   setCurrency,

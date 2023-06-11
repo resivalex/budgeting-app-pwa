@@ -89,6 +89,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
         navigate('/', { replace: true })
       }
     } else {
+      setType('expense')
       dispatch(reset())
     }
   }, [dispatch, navigate, transaction, transactionId])
@@ -135,9 +136,9 @@ export default function TransactionFormContainer({ onApply }: Props) {
 
   const handlePayeeTransferAccountChange = (value: string) => {
     if (value === account) {
-      dispatch(setAccount(payeeTransferAccount))
+      dispatch(setAccount({ type: type, account: payeeTransferAccount }))
     }
-    dispatch(setPayeeTransferAccount(value))
+    dispatch(setPayeeTransferAccount({ type: type, account: value }))
   }
 
   const isValid = !!(
@@ -199,7 +200,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       comment={transactionForm.comment}
       onCommentChange={(comment: string) => dispatch(setComment(comment))}
       datetime={new Date(transactionForm.datetime)}
-      onAccountChange={(account) => dispatch(setAccount(account))}
+      onAccountChange={(account) => dispatch(setAccount({ type: type, account: account }))}
       onDatetimeChange={handleDatetimeChange}
       onSave={handleSave}
       accounts={currencyAccounts}
