@@ -80,33 +80,49 @@ export default function TransactionFormContainer({ onApply }: Props) {
     accountProperties
   )
 
-  useEffect(() => {
-    if (transactionId) {
-      if (curTransaction) {
-        setType(curTransaction.type)
-        setAmount(`${parseFloat(curTransaction.amount)}`.replace(',', '.'))
-        setAccount(curTransaction.account)
-        setCurrency(curTransaction.currency)
-        setCategory(curTransaction.category)
-        setPayee(curTransaction.payee)
-        setPayeeTransferAccount(curTransaction.payeeTransferAccount)
-        setComment(curTransaction.comment)
-        setDatetime(convertToLocaleTime(curTransaction.datetime))
-      } else {
-        navigate('/', { replace: true })
-      }
+  const initializeFormFromTransaction = (t: TransactionDTO) => {
+    setType(t.type)
+    setAmount(`${parseFloat(t.amount)}`.replace(',', '.'))
+    setAccount(t.account)
+    setCurrency(t.currency)
+    setCategory(t.category)
+    if (t.type === 'transfer') {
+      setPayeeTransferAccount(t.payee)
     } else {
-      setType('expense')
-      setAmount('')
-      setAccount('')
-      setCurrency('')
-      setCategory('')
-      setPayee('')
-      setPayeeTransferAccount('')
-      setComment('')
-      setDatetime(new Date().toISOString())
+      setPayee(t.payee)
     }
-  }, [dispatch, navigate, curTransaction, transactionId])
+    setComment(t.comment)
+    setDatetime(convertToLocaleTime(t.datetime))
+  }
+
+  useEffect(() => {
+    if (!transactionId) {
+      return
+    }
+    if (curTransaction) {
+      initializeFormFromTransaction(curTransaction)
+    } else {
+      navigate('/', { replace: true })
+    }
+  }, [navigate, curTransaction, transactionId])
+
+  const resetForm = () => {
+    setType('expense')
+    setAmount('')
+    setAccount('')
+    setCurrency('')
+    setCategory('')
+    setPayee('')
+    setPayeeTransferAccount('')
+    setComment('')
+    setDatetime(new Date().toISOString())
+  }
+
+  useEffect(() => {
+    if (!transactionId) {
+      resetForm()
+    }
+  }, [transactionId])
 
   if (accounts.length === 0) {
     return null
