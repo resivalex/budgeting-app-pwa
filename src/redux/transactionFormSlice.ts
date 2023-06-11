@@ -4,16 +4,12 @@ import { RootState } from './store'
 interface TransactionFormState {
   account: string
   payeeTransferAccount: string
-  payeeSuggestions: string[]
-  commentSuggestions: string[]
 }
 
 function generateInitialState(): TransactionFormState {
   return {
     account: '',
     payeeTransferAccount: '',
-    payeeSuggestions: [],
-    commentSuggestions: [],
   }
 }
 
@@ -43,25 +39,13 @@ export const transactionFormSlice = createSlice({
       }
       state.payeeTransferAccount = account
     },
-    setPayeeSuggestions: (state, action: PayloadAction<string[]>) => {
-      state.payeeSuggestions = action.payload
-    },
-    setCommentSuggestions: (state, action: PayloadAction<string[]>) => {
-      state.commentSuggestions = action.payload
-    },
     reset: () => {
       return generateInitialState()
     },
   },
 })
 
-export const {
-  setAccount,
-  setPayeeTransferAccount,
-  setPayeeSuggestions,
-  setCommentSuggestions,
-  reset,
-} = transactionFormSlice.actions
+export const { setAccount, setPayeeTransferAccount, reset } = transactionFormSlice.actions
 
 export const selectTransactionForm = (state: RootState) => state.transactionForm
 

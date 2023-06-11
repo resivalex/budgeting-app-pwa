@@ -11,6 +11,8 @@ import {
   payeeAtom,
   commentAtom,
   datetimeAtom,
+  payeeSuggestionsAtom,
+  commentSuggestionsAtom,
 } from './atoms'
 import {
   TransactionDTO,
@@ -25,8 +27,6 @@ import StepByStepTransactionForm from './StepByStepTransactionForm'
 import {
   setAccount,
   setPayeeTransferAccount,
-  setPayeeSuggestions,
-  setCommentSuggestions,
   selectTransactionForm,
   reset,
 } from '@/redux/transactionFormSlice'
@@ -49,6 +49,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const [payee, setPayee] = useAtom(payeeAtom)
   const [comment, setComment] = useAtom(commentAtom)
   const [datetime, setDatetime] = useAtom(datetimeAtom)
+  const [payeeSuggestions, setPayeeSuggestions] = useAtom(payeeSuggestionsAtom)
+  const [commentSuggestions, setCommentSuggestions] = useAtom(commentSuggestionsAtom)
 
   const dispatch = useDispatch()
   const transactionForm = useSelector(selectTransactionForm)
@@ -202,10 +204,11 @@ export default function TransactionFormContainer({ onApply }: Props) {
         const restoredCategory = categoryNameFromExtendedMap[category] || category
         setCategory(restoredCategory)
         const transactionAggregator = new TransactionAggregator(transactions)
-        const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(fixedCategory)
-        dispatch(setPayeeSuggestions(payeeSuggestions))
-        const commentSuggestions = transactionAggregator.getRecentCommentsByCategory(fixedCategory)
-        dispatch(setCommentSuggestions(commentSuggestions))
+        const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(restoredCategory)
+        setPayeeSuggestions(payeeSuggestions)
+        const commentSuggestions =
+          transactionAggregator.getRecentCommentsByCategory(restoredCategory)
+        setCommentSuggestions(commentSuggestions)
       }}
       payee={payee}
       onPayeeChange={(payee: string) => setPayee(payee)}
@@ -222,8 +225,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
       currencies={availableCurrencies}
       onCurrencyChange={(currency: string) => setCurrency(currency)}
       isValid={isValid}
-      payees={fixedCategory ? transactionForm.payeeSuggestions : payees}
-      comments={fixedCategory ? transactionForm.commentSuggestions : comments}
+      payees={fixedCategory ? payeeSuggestions : payees}
+      comments={fixedCategory ? commentSuggestions : comments}
     />
   )
 }
