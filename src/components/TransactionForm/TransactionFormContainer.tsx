@@ -136,7 +136,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   ) {
     fixedPayeeTransferAccount = currencyAccounts[0].account
   }
-  if (type === 'transfer' && payeeTransferAccount === fixedAccount) {
+  if (type === 'transfer' && fixedPayeeTransferAccount === fixedAccount) {
     fixedPayeeTransferAccount = currencyAccounts[1].account
   }
 
@@ -148,25 +148,18 @@ export default function TransactionFormContainer({ onApply }: Props) {
     }
   }
 
-  function setAccountAwareOfType(value: string) {
-    if (type === 'transfer' && payeeTransferAccount === value) {
-      setPayeeTransferAccount(fixedAccount)
+  function setAccountAwareOfPayeeTransferAccount(value: string) {
+    if (payeeTransferAccount === value) {
+      setPayeeTransferAccount(account)
     }
     setAccount(value)
   }
 
-  function setPayeeTransferAccountAwareOfType(value: string) {
-    if (type === 'transfer' && account === value) {
+  function setPayeeTransferAccountAwareOfAccount(value: string) {
+    if (account === value) {
       setAccount(payeeTransferAccount)
     }
     setPayeeTransferAccount(value)
-  }
-
-  const handlePayeeTransferAccountChange = (value: string) => {
-    if (value === account) {
-      setAccountAwareOfType(payeeTransferAccount)
-    }
-    setPayeeTransferAccountAwareOfType(value)
   }
 
   const isValid = !!(
@@ -176,7 +169,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
     (type === 'transfer' || fixedCategory) &&
     type &&
     fixedCurrency &&
-    (type !== 'transfer' || payeeTransferAccount)
+    (type !== 'transfer' || fixedPayeeTransferAccount)
   )
 
   const handleSave = () => {
@@ -188,11 +181,11 @@ export default function TransactionFormContainer({ onApply }: Props) {
       type: type,
       amount: (parseFloat(amount) || 0).toFixed(2),
       currency: fixedCurrency,
-      payee: type === 'transfer' ? payeeTransferAccount : payee,
+      payee: type === 'transfer' ? fixedPayeeTransferAccount : payee,
       comment: comment,
     })
     if (!transactionId) {
-      setAccountName(fixedAccount)
+      dispatch(setAccountName(fixedAccount))
     }
     dispatch(resetFocusedTransactionId())
   }
@@ -209,7 +202,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onTypeChange={(type: 'income' | 'expense' | 'transfer') => setType(type)}
       amount={amount}
       onAmountChange={(amount: string) => setAmount(amount)}
-      account={account}
+      account={fixedAccount}
       currency={fixedCurrency}
       category={expandedCategory}
       onCategoryChange={(category: string) => {
@@ -224,12 +217,12 @@ export default function TransactionFormContainer({ onApply }: Props) {
       }}
       payee={payee}
       onPayeeChange={(payee: string) => setPayee(payee)}
-      payeeTransferAccount={payeeTransferAccount}
-      onPayeeTransferAccountChange={handlePayeeTransferAccountChange}
+      payeeTransferAccount={fixedPayeeTransferAccount}
+      onPayeeTransferAccountChange={(value) => setPayeeTransferAccountAwareOfAccount(value)}
       comment={comment}
       onCommentChange={(comment: string) => setComment(comment)}
       datetime={new Date(datetime)}
-      onAccountChange={(account) => setAccount(account)}
+      onAccountChange={(account) => setAccountAwareOfPayeeTransferAccount(account)}
       onDatetimeChange={handleDatetimeChange}
       onSave={handleSave}
       accounts={currencyAccounts}
