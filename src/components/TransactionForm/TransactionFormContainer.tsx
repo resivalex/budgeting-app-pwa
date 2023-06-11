@@ -190,6 +190,16 @@ export default function TransactionFormContainer({ onApply }: Props) {
     dispatch(resetFocusedTransactionId())
   }
 
+  const handleCategoryChange = (category: string) => {
+    const restoredCategory = categoryNameFromExtendedMap[category] || category
+    setCategory(restoredCategory)
+    const transactionAggregator = new TransactionAggregator(appTransactions)
+    const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(restoredCategory)
+    setPayeeSuggestions(payeeSuggestions)
+    const commentSuggestions = transactionAggregator.getRecentCommentsByCategory(restoredCategory)
+    setCommentSuggestions(commentSuggestions)
+  }
+
   const expandedCategory = categoryNameToExtendedMap[fixedCategory] || fixedCategory
   const expandedCategories = appCategories.map((c) => categoryNameToExtendedMap[c] || c)
 
@@ -205,16 +215,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       account={fixedAccount}
       currency={fixedCurrency}
       category={expandedCategory}
-      onCategoryChange={(category: string) => {
-        const restoredCategory = categoryNameFromExtendedMap[category] || category
-        setCategory(restoredCategory)
-        const transactionAggregator = new TransactionAggregator(appTransactions)
-        const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(restoredCategory)
-        setPayeeSuggestions(payeeSuggestions)
-        const commentSuggestions =
-          transactionAggregator.getRecentCommentsByCategory(restoredCategory)
-        setCommentSuggestions(commentSuggestions)
-      }}
+      onCategoryChange={handleCategoryChange}
       payee={payee}
       onPayeeChange={(payee: string) => setPayee(payee)}
       payeeTransferAccount={fixedPayeeTransferAccount}
