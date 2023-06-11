@@ -20,7 +20,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import TransactionAggregator from '@/redux/TransactionAggregator'
 
 interface Props {
-  transactionId?: string
   onApply: (t: TransactionDTO) => void
 }
 
