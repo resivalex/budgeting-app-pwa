@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
@@ -8,6 +8,8 @@ import {
   amountAtom,
   currencyAtom,
   categoryAtom,
+  accountAtom,
+  payeeTransferAccountAtom,
   payeeAtom,
   commentAtom,
   datetimeAtom,
@@ -24,12 +26,6 @@ import {
 import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties } from '@/utils'
 import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
-import {
-  setAccount,
-  setPayeeTransferAccount,
-  selectTransactionForm,
-  reset,
-} from '@/redux/transactionFormSlice'
 import { useAppSelector } from '@/redux/appSlice'
 import { setAccountName } from '@/redux/transactionFiltersSlice'
 import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
@@ -46,6 +42,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const [amount, setAmount] = useAtom(amountAtom)
   const [currency, setCurrency] = useAtom(currencyAtom)
   const [category, setCategory] = useAtom(categoryAtom)
+  const [account, setAccount] = useAtom(accountAtom)
+  const [payeeTransferAccount, setPayeeTransferAccount] = useAtom(payeeTransferAccountAtom)
   const [payee, setPayee] = useAtom(payeeAtom)
   const [comment, setComment] = useAtom(commentAtom)
   const [datetime, setDatetime] = useAtom(datetimeAtom)
@@ -53,7 +51,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const [commentSuggestions, setCommentSuggestions] = useAtom(commentSuggestionsAtom)
 
   const dispatch = useDispatch()
-  const transactionForm = useSelector(selectTransactionForm)
   const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
   const categories: string[] = useAppSelector((state) => state.categories)
   const currencies: string[] = useAppSelector((state) => state.currencies)
@@ -88,11 +85,11 @@ export default function TransactionFormContainer({ onApply }: Props) {
       if (transaction) {
         setType(transaction.type)
         setAmount(`${parseFloat(transaction.amount)}`.replace(',', '.'))
-        dispatch(setAccount(transaction.account))
+        setAccount(transaction.account)
         setCurrency(transaction.currency)
         setCategory(transaction.category)
         setPayee(transaction.payee)
-        dispatch(setPayeeTransferAccount(transaction.payeeTransferAccount))
+        setPayeeTransferAccount(transaction.payeeTransferAccount)
         setComment(transaction.comment)
         setDatetime(convertToLocaleTime(transaction.datetime))
       } else {
@@ -101,12 +98,13 @@ export default function TransactionFormContainer({ onApply }: Props) {
     } else {
       setType('expense')
       setAmount('')
+      setAccount('')
       setCurrency('')
       setCategory('')
       setPayee('')
+      setPayeeTransferAccount('')
       setComment('')
       setDatetime(new Date().toISOString())
-      dispatch(reset())
     }
   }, [dispatch, navigate, transaction, transactionId])
 
@@ -122,24 +120,24 @@ export default function TransactionFormContainer({ onApply }: Props) {
     ? currency
     : availableCurrencies[0]
   const currencyAccounts = accounts.filter((a) => a.currency === fixedCurrency)
-  const account = _.includes(
+  const fixedAccount = _.includes(
     currencyAccounts.map((a) => a.account),
-    transactionForm.account
+    account
   )
-    ? transactionForm.account
+    ? account
     : currencyAccounts[0].account
   const fixedCategory = _.includes(categories, category) ? category : ''
-  let payeeTransferAccount = transactionForm.payeeTransferAccount
+  let fixedPayeeTransferAccount = payeeTransferAccount
   if (
     !_.includes(
       currencyAccounts.map((a) => a.account),
       payeeTransferAccount
     )
   ) {
-    payeeTransferAccount = currencyAccounts[0].account
+    fixedPayeeTransferAccount = currencyAccounts[0].account
   }
-  if (type === 'transfer' && payeeTransferAccount === account) {
-    payeeTransferAccount = currencyAccounts[1].account
+  if (type === 'transfer' && payeeTransferAccount === fixedAccount) {
+    fixedPayeeTransferAccount = currencyAccounts[1].account
   }
 
   const handleDatetimeChange = (value: Date | null) => {
@@ -150,17 +148,31 @@ export default function TransactionFormContainer({ onApply }: Props) {
     }
   }
 
+  function setAccountAwareOfType(value: string) {
+    if (type === 'transfer' && payeeTransferAccount === value) {
+      setPayeeTransferAccount(fixedAccount)
+    }
+    setAccount(value)
+  }
+
+  function setPayeeTransferAccountAwareOfType(value: string) {
+    if (type === 'transfer' && account === value) {
+      setAccount(payeeTransferAccount)
+    }
+    setPayeeTransferAccount(value)
+  }
+
   const handlePayeeTransferAccountChange = (value: string) => {
     if (value === account) {
-      dispatch(setAccount({ type: type, account: payeeTransferAccount }))
+      setAccountAwareOfType(payeeTransferAccount)
     }
-    dispatch(setPayeeTransferAccount({ type: type, account: value }))
+    setPayeeTransferAccountAwareOfType(value)
   }
 
   const isValid = !!(
     datetime &&
     amount &&
-    account &&
+    fixedAccount &&
     (type === 'transfer' || fixedCategory) &&
     type &&
     fixedCurrency &&
@@ -171,7 +183,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
     onApply({
       _id: transactionId || uuidv4(),
       datetime: convertToUtcTime(datetime),
-      account: account,
+      account: fixedAccount,
       category: type === 'transfer' ? '' : fixedCategory,
       type: type,
       amount: (parseFloat(amount) || 0).toFixed(2),
@@ -180,7 +192,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       comment: comment,
     })
     if (!transactionId) {
-      dispatch(setAccountName(account))
+      setAccountName(fixedAccount)
     }
     dispatch(resetFocusedTransactionId())
   }
@@ -217,7 +229,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       comment={comment}
       onCommentChange={(comment: string) => setComment(comment)}
       datetime={new Date(datetime)}
-      onAccountChange={(account) => dispatch(setAccount({ type: type, account: account }))}
+      onAccountChange={(account) => setAccount(account)}
       onDatetimeChange={handleDatetimeChange}
       onSave={handleSave}
       accounts={currencyAccounts}
