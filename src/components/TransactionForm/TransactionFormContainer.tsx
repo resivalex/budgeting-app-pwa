@@ -23,6 +23,29 @@ interface Props {
   onApply: (t: TransactionDTO) => void
 }
 
+function useCategoryExtensions() {
+  const categoryExpansions: CategoryExpansionsDTO = localStorage.categoryExpansions
+    ? JSON.parse(localStorage.categoryExpansions)
+    : { expansions: [] }
+  const categoryNameToExtendedMap: { [name: string]: string } = {}
+  const categoryNameFromExtendedMap: { [extendedName: string]: string } = {}
+  categoryExpansions.expansions.forEach((e) => {
+    categoryNameToExtendedMap[e.name] = e.expandedName
+    categoryNameFromExtendedMap[e.expandedName] = e.name
+  })
+
+  return { categoryNameToExtendedMap, categoryNameFromExtendedMap }
+}
+
+function useAccounts(): ColoredAccountDetailsDTO[] {
+  const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
+  const accountProperties: AccountPropertiesDTO = localStorage.accountProperties
+    ? JSON.parse(localStorage.accountProperties)
+    : { accounts: [] }
+
+  return mergeAccountDetailsAndProperties(accountDetails, accountProperties)
+}
+
 export default function TransactionFormContainer({ onApply }: Props) {
   const [type, setType] = useState<'income' | 'expense' | 'transfer'>('expense')
   const [amount, setAmount] = useState('')
@@ -37,7 +60,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const [commentSuggestions, setCommentSuggestions] = useState<string[]>([])
 
   const dispatch = useDispatch()
-  const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
   const appCategories: string[] = useAppSelector((state) => state.categories)
   const appCurrencies: string[] = useAppSelector((state) => state.currencies)
   const appPayees: string[] = useAppSelector((state) => state.payees)
@@ -48,23 +70,9 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const curTransaction = useAppSelector((state) => state.transactions).find(
     (t: TransactionDTO) => t._id === transactionId
   )
-  const categoryExpansions: CategoryExpansionsDTO = localStorage.categoryExpansions
-    ? JSON.parse(localStorage.categoryExpansions)
-    : { expansions: [] }
-  const categoryNameToExtendedMap: { [name: string]: string } = {}
-  const categoryNameFromExtendedMap: { [extendedName: string]: string } = {}
-  categoryExpansions.expansions.forEach((e) => {
-    categoryNameToExtendedMap[e.name] = e.expandedName
-    categoryNameFromExtendedMap[e.expandedName] = e.name
-  })
 
-  const accountProperties: AccountPropertiesDTO = localStorage.accountProperties
-    ? JSON.parse(localStorage.accountProperties)
-    : { accounts: [] }
-  const accounts: ColoredAccountDetailsDTO[] = mergeAccountDetailsAndProperties(
-    accountDetails,
-    accountProperties
-  )
+  const { categoryNameToExtendedMap, categoryNameFromExtendedMap } = useCategoryExtensions()
+  const accounts = useAccounts()
 
   const initializeFormFromTransaction = (t: TransactionDTO) => {
     setType(t.type)
