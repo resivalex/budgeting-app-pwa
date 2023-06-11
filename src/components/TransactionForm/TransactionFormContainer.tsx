@@ -200,6 +200,38 @@ export default function TransactionFormContainer({ onApply }: Props) {
     setCommentSuggestions(commentSuggestions)
   }
 
+  const handleTypeChange = (type: 'income' | 'expense' | 'transfer') => {
+    setType(type)
+  }
+
+  const handleAmountChange = (amount: string) => {
+    setAmount(amount)
+  }
+
+  const handlePayeeChange = (payee: string) => {
+    setPayee(payee)
+  }
+
+  const handlePayeeTransferAccountChange = (payeeTransferAccount: string) => {
+    setPayeeTransferAccountAwareOfAccount(payeeTransferAccount)
+  }
+
+  const handleCommentChange = (comment: string) => {
+    setComment(comment)
+  }
+
+  const handleAccountChange = (account: string) => {
+    setAccountAwareOfPayeeTransferAccount(account)
+  }
+
+  const handleCurrencyChange = (currency: string) => {
+    setCurrency(currency)
+  }
+
+  const viewDatetime = new Date(datetime)
+  const payees = fixedCategory ? payeeSuggestions : appPayees
+  const comments = fixedCategory ? commentSuggestions : appComments
+
   const expandedCategory = categoryNameToExtendedMap[fixedCategory] || fixedCategory
   const expandedCategories = appCategories.map((c) => categoryNameToExtendedMap[c] || c)
 
@@ -209,30 +241,30 @@ export default function TransactionFormContainer({ onApply }: Props) {
   return (
     <TransactionFormComponent
       type={type}
-      onTypeChange={(type: 'income' | 'expense' | 'transfer') => setType(type)}
+      onTypeChange={handleTypeChange}
       amount={amount}
-      onAmountChange={(amount: string) => setAmount(amount)}
+      onAmountChange={handleAmountChange}
       account={fixedAccount}
       currency={fixedCurrency}
       category={expandedCategory}
       onCategoryChange={handleCategoryChange}
       payee={payee}
-      onPayeeChange={(payee: string) => setPayee(payee)}
+      onPayeeChange={handlePayeeChange}
       payeeTransferAccount={fixedPayeeTransferAccount}
-      onPayeeTransferAccountChange={(value) => setPayeeTransferAccountAwareOfAccount(value)}
+      onPayeeTransferAccountChange={handlePayeeTransferAccountChange}
       comment={comment}
-      onCommentChange={(comment: string) => setComment(comment)}
-      datetime={new Date(datetime)}
-      onAccountChange={(account) => setAccountAwareOfPayeeTransferAccount(account)}
+      onCommentChange={handleCommentChange}
+      datetime={viewDatetime}
+      onAccountChange={handleAccountChange}
       onDatetimeChange={handleDatetimeChange}
       onSave={handleSave}
       accounts={currencyAccounts}
       categories={expandedCategories}
       currencies={availableCurrencies}
-      onCurrencyChange={(currency: string) => setCurrency(currency)}
+      onCurrencyChange={handleCurrencyChange}
       isValid={isValid}
-      payees={fixedCategory ? payeeSuggestions : appPayees}
-      comments={fixedCategory ? commentSuggestions : appComments}
+      payees={payees}
+      comments={comments}
     />
   )
 }
