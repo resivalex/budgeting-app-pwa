@@ -3,7 +3,15 @@ import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
 import { useAtom } from 'jotai'
-import { typeAtom } from './atoms'
+import {
+  typeAtom,
+  amountAtom,
+  currencyAtom,
+  categoryAtom,
+  payeeAtom,
+  commentAtom,
+  datetimeAtom,
+} from './atoms'
 import {
   TransactionDTO,
   AccountDetailsDTO,
@@ -15,14 +23,8 @@ import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties
 import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
 import {
-  setAmount,
   setAccount,
-  setCurrency,
-  setCategory,
-  setPayee,
   setPayeeTransferAccount,
-  setComment,
-  setDatetime,
   setPayeeSuggestions,
   setCommentSuggestions,
   selectTransactionForm,
@@ -41,6 +43,12 @@ interface Props {
 
 export default function TransactionFormContainer({ onApply }: Props) {
   const [type, setType] = useAtom(typeAtom)
+  const [amount, setAmount] = useAtom(amountAtom)
+  const [currency, setCurrency] = useAtom(currencyAtom)
+  const [category, setCategory] = useAtom(categoryAtom)
+  const [payee, setPayee] = useAtom(payeeAtom)
+  const [comment, setComment] = useAtom(commentAtom)
+  const [datetime, setDatetime] = useAtom(datetimeAtom)
 
   const dispatch = useDispatch()
   const transactionForm = useSelector(selectTransactionForm)
@@ -77,19 +85,25 @@ export default function TransactionFormContainer({ onApply }: Props) {
     if (transactionId) {
       if (transaction) {
         setType(transaction.type)
-        dispatch(setAmount(`${parseFloat(transaction.amount)}`.replace(',', '.')))
+        setAmount(`${parseFloat(transaction.amount)}`.replace(',', '.'))
         dispatch(setAccount(transaction.account))
-        dispatch(setCurrency(transaction.currency))
-        dispatch(setCategory(transaction.category))
-        dispatch(setPayee(transaction.payee))
+        setCurrency(transaction.currency)
+        setCategory(transaction.category)
+        setPayee(transaction.payee)
         dispatch(setPayeeTransferAccount(transaction.payeeTransferAccount))
-        dispatch(setComment(transaction.comment))
-        dispatch(setDatetime(convertToLocaleTime(transaction.datetime)))
+        setComment(transaction.comment)
+        setDatetime(convertToLocaleTime(transaction.datetime))
       } else {
         navigate('/', { replace: true })
       }
     } else {
       setType('expense')
+      setAmount('')
+      setCurrency('')
+      setCategory('')
+      setPayee('')
+      setComment('')
+      setDatetime(new Date().toISOString())
       dispatch(reset())
     }
   }, [dispatch, navigate, transaction, transactionId])
@@ -102,17 +116,17 @@ export default function TransactionFormContainer({ onApply }: Props) {
     type === 'transfer'
       ? currencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
       : currencies
-  const currency = _.includes(availableCurrencies, transactionForm.currency)
-    ? transactionForm.currency
+  const fixedCurrency = _.includes(availableCurrencies, currency)
+    ? currency
     : availableCurrencies[0]
-  const currencyAccounts = accounts.filter((a) => a.currency === currency)
+  const currencyAccounts = accounts.filter((a) => a.currency === fixedCurrency)
   const account = _.includes(
     currencyAccounts.map((a) => a.account),
     transactionForm.account
   )
     ? transactionForm.account
     : currencyAccounts[0].account
-  const category = _.includes(categories, transactionForm.category) ? transactionForm.category : ''
+  const fixedCategory = _.includes(categories, category) ? category : ''
   let payeeTransferAccount = transactionForm.payeeTransferAccount
   if (
     !_.includes(
@@ -128,9 +142,9 @@ export default function TransactionFormContainer({ onApply }: Props) {
 
   const handleDatetimeChange = (value: Date | null) => {
     if (value) {
-      dispatch(setDatetime(value.toISOString()))
+      setDatetime(value.toISOString())
     } else {
-      dispatch(setDatetime(new Date().toISOString()))
+      setDatetime(new Date().toISOString())
     }
   }
 
@@ -142,26 +156,26 @@ export default function TransactionFormContainer({ onApply }: Props) {
   }
 
   const isValid = !!(
-    transactionForm.datetime &&
-    transactionForm.amount &&
+    datetime &&
+    amount &&
     account &&
-    (type === 'transfer' || category) &&
+    (type === 'transfer' || fixedCategory) &&
     type &&
-    currency &&
+    fixedCurrency &&
     (type !== 'transfer' || payeeTransferAccount)
   )
 
   const handleSave = () => {
     onApply({
       _id: transactionId || uuidv4(),
-      datetime: convertToUtcTime(transactionForm.datetime),
+      datetime: convertToUtcTime(datetime),
       account: account,
-      category: type === 'transfer' ? '' : category,
+      category: type === 'transfer' ? '' : fixedCategory,
       type: type,
-      amount: (parseFloat(transactionForm.amount) || 0).toFixed(2),
-      currency: currency,
-      payee: type === 'transfer' ? payeeTransferAccount : transactionForm.payee,
-      comment: transactionForm.comment,
+      amount: (parseFloat(amount) || 0).toFixed(2),
+      currency: fixedCurrency,
+      payee: type === 'transfer' ? payeeTransferAccount : payee,
+      comment: comment,
     })
     if (!transactionId) {
       dispatch(setAccountName(account))
@@ -169,7 +183,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
     dispatch(resetFocusedTransactionId())
   }
 
-  const expandedCategory = categoryNameToExtendedMap[category] || category
+  const expandedCategory = categoryNameToExtendedMap[fixedCategory] || fixedCategory
   const expandedCategories = categories.map((c) => categoryNameToExtendedMap[c] || c)
 
   const isStepByStep = false
@@ -179,37 +193,37 @@ export default function TransactionFormContainer({ onApply }: Props) {
     <TransactionFormComponent
       type={type}
       onTypeChange={(type: 'income' | 'expense' | 'transfer') => setType(type)}
-      amount={transactionForm.amount}
-      onAmountChange={(amount: string) => dispatch(setAmount(amount))}
+      amount={amount}
+      onAmountChange={(amount: string) => setAmount(amount)}
       account={account}
-      currency={currency}
+      currency={fixedCurrency}
       category={expandedCategory}
       onCategoryChange={(category: string) => {
-        const fixedCategory = categoryNameFromExtendedMap[category] || category
-        dispatch(setCategory(fixedCategory))
+        const restoredCategory = categoryNameFromExtendedMap[category] || category
+        setCategory(restoredCategory)
         const transactionAggregator = new TransactionAggregator(transactions)
         const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(fixedCategory)
         dispatch(setPayeeSuggestions(payeeSuggestions))
         const commentSuggestions = transactionAggregator.getRecentCommentsByCategory(fixedCategory)
         dispatch(setCommentSuggestions(commentSuggestions))
       }}
-      payee={transactionForm.payee}
-      onPayeeChange={(payee: string) => dispatch(setPayee(payee))}
+      payee={payee}
+      onPayeeChange={(payee: string) => setPayee(payee)}
       payeeTransferAccount={payeeTransferAccount}
       onPayeeTransferAccountChange={handlePayeeTransferAccountChange}
-      comment={transactionForm.comment}
-      onCommentChange={(comment: string) => dispatch(setComment(comment))}
-      datetime={new Date(transactionForm.datetime)}
+      comment={comment}
+      onCommentChange={(comment: string) => setComment(comment)}
+      datetime={new Date(datetime)}
       onAccountChange={(account) => dispatch(setAccount({ type: type, account: account }))}
       onDatetimeChange={handleDatetimeChange}
       onSave={handleSave}
       accounts={currencyAccounts}
       categories={expandedCategories}
       currencies={availableCurrencies}
-      onCurrencyChange={(currency: string) => dispatch(setCurrency(currency))}
+      onCurrencyChange={(currency: string) => setCurrency(currency)}
       isValid={isValid}
-      payees={category ? transactionForm.payeeSuggestions : payees}
-      comments={category ? transactionForm.commentSuggestions : comments}
+      payees={fixedCategory ? transactionForm.payeeSuggestions : payees}
+      comments={fixedCategory ? transactionForm.commentSuggestions : comments}
     />
   )
 }
