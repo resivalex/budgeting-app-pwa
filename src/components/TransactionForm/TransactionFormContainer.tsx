@@ -52,14 +52,14 @@ export default function TransactionFormContainer({ onApply }: Props) {
 
   const dispatch = useDispatch()
   const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
-  const categories: string[] = useAppSelector((state) => state.categories)
-  const currencies: string[] = useAppSelector((state) => state.currencies)
-  const payees: string[] = useAppSelector((state) => state.payees)
-  const transactions: TransactionDTO[] = useAppSelector((state) => state.transactions)
-  const comments: string[] = useAppSelector((state) => state.comments)
+  const appCategories: string[] = useAppSelector((state) => state.categories)
+  const appCurrencies: string[] = useAppSelector((state) => state.currencies)
+  const appPayees: string[] = useAppSelector((state) => state.payees)
+  const appTransactions: TransactionDTO[] = useAppSelector((state) => state.transactions)
+  const appComments: string[] = useAppSelector((state) => state.comments)
   const navigate = useNavigate()
   const { transactionId } = useParams()
-  const transaction = useAppSelector((state) => state.transactions).find(
+  const curTransaction = useAppSelector((state) => state.transactions).find(
     (t: TransactionDTO) => t._id === transactionId
   )
   const categoryExpansions: CategoryExpansionsDTO = localStorage.categoryExpansions
@@ -82,16 +82,16 @@ export default function TransactionFormContainer({ onApply }: Props) {
 
   useEffect(() => {
     if (transactionId) {
-      if (transaction) {
-        setType(transaction.type)
-        setAmount(`${parseFloat(transaction.amount)}`.replace(',', '.'))
-        setAccount(transaction.account)
-        setCurrency(transaction.currency)
-        setCategory(transaction.category)
-        setPayee(transaction.payee)
-        setPayeeTransferAccount(transaction.payeeTransferAccount)
-        setComment(transaction.comment)
-        setDatetime(convertToLocaleTime(transaction.datetime))
+      if (curTransaction) {
+        setType(curTransaction.type)
+        setAmount(`${parseFloat(curTransaction.amount)}`.replace(',', '.'))
+        setAccount(curTransaction.account)
+        setCurrency(curTransaction.currency)
+        setCategory(curTransaction.category)
+        setPayee(curTransaction.payee)
+        setPayeeTransferAccount(curTransaction.payeeTransferAccount)
+        setComment(curTransaction.comment)
+        setDatetime(convertToLocaleTime(curTransaction.datetime))
       } else {
         navigate('/', { replace: true })
       }
@@ -106,7 +106,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       setComment('')
       setDatetime(new Date().toISOString())
     }
-  }, [dispatch, navigate, transaction, transactionId])
+  }, [dispatch, navigate, curTransaction, transactionId])
 
   if (accounts.length === 0) {
     return null
@@ -114,8 +114,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
 
   const availableCurrencies =
     type === 'transfer'
-      ? currencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
-      : currencies
+      ? appCurrencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
+      : appCurrencies
   const fixedCurrency = _.includes(availableCurrencies, currency)
     ? currency
     : availableCurrencies[0]
@@ -126,7 +126,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   )
     ? account
     : currencyAccounts[0].account
-  const fixedCategory = _.includes(categories, category) ? category : ''
+  const fixedCategory = _.includes(appCategories, category) ? category : ''
   let fixedPayeeTransferAccount = payeeTransferAccount
   if (
     !_.includes(
@@ -191,7 +191,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   }
 
   const expandedCategory = categoryNameToExtendedMap[fixedCategory] || fixedCategory
-  const expandedCategories = categories.map((c) => categoryNameToExtendedMap[c] || c)
+  const expandedCategories = appCategories.map((c) => categoryNameToExtendedMap[c] || c)
 
   const isStepByStep = false
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
@@ -208,7 +208,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onCategoryChange={(category: string) => {
         const restoredCategory = categoryNameFromExtendedMap[category] || category
         setCategory(restoredCategory)
-        const transactionAggregator = new TransactionAggregator(transactions)
+        const transactionAggregator = new TransactionAggregator(appTransactions)
         const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(restoredCategory)
         setPayeeSuggestions(payeeSuggestions)
         const commentSuggestions =
@@ -230,8 +230,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
       currencies={availableCurrencies}
       onCurrencyChange={(currency: string) => setCurrency(currency)}
       isValid={isValid}
-      payees={fixedCategory ? payeeSuggestions : payees}
-      comments={fixedCategory ? commentSuggestions : comments}
+      payees={fixedCategory ? payeeSuggestions : appPayees}
+      comments={fixedCategory ? commentSuggestions : appComments}
     />
   )
 }
