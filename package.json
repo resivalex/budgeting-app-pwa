@@ -28,6 +28,7 @@
     "classnames": "^2.3.2",
     "customize-cra": "^1.0.0",
     "dayjs": "^1.11.7",
+    "jotai": "^2.1.1",
     "lodash": "^4.17.21",
     "pouchdb": "^8.0.0",
     "react": "^18.2.0",

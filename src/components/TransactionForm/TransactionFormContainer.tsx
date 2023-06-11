@@ -1,4 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux'
+import { v4 as uuidv4 } from 'uuid'
+import _ from 'lodash'
+import { useEffect } from 'react'
+import { useAtom } from 'jotai'
+import { typeAtom } from './atoms'
 import {
   TransactionDTO,
   AccountDetailsDTO,
@@ -7,11 +12,9 @@ import {
   ColoredAccountDetailsDTO,
 } from '@/types'
 import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties } from '@/utils'
-import { v4 as uuidv4 } from 'uuid'
 import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
 import {
-  setType,
   setAmount,
   setAccount,
   setCurrency,
@@ -28,8 +31,6 @@ import {
 import { useAppSelector } from '@/redux/appSlice'
 import { setAccountName } from '@/redux/transactionFiltersSlice'
 import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
-import _ from 'lodash'
-import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import TransactionAggregator from '@/redux/TransactionAggregator'
 
@@ -39,6 +40,8 @@ interface Props {
 }
 
 export default function TransactionFormContainer({ onApply }: Props) {
+  const [type, setType] = useAtom(typeAtom)
+
   const dispatch = useDispatch()
   const transactionForm = useSelector(selectTransactionForm)
   const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
@@ -73,7 +76,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   useEffect(() => {
     if (transactionId) {
       if (transaction) {
-        dispatch(setType(transaction.type))
+        setType(transaction.type)
         dispatch(setAmount(`${parseFloat(transaction.amount)}`.replace(',', '.')))
         dispatch(setAccount(transaction.account))
         dispatch(setCurrency(transaction.currency))
@@ -94,7 +97,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
     return null
   }
 
-  const type = transactionForm.type
   const availableCurrencies =
     type === 'transfer'
       ? currencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
@@ -175,7 +177,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   return (
     <TransactionFormComponent
       type={type}
-      onTypeChange={(type: 'income' | 'expense' | 'transfer') => dispatch(setType(type))}
+      onTypeChange={(type: 'income' | 'expense' | 'transfer') => setType(type)}
       amount={transactionForm.amount}
       onAmountChange={(amount: string) => dispatch(setAmount(amount))}
       account={account}
