@@ -146,20 +146,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
     }
   }
 
-  function setAccountAwareOfPayeeTransferAccount(value: string) {
-    if (payeeTransferAccount === value) {
-      setPayeeTransferAccount(account)
-    }
-    setAccount(value)
-  }
-
-  function setPayeeTransferAccountAwareOfAccount(value: string) {
-    if (account === value) {
-      setAccount(payeeTransferAccount)
-    }
-    setPayeeTransferAccount(value)
-  }
-
   const isValid = !!(
     datetime &&
     amount &&
@@ -242,16 +228,22 @@ export default function TransactionFormContainer({ onApply }: Props) {
     setPayee(payee)
   }
 
-  const handlePayeeTransferAccountChange = (payeeTransferAccount: string) => {
-    setPayeeTransferAccountAwareOfAccount(payeeTransferAccount)
+  const handlePayeeTransferAccountChange = (value: string) => {
+    setPayeeTransferAccount(value)
+    if (account === value) {
+      setAccount(payeeTransferAccount)
+    }
   }
 
   const handleCommentChange = (comment: string) => {
     setComment(comment)
   }
 
-  const handleAccountChange = (account: string) => {
-    setAccountAwareOfPayeeTransferAccount(account)
+  const handleAccountChange = (value: string) => {
+    setAccount(value)
+    if (payeeTransferAccount === value) {
+      setPayeeTransferAccount(account)
+    }
   }
 
   const handleCurrencyChange = (currency: string) => {
