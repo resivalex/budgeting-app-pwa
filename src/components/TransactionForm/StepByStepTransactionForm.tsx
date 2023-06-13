@@ -14,7 +14,7 @@ import {
 } from './FormInputs'
 
 interface Props {
-  type: 'income' | 'expense' | 'transfer'
+  type: 'income' | 'expense' | 'transfer' | ''
   onTypeChange: (type: 'income' | 'expense' | 'transfer') => void
   amount: string
   onAmountChange: (amount: string) => void
@@ -50,18 +50,6 @@ const payeeStep = 'payee'
 const payeeTransferAccountStep = 'payeeTransferAccount'
 const commentStep = 'comment'
 const datetimeStep = 'datetime'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const stepNames = [
-  typeStep,
-  currencyStep,
-  amountStep,
-  accountStep,
-  categoryStep,
-  payeeStep,
-  payeeTransferAccountStep,
-  commentStep,
-  datetimeStep,
-]
 
 function StepByStepTransactionForm({
   type,

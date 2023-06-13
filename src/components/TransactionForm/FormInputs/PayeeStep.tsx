@@ -7,7 +7,7 @@ interface Props {
   onPayeeChange: (payee: string) => void
   onExpand: () => void
   payees: string[]
-  type: 'expense' | 'income' | 'transfer'
+  type: 'expense' | 'income' | 'transfer' | ''
 }
 
 const PayeeLabel = styled.div<{ isExpanded: boolean }>`
@@ -27,11 +27,15 @@ export default function PayeeStep({
   payees,
   type,
 }: Props) {
+  function labelText() {
+    return type === 'income' ? 'Плательщик' : 'Получатель'
+  }
+
   if (!isExpanded) {
     return (
       <div className="field" onClick={onExpand}>
         <PayeeLabel className="is-size-7" isExpanded={isExpanded}>
-          {type === 'expense' ? 'Получатель' : 'Плательщик'}
+          {labelText()}
         </PayeeLabel>
         <SelectedPayee>{payee || 'Select'}</SelectedPayee>
       </div>
@@ -41,7 +45,7 @@ export default function PayeeStep({
   return (
     <div className="field">
       <PayeeLabel className="is-size-7" isExpanded={isExpanded}>
-        {type === 'expense' ? 'Получатель' : 'Плательщик'}
+        {labelText()}
       </PayeeLabel>
       <div className="control">
         <SuggestingInput2 value={payee} suggestions={payees} onChange={onPayeeChange} />

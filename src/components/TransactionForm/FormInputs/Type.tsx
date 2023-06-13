@@ -2,7 +2,7 @@ import { reactSelectSmallStyles } from '@/utils'
 import Select from 'react-select'
 
 interface Props {
-  type: 'income' | 'expense' | 'transfer'
+  type: 'income' | 'expense' | 'transfer' | ''
   onTypeChange: (type: 'income' | 'expense' | 'transfer') => void
   typeOptions: { value: string; label: string }[]
 }

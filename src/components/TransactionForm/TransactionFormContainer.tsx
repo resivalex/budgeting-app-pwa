@@ -45,7 +45,7 @@ function useAccounts(): ColoredAccountDetailsDTO[] {
 }
 
 export default function TransactionFormContainer({ onApply }: Props) {
-  const [type, setType] = useState<'income' | 'expense' | 'transfer'>('expense')
+  const [type, setType] = useState<'income' | 'expense' | 'transfer' | ''>('expense')
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('')
   const [category, setCategory] = useState('')
@@ -99,7 +99,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
   }, [navigate, curTransaction, transactionId])
 
   const resetForm = () => {
-    setType('expense')
+    setType('')
     setAmount('')
     setAccount('')
     setCurrency('')
@@ -181,6 +181,12 @@ export default function TransactionFormContainer({ onApply }: Props) {
   )
 
   const handleSave = () => {
+    if (type === '') {
+      return
+    }
+    if (!isValid) {
+      return
+    }
     onApply({
       _id: transactionId || uuidv4(),
       datetime: convertToUtcTime(datetime),

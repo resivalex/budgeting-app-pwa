@@ -13,7 +13,7 @@ import {
 } from './FormInputs'
 
 interface Props {
-  type: 'income' | 'expense' | 'transfer'
+  type: 'income' | 'expense' | 'transfer' | ''
   onTypeChange: (type: 'income' | 'expense' | 'transfer') => void
   amount: string
   onAmountChange: (amount: string) => void
