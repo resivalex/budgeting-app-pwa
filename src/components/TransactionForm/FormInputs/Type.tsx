@@ -22,6 +22,7 @@ export default function Type({ type, onTypeChange, typeOptions }: Props) {
           }}
           options={typeOptions}
           isSearchable={false}
+          placeholder="Выберите из списка..."
           styles={reactSelectSmallStyles}
         />
       </div>
