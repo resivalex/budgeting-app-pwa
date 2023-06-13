@@ -12,32 +12,47 @@ import {
   Datetime as DatetimeFormInput,
 } from './FormInputs'
 
+// Types
+type TransactionType = 'income' | 'expense' | 'transfer'
+
+interface SelectOption {
+  value: string
+  label: string
+}
+
 interface Props {
-  type: 'income' | 'expense' | 'transfer' | ''
-  onTypeChange: (type: 'income' | 'expense' | 'transfer') => void
-  amount: string
-  onAmountChange: (amount: string) => void
-  account: string
+  // Basic transaction details
+  type: TransactionType | ''
   currency: string
+  amount: string
+  account: string
   category: string
-  onCategoryChange: (category: string) => void
   payee: string
-  onPayeeChange: (payee: string) => void
   payeeTransferAccount: string
-  onPayeeTransferAccountChange: (payeeTransferAccount: string) => void
   comment: string
-  onCommentChange: (comment: string) => void
   datetime: Date
-  onAccountChange: (account: string) => void
-  onDatetimeChange: (datetime: Date | null) => void
-  onSave: () => void
+
+  // Options for dropdown/select inputs
   accounts: ColoredAccountDetailsDTO[]
-  categoryOptions: { value: string; label: string }[]
+  categoryOptions: SelectOption[]
   currencies: string[]
-  onCurrencyChange: (currency: string) => void
-  isValid: boolean
   payees: string[]
   comments: string[]
+
+  // Event handlers
+  onTypeChange: (type: TransactionType) => void
+  onCurrencyChange: (currency: string) => void
+  onAmountChange: (amount: string) => void
+  onAccountChange: (account: string) => void
+  onCategoryChange: (category: string) => void
+  onPayeeChange: (payee: string) => void
+  onPayeeTransferAccountChange: (payeeTransferAccount: string) => void
+  onCommentChange: (comment: string) => void
+  onDatetimeChange: (datetime: Date | null) => void
+
+  // Save event
+  isValid: boolean
+  onSave: () => void
 }
 
 function TransactionForm({

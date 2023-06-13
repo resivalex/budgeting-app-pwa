@@ -275,31 +275,36 @@ export default function TransactionFormContainer({ onApply }: Props) {
 
   return (
     <TransactionFormComponent
+      // Basic transaction details
       type={type}
-      onTypeChange={handleTypeChange}
       amount={amount}
-      onAmountChange={handleAmountChange}
       account={account}
       currency={currency}
       category={fixedCategory}
-      onCategoryChange={handleCategoryChange}
       payee={payee}
-      onPayeeChange={handlePayeeChange}
       payeeTransferAccount={payeeTransferAccount}
-      onPayeeTransferAccountChange={handlePayeeTransferAccountChange}
       comment={comment}
-      onCommentChange={handleCommentChange}
       datetime={viewDatetime}
+      // Event handlers for basic transaction details
+      onTypeChange={handleTypeChange}
+      onAmountChange={handleAmountChange}
       onAccountChange={handleAccountChange}
+      onCategoryChange={handleCategoryChange}
+      onPayeeChange={handlePayeeChange}
+      onPayeeTransferAccountChange={handlePayeeTransferAccountChange}
+      onCommentChange={handleCommentChange}
       onDatetimeChange={handleDatetimeChange}
-      onSave={handleSave}
+      // Dropdown options
       accounts={availableAccounts}
       categoryOptions={categoryOptions}
       currencies={availableCurrencies}
-      onCurrencyChange={handleCurrencyChange}
-      isValid={isValid}
       payees={payees}
       comments={comments}
+      // Event handlers for dropdown options
+      onCurrencyChange={handleCurrencyChange}
+      // Validation and Save event
+      isValid={isValid}
+      onSave={handleSave}
     />
   )
 }
