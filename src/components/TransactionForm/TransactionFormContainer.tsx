@@ -120,33 +120,25 @@ export default function TransactionFormContainer({ onApply }: Props) {
     return null
   }
 
-  const availableCurrencies =
-    type === 'transfer'
-      ? appCurrencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
-      : appCurrencies
-  const fixedCurrency = _.includes(availableCurrencies, currency)
-    ? currency
-    : availableCurrencies[0]
-  const currencyAccounts = accounts.filter((a) => a.currency === fixedCurrency)
-  const fixedAccount = _.includes(
-    currencyAccounts.map((a) => a.account),
-    account
+  function getAvailableCurrenciesAndAccounts(type: string, currency: string) {
+    const availableCurrencies =
+      type === 'transfer'
+        ? appCurrencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
+        : appCurrencies
+    const availableAccounts = accounts.filter((a) => a.currency === currency)
+
+    return {
+      availableCurrencies,
+      availableAccounts,
+    }
+  }
+
+  const { availableCurrencies, availableAccounts } = getAvailableCurrenciesAndAccounts(
+    type,
+    currency
   )
-    ? account
-    : currencyAccounts[0].account
+
   const fixedCategory = _.includes(appCategories, category) ? category : ''
-  let fixedPayeeTransferAccount = payeeTransferAccount
-  if (
-    !_.includes(
-      currencyAccounts.map((a) => a.account),
-      payeeTransferAccount
-    )
-  ) {
-    fixedPayeeTransferAccount = currencyAccounts[0].account
-  }
-  if (type === 'transfer' && fixedPayeeTransferAccount === fixedAccount) {
-    fixedPayeeTransferAccount = currencyAccounts[1].account
-  }
 
   const handleDatetimeChange = (value: Date | null) => {
     if (value) {
@@ -173,11 +165,11 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const isValid = !!(
     datetime &&
     amount &&
-    fixedAccount &&
+    account &&
     (type === 'transfer' || fixedCategory) &&
     type &&
-    fixedCurrency &&
-    (type !== 'transfer' || fixedPayeeTransferAccount)
+    currency &&
+    (type !== 'transfer' || payeeTransferAccount)
   )
 
   const handleSave = () => {
@@ -190,16 +182,16 @@ export default function TransactionFormContainer({ onApply }: Props) {
     onApply({
       _id: transactionId || uuidv4(),
       datetime: convertToUtcTime(datetime),
-      account: fixedAccount,
+      account: account,
       category: type === 'transfer' ? '' : fixedCategory,
       type: type,
       amount: (parseFloat(amount) || 0).toFixed(2),
-      currency: fixedCurrency,
-      payee: type === 'transfer' ? fixedPayeeTransferAccount : payee,
+      currency: currency,
+      payee: type === 'transfer' ? payeeTransferAccount : payee,
       comment: comment,
     })
     if (!transactionId) {
-      dispatch(setAccountName(fixedAccount))
+      dispatch(setAccountName(account))
     }
     dispatch(resetFocusedTransactionId())
   }
@@ -213,8 +205,35 @@ export default function TransactionFormContainer({ onApply }: Props) {
     setCommentSuggestions(commentSuggestions)
   }
 
+  function adjustCurrencyAndAccounts(type: string, currency: string) {
+    const { availableCurrencies, availableAccounts } = getAvailableCurrenciesAndAccounts(
+      type,
+      currency
+    )
+    if (!_.includes(availableCurrencies, currency)) {
+      setCurrency('')
+    }
+    if (
+      !_.includes(
+        _.map(availableAccounts, (a) => a.account),
+        account
+      )
+    ) {
+      setAccount('')
+    }
+    if (
+      !_.includes(
+        _.map(availableAccounts, (a) => a.account),
+        payeeTransferAccount
+      )
+    ) {
+      setPayeeTransferAccount('')
+    }
+  }
+
   const handleTypeChange = (type: 'income' | 'expense' | 'transfer') => {
     setType(type)
+    adjustCurrencyAndAccounts(type, currency)
   }
 
   const handleAmountChange = (amount: string) => {
@@ -239,6 +258,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
 
   const handleCurrencyChange = (currency: string) => {
     setCurrency(currency)
+    adjustCurrencyAndAccounts(type, currency)
   }
 
   const viewDatetime = new Date(datetime)
@@ -259,13 +279,13 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onTypeChange={handleTypeChange}
       amount={amount}
       onAmountChange={handleAmountChange}
-      account={fixedAccount}
-      currency={fixedCurrency}
+      account={account}
+      currency={currency}
       category={fixedCategory}
       onCategoryChange={handleCategoryChange}
       payee={payee}
       onPayeeChange={handlePayeeChange}
-      payeeTransferAccount={fixedPayeeTransferAccount}
+      payeeTransferAccount={payeeTransferAccount}
       onPayeeTransferAccountChange={handlePayeeTransferAccountChange}
       comment={comment}
       onCommentChange={handleCommentChange}
@@ -273,7 +293,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onAccountChange={handleAccountChange}
       onDatetimeChange={handleDatetimeChange}
       onSave={handleSave}
-      accounts={currencyAccounts}
+      accounts={availableAccounts}
       categoryOptions={categoryOptions}
       currencies={availableCurrencies}
       onCurrencyChange={handleCurrencyChange}

@@ -15,13 +15,14 @@ export default function Account({ account, onAccountChange, accountOptions }: Pr
         <Select
           className="basic-single"
           classNamePrefix="select"
-          value={accountOptions.find((option) => option.value === account)}
+          value={accountOptions.find((option) => option.value === account) || null}
           onChange={(selectedOption) => {
             if (!selectedOption) return
             onAccountChange(selectedOption.value)
           }}
           options={accountOptions}
           isSearchable={false}
+          placeholder="Выберите из списка..."
           styles={reactSelectColorStyles}
         />
       </div>

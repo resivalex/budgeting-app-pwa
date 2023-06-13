@@ -29,7 +29,7 @@ export const reactSelectSmallStyles = {
 
 export const reactSelectColorStyles = {
   control: (provided: any, { selectProps }: any) => {
-    const color = selectProps.value && selectProps.value.color ? selectProps.value.color : '#000'
+    const color = selectProps.value && selectProps.value.color ? selectProps.value.color : '#fff'
 
     return {
       ...provided,

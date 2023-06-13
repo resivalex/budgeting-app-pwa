@@ -15,13 +15,14 @@ export default function Currency({ currency, onCurrencyChange, currencyOptions }
         <Select
           className="basic-single"
           classNamePrefix="select"
-          value={currencyOptions.find((option) => option.value === currency)}
+          value={currencyOptions.find((option) => option.value === currency) || null}
           onChange={(selectedOption) => {
             if (!selectedOption) return
             onCurrencyChange(selectedOption.value)
           }}
           options={currencyOptions}
           isSearchable={false}
+          placeholder="Выберите из списка..."
           styles={reactSelectSmallStyles}
         />
       </div>

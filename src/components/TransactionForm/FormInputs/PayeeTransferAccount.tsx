@@ -19,13 +19,14 @@ export default function PayeeTransferAccount({
         <Select
           className="basic-single"
           classNamePrefix="select"
-          value={accountOptions.find((option) => option.value === payeeTransferAccount)}
+          value={accountOptions.find((option) => option.value === payeeTransferAccount) || null}
           onChange={(selectedOption) => {
             if (!selectedOption) return
             onPayeeTransferAccountChange(selectedOption.value)
           }}
           options={accountOptions}
           isSearchable={false}
+          placeholder="Выберите из списка..."
           styles={reactSelectColorStyles}
         />
       </div>
