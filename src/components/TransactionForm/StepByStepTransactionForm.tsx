@@ -33,7 +33,7 @@ interface Props {
   onDatetimeChange: (datetime: Date | null) => void
   onSave: () => void
   accounts: ColoredAccountDetailsDTO[]
-  categories: string[]
+  categoryOptions: { value: string; label: string }[]
   currencies: string[]
   onCurrencyChange: (currency: string) => void
   isValid: boolean
@@ -83,7 +83,7 @@ function StepByStepTransactionForm({
   onDatetimeChange,
   onSave,
   accounts,
-  categories,
+  categoryOptions,
   currencies,
   onCurrencyChange,
   isValid,
@@ -100,10 +100,6 @@ function StepByStepTransactionForm({
     value: a.account,
     label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
     color: a.color,
-  }))
-  const categoryOptions = categories.map((category) => ({
-    value: category,
-    label: category,
   }))
 
   function renderTypeStep() {

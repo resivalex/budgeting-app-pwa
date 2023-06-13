@@ -23,18 +23,16 @@ interface Props {
   onApply: (t: TransactionDTO) => void
 }
 
-function useCategoryExtensions() {
+function useCategoryExtensions(): { [name: string]: string } {
   const categoryExpansions: CategoryExpansionsDTO = localStorage.categoryExpansions
     ? JSON.parse(localStorage.categoryExpansions)
     : { expansions: [] }
   const categoryNameToExtendedMap: { [name: string]: string } = {}
-  const categoryNameFromExtendedMap: { [extendedName: string]: string } = {}
   categoryExpansions.expansions.forEach((e) => {
     categoryNameToExtendedMap[e.name] = e.expandedName
-    categoryNameFromExtendedMap[e.expandedName] = e.name
   })
 
-  return { categoryNameToExtendedMap, categoryNameFromExtendedMap }
+  return categoryNameToExtendedMap
 }
 
 function useAccounts(): ColoredAccountDetailsDTO[] {
@@ -71,7 +69,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
     (t: TransactionDTO) => t._id === transactionId
   )
 
-  const { categoryNameToExtendedMap, categoryNameFromExtendedMap } = useCategoryExtensions()
+  const categoryExtensions = useCategoryExtensions()
   const accounts = useAccounts()
 
   const initializeFormFromTransaction = (t: TransactionDTO) => {
@@ -201,12 +199,11 @@ export default function TransactionFormContainer({ onApply }: Props) {
   }
 
   const handleCategoryChange = (category: string) => {
-    const restoredCategory = categoryNameFromExtendedMap[category] || category
-    setCategory(restoredCategory)
+    setCategory(category)
     const transactionAggregator = new TransactionAggregator(appTransactions)
-    const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(restoredCategory)
+    const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(category)
     setPayeeSuggestions(payeeSuggestions)
-    const commentSuggestions = transactionAggregator.getRecentCommentsByCategory(restoredCategory)
+    const commentSuggestions = transactionAggregator.getRecentCommentsByCategory(category)
     setCommentSuggestions(commentSuggestions)
   }
 
@@ -242,8 +239,10 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const payees = fixedCategory ? payeeSuggestions : appPayees
   const comments = fixedCategory ? commentSuggestions : appComments
 
-  const expandedCategory = categoryNameToExtendedMap[fixedCategory] || fixedCategory
-  const expandedCategories = appCategories.map((c) => categoryNameToExtendedMap[c] || c)
+  const categoryOptions = appCategories.map((c) => ({
+    value: c,
+    label: categoryExtensions[c] || c,
+  }))
 
   const isStepByStep = false
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
@@ -256,7 +255,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onAmountChange={handleAmountChange}
       account={fixedAccount}
       currency={fixedCurrency}
-      category={expandedCategory}
+      category={fixedCategory}
       onCategoryChange={handleCategoryChange}
       payee={payee}
       onPayeeChange={handlePayeeChange}
@@ -269,7 +268,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       onDatetimeChange={handleDatetimeChange}
       onSave={handleSave}
       accounts={currencyAccounts}
-      categories={expandedCategories}
+      categoryOptions={categoryOptions}
       currencies={availableCurrencies}
       onCurrencyChange={handleCurrencyChange}
       isValid={isValid}

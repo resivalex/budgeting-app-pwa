@@ -51,8 +51,9 @@ function useChoosingInput({ value, onChange, options }: ChoosingInputProps) {
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
-    setInputValue(value)
-  }, [value])
+    const option = options.find((option) => option.value === value)
+    setInputValue(option?.label || '')
+  }, [value, options])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
@@ -65,15 +66,16 @@ function useChoosingInput({ value, onChange, options }: ChoosingInputProps) {
   const handleBlur = () => {
     const option = options.find((option) => option.label === inputValue)
     if (!option) {
-      setInputValue(value)
+      const prevOption = options.find((option) => option.value === value)
+      setInputValue(prevOption?.label || '')
     }
 
     setShowSuggestions(false)
   }
 
-  const handleSuggestionClick = (suggestionValue: string) => {
+  const handleSuggestionClick = (suggestionValue: string, suggestionLabel: string) => {
     onChange(suggestionValue)
-    setInputValue(suggestionValue)
+    setInputValue(suggestionLabel)
   }
 
   const filteredSuggestions = useMemo(() => {
@@ -123,7 +125,10 @@ export default function ChoosingInput(props: ChoosingInputProps) {
       {showSuggestions && (
         <Suggestions>
           {filteredSuggestions.map((option, index) => (
-            <Suggestion key={index} onMouseDown={() => handleSuggestionClick(option.value)}>
+            <Suggestion
+              key={index}
+              onMouseDown={() => handleSuggestionClick(option.value, option.label)}
+            >
               {option.label}
             </Suggestion>
           ))}

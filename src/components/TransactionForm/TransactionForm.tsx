@@ -32,7 +32,7 @@ interface Props {
   onDatetimeChange: (datetime: Date | null) => void
   onSave: () => void
   accounts: ColoredAccountDetailsDTO[]
-  categories: string[]
+  categoryOptions: { value: string; label: string }[]
   currencies: string[]
   onCurrencyChange: (currency: string) => void
   isValid: boolean
@@ -60,7 +60,7 @@ function TransactionForm({
   onDatetimeChange,
   onSave,
   accounts,
-  categories,
+  categoryOptions,
   currencies,
   onCurrencyChange,
   isValid,
@@ -78,7 +78,6 @@ function TransactionForm({
     label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
     color: a.color,
   }))
-  const categoryOptions = categories.map((c) => ({ value: c, label: c }))
 
   return (
     <div className="field p-2">
