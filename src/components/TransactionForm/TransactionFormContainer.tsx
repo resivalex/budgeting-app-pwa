@@ -138,8 +138,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
     currency
   )
 
-  const fixedCategory = _.includes(appCategories, category) ? category : ''
-
   const handleDatetimeChange = (value: Date | null) => {
     if (value) {
       setDatetime(value.toISOString())
@@ -166,7 +164,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
     datetime &&
     amount &&
     account &&
-    (type === 'transfer' || fixedCategory) &&
+    (type === 'transfer' || category) &&
     type &&
     currency &&
     (type !== 'transfer' || payeeTransferAccount)
@@ -183,7 +181,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       _id: transactionId || uuidv4(),
       datetime: convertToUtcTime(datetime),
       account: account,
-      category: type === 'transfer' ? '' : fixedCategory,
+      category: type === 'transfer' ? '' : category,
       type: type,
       amount: (parseFloat(amount) || 0).toFixed(2),
       currency: currency,
@@ -262,8 +260,8 @@ export default function TransactionFormContainer({ onApply }: Props) {
   }
 
   const viewDatetime = new Date(datetime)
-  const payees = fixedCategory ? payeeSuggestions : appPayees
-  const comments = fixedCategory ? commentSuggestions : appComments
+  const payees = category ? payeeSuggestions : appPayees
+  const comments = category ? commentSuggestions : appComments
 
   const categoryOptions = appCategories.map((c) => ({
     value: c,
@@ -280,7 +278,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
       amount={amount}
       account={account}
       currency={currency}
-      category={fixedCategory}
+      category={category}
       payee={payee}
       payeeTransferAccount={payeeTransferAccount}
       comment={comment}
