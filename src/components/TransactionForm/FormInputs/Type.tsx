@@ -15,7 +15,7 @@ export default function Type({ type, onTypeChange, typeOptions }: Props) {
         <Select
           className="basic-single"
           classNamePrefix="select"
-          value={typeOptions.find((option) => option.value === type)}
+          value={typeOptions.find((option) => option.value === type) || null}
           onChange={(selectedOption) => {
             if (!selectedOption) return
             onTypeChange(selectedOption.value as 'income' | 'expense' | 'transfer')
