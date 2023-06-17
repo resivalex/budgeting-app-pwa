@@ -8,6 +8,8 @@ import { useReduxTransactions } from './hooks/useReduxTransactions'
 import { v4 as uuidv4 } from 'uuid'
 import { useSyncService } from './hooks/useSyncService'
 import { useLastNotificationText } from './hooks/useLastNotificationText'
+import { setAccountName } from '@/redux/transactionFiltersSlice'
+import { useDispatch } from 'react-redux'
 
 const instanceId = uuidv4()
 
@@ -19,6 +21,7 @@ interface Props {
 
 export default function AuthorizedAppContainer({ backendService, dbService, isLoading }: Props) {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   useCategoryExpansions(backendService)
   useAccountProperties(backendService)
@@ -44,6 +47,7 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
     await addDbTransaction(t)
     addReduxTransaction(t)
     setLastNotificationText('Запись добавлена')
+    dispatch(setAccountName(t.account))
     navigate('/transactions', { replace: true })
   }
 

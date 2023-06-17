@@ -14,7 +14,6 @@ import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties
 import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
 import { useAppSelector } from '@/redux/appSlice'
-import { setAccountName } from '@/redux/transactionFiltersSlice'
 import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import TransactionAggregator from '@/redux/TransactionAggregator'
@@ -190,9 +189,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
       payee: type === 'transfer' ? payeeTransferAccount : payee,
       comment: comment,
     })
-    if (!transactionId) {
-      dispatch(setAccountName(account))
-    }
     dispatch(resetFocusedTransactionId())
   }
 
