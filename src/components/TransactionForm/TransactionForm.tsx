@@ -96,13 +96,13 @@ function TransactionForm({
 
   return (
     <div className="field p-2">
+      <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
       <TypeFormInput type={type} onTypeChange={onTypeChange} typeOptions={typeOptions} />
       <CurrencyFormInput
         currency={currency}
         onCurrencyChange={onCurrencyChange}
         currencyOptions={currencyOptions}
       />
-      <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
       <AccountFormInput
         account={account}
         onAccountChange={onAccountChange}

@@ -49,7 +49,7 @@ export default function TypeStep({ value, isExpanded, onChange, onExpand }: Prop
       case 'transfer':
         return 'Перевод'
       default:
-        return '?'
+        return 'Тип?'
     }
   }
 

@@ -43,7 +43,7 @@ const Container = styled.div`
 export default function CurrencyStep({ value, isExpanded, onChange, onExpand, options }: Props) {
   function renderSelectedOptionLabel() {
     const selectedOption = options.find((option) => option.value === value)
-    return selectedOption ? selectedOption.label : '?'
+    return selectedOption ? selectedOption.label : 'Валюта?'
   }
 
   if (!isExpanded) {

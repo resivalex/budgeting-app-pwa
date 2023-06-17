@@ -93,7 +93,7 @@ function StepByStepTransactionForm({
   payees,
   comments,
 }: Props) {
-  const [currentStep, setCurrentStep] = useState(typeStep)
+  const [currentStep, setCurrentStep] = useState(amountStep)
 
   const currencyOptions = currencies.map((currency) => ({
     value: currency,
@@ -213,9 +213,9 @@ function StepByStepTransactionForm({
 
   return (
     <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
+      {renderAmountStep()}
       {renderTypeStep()}
       {renderCurrencyStep()}
-      {renderAmountStep()}
       {renderAccountStep()}
       {type === 'transfer' ? (
         renderPayeeTransferAccountStep()
