@@ -10,6 +10,7 @@ import { useSyncService } from './hooks/useSyncService'
 import { useLastNotificationText } from './hooks/useLastNotificationText'
 import { setAccountName } from '@/redux/transactionFiltersSlice'
 import { useDispatch } from 'react-redux'
+import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 
 const instanceId = uuidv4()
 
@@ -48,6 +49,7 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
     addReduxTransaction(t)
     setLastNotificationText('Запись добавлена')
     dispatch(setAccountName(t.account))
+    dispatch(resetFocusedTransactionId())
     navigate('/transactions', { replace: true })
   }
 
@@ -55,6 +57,7 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
     await replaceDbTransaction(t)
     replaceReduxTransaction(t)
     setLastNotificationText('Запись изменена')
+    dispatch(resetFocusedTransactionId())
     navigate('/transactions', { replace: true })
   }
 

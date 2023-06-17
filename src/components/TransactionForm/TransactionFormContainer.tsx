@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
@@ -14,7 +13,6 @@ import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties
 import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
 import { useAppSelector } from '@/redux/appSlice'
-import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import TransactionAggregator from '@/services/TransactionAggregator'
 
@@ -63,7 +61,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const [payeeSuggestions, setPayeeSuggestions] = useState<string[]>([])
   const [commentSuggestions, setCommentSuggestions] = useState<string[]>([])
 
-  const dispatch = useDispatch()
   const appCategories: string[] = useAppSelector((state) => state.categories)
   const appCurrencies: string[] = useAppSelector((state) => state.currencies)
   const appPayees: string[] = useAppSelector((state) => state.payees)
@@ -189,7 +186,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
       payee: type === 'transfer' ? payeeTransferAccount : payee,
       comment: comment,
     })
-    dispatch(resetFocusedTransactionId())
   }
 
   const handleCategoryChange = (category: string) => {
