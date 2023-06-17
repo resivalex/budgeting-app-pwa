@@ -16,7 +16,7 @@ import StepByStepTransactionForm from './StepByStepTransactionForm'
 import { useAppSelector } from '@/redux/appSlice'
 import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 import { useNavigate, useParams } from 'react-router-dom'
-import TransactionAggregator from '@/redux/TransactionAggregator'
+import TransactionAggregator from '@/services/TransactionAggregator'
 
 interface Props {
   onApply: (t: TransactionDTO) => void
