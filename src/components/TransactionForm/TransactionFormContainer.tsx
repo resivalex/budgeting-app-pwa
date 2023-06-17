@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
@@ -23,25 +23,32 @@ interface Props {
   onApply: (t: TransactionDTO) => void
 }
 
-function useCategoryExtensions(): { [name: string]: string } {
-  const categoryExpansions: CategoryExpansionsDTO = localStorage.categoryExpansions
-    ? JSON.parse(localStorage.categoryExpansions)
-    : { expansions: [] }
-  const categoryNameToExtendedMap: { [name: string]: string } = {}
-  categoryExpansions.expansions.forEach((e) => {
-    categoryNameToExtendedMap[e.name] = e.expandedName
-  })
+function useCategoryExtensions(localStorageCategoryExpansions: string): { [name: string]: string } {
+  return useMemo(() => {
+    const categoryExpansions: CategoryExpansionsDTO = localStorage.categoryExpansions
+      ? JSON.parse(localStorage.categoryExpansions)
+      : { expansions: [] }
 
-  return categoryNameToExtendedMap
+    const categoryNameToExtendedMap: { [name: string]: string } = {}
+    categoryExpansions.expansions.forEach((e) => {
+      categoryNameToExtendedMap[e.name] = e.expandedName
+    })
+
+    return categoryNameToExtendedMap
+  }, [localStorageCategoryExpansions])
 }
 
-function useAccounts(): ColoredAccountDetailsDTO[] {
+function useAccounts(localStorageAccountProperties: string): ColoredAccountDetailsDTO[] {
   const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
-  const accountProperties: AccountPropertiesDTO = localStorage.accountProperties
-    ? JSON.parse(localStorage.accountProperties)
-    : { accounts: [] }
 
-  return mergeAccountDetailsAndProperties(accountDetails, accountProperties)
+  return useMemo(() => {
+    const accountProperties: AccountPropertiesDTO = localStorageAccountProperties
+      ? JSON.parse(localStorageAccountProperties)
+      : { accounts: [] }
+
+
+    return mergeAccountDetailsAndProperties(accountDetails, accountProperties)
+  }, [accountDetails, localStorageAccountProperties])
 }
 
 export default function TransactionFormContainer({ onApply }: Props) {
@@ -69,8 +76,17 @@ export default function TransactionFormContainer({ onApply }: Props) {
     (t: TransactionDTO) => t._id === transactionId
   )
 
-  const categoryExtensions = useCategoryExtensions()
-  const accounts = useAccounts()
+  const categoryExtensions = useCategoryExtensions(localStorage.categoryExpansions || '')
+  const categoryOptions = useMemo(
+    () =>
+      appCategories.map((c) => ({
+        value: c,
+        label: categoryExtensions[c] || c,
+      })),
+    [appCategories, categoryExtensions]
+  )
+
+  const accounts = useAccounts(localStorage.accountProperties || '')
 
   const initializeFormFromTransaction = (t: TransactionDTO) => {
     setType(t.type)
@@ -254,11 +270,6 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const viewDatetime = new Date(datetime)
   const payees = category ? payeeSuggestions : appPayees
   const comments = category ? commentSuggestions : appComments
-
-  const categoryOptions = appCategories.map((c) => ({
-    value: c,
-    label: categoryExtensions[c] || c,
-  }))
 
   const isStepByStep = false
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
