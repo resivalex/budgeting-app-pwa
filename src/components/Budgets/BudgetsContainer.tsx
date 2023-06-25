@@ -7,7 +7,7 @@ import {
   setAvailableMonths,
   useBudgetsSelector,
 } from '@/redux/budgetsSlice'
-import { AppState, useAppSelector } from '@/redux/appSlice'
+import { useAppSelector } from '@/redux/appSlice'
 import { useEffect } from 'react'
 import { BackendService } from '@/services'
 import Budgets from './Budgets'
@@ -15,10 +15,6 @@ import { TransactionDTO, BudgetDTO, SpendingLimitsDTO } from '@/types'
 import _ from 'lodash'
 
 type ConversionMapType = { [sourceCurrency: string]: { [targetCurrency: string]: number } }
-
-interface Props {
-  onTransactionRemove: (id: string) => void
-}
 
 interface MonthSpendingLimit {
   name: string
@@ -193,10 +189,15 @@ function calculateExpectationRatioByCurrentDate(selectedMonth: string) {
   return millisecondsFromSelectedMonth / millisecondsInMonth
 }
 
-export default function BudgetsContainer({ onTransactionRemove }: Props) {
+export default function BudgetsContainer({
+  transactions,
+  onTransactionRemove,
+}: {
+  transactions: TransactionDTO[]
+  onTransactionRemove: (id: string) => void
+}) {
   const dispatch = useDispatch()
   const categories: string[] = useAppSelector((state) => state.categories)
-  const transactions = useAppSelector((state: AppState) => state.transactions)
   const budgets: any[] = useBudgetsSelector((state) => state.budgets)
   const focusedBudgetName = useBudgetsSelector((state) => state.focusedBudgetName)
   const selectedMonth = useBudgetsSelector((state) => state.budgetMonthFirstDay)

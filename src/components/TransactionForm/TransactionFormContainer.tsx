@@ -16,10 +16,6 @@ import { useAppSelector } from '@/redux/appSlice'
 import { useNavigate, useParams } from 'react-router-dom'
 import TransactionAggregator from '@/services/TransactionAggregator'
 
-interface Props {
-  onApply: (t: TransactionDTO) => void
-}
-
 function useCategoryExtensions(localStorageCategoryExpansions: string): { [name: string]: string } {
   return useMemo(() => {
     const categoryExpansions: CategoryExpansionsDTO = localStorageCategoryExpansions
@@ -47,7 +43,13 @@ function useAccounts(localStorageAccountProperties: string): ColoredAccountDetai
   }, [accountDetails, localStorageAccountProperties])
 }
 
-export default function TransactionFormContainer({ onApply }: Props) {
+export default function TransactionFormContainer({
+  transactions,
+  onApply,
+}: {
+  transactions: TransactionDTO[]
+  onApply: (t: TransactionDTO) => void
+}) {
   const [type, setType] = useState<'income' | 'expense' | 'transfer' | ''>('expense')
   const [amount, setAmount] = useState('')
   const [currency, setCurrency] = useState('')
@@ -63,13 +65,10 @@ export default function TransactionFormContainer({ onApply }: Props) {
   const appCategories: string[] = useAppSelector((state) => state.categories)
   const appCurrencies: string[] = useAppSelector((state) => state.currencies)
   const appPayees: string[] = useAppSelector((state) => state.payees)
-  const appTransactions: TransactionDTO[] = useAppSelector((state) => state.transactions)
   const appComments: string[] = useAppSelector((state) => state.comments)
   const navigate = useNavigate()
   const { transactionId } = useParams()
-  const curTransaction = useAppSelector((state) => state.transactions).find(
-    (t: TransactionDTO) => t._id === transactionId
-  )
+  const curTransaction = transactions.find((t: TransactionDTO) => t._id === transactionId)
 
   const categoryExtensions = useCategoryExtensions(localStorage.categoryExpansions || '')
   const categoryOptions = useMemo(
@@ -189,7 +188,7 @@ export default function TransactionFormContainer({ onApply }: Props) {
 
   const handleCategoryChange = (category: string) => {
     setCategory(category)
-    const transactionAggregator = new TransactionAggregator(appTransactions)
+    const transactionAggregator = new TransactionAggregator(transactions)
     const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(category)
     setPayeeSuggestions(payeeSuggestions)
     const commentSuggestions = transactionAggregator.getRecentCommentsByCategory(category)

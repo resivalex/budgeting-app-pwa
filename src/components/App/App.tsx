@@ -82,12 +82,24 @@ export default function App({
             />
             <Route
               path="/budgets"
-              element={<BudgetsContainer onTransactionRemove={onRemoveTransaction} />}
+              element={
+                <BudgetsContainer
+                  transactions={transactions}
+                  onTransactionRemove={onRemoveTransaction}
+                />
+              }
             />
-            <Route path="/add" element={<TransactionFormContainer onApply={onAddTransaction} />} />
+            <Route
+              path="/add"
+              element={
+                <TransactionFormContainer transactions={transactions} onApply={onAddTransaction} />
+              }
+            />
             <Route
               path="/transactions/:transactionId"
-              element={<TransactionFormContainer onApply={onEditTransaction} />}
+              element={
+                <TransactionFormContainer transactions={transactions} onApply={onEditTransaction} />
+              }
             />
             <Route path="*" element={<NotFound />} />
           </Routes>

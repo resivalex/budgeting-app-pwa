@@ -5,7 +5,6 @@ import TransactionAggregator from '@/services/TransactionAggregator'
 import { AccountDetailsDTO } from '@/types'
 
 export type AppState = {
-  transactions: any[]
   accountDetails: AccountDetailsDTO[]
   categories: string[]
   currencies: string[]
@@ -14,7 +13,6 @@ export type AppState = {
 }
 
 const initialState: AppState = {
-  transactions: [],
   accountDetails: [],
   categories: [],
   currencies: [],
@@ -26,9 +24,8 @@ const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    setTransactions: (state, action: PayloadAction<any[]>) => {
+    aggregateTransactions: (state, action: PayloadAction<any[]>) => {
       const transactions = action.payload
-      state.transactions = transactions
 
       const transactionAggregator = new TransactionAggregator(transactions)
       state.accountDetails = transactionAggregator.getAccountDetails()
@@ -40,7 +37,7 @@ const appSlice = createSlice({
   },
 })
 
-export const { setTransactions } = appSlice.actions
+export const { aggregateTransactions } = appSlice.actions
 
 export function useAppSelector(selector: (state: AppState) => any) {
   return useSelector((state: RootState) => selector(state.app))
