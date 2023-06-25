@@ -6,7 +6,6 @@ import { AccountDetailsDTO } from '@/types'
 
 export type AppState = {
   isInitialized: boolean
-  isAuthenticated: boolean
   transactions: any[]
   offlineMode: boolean
   accountDetails: AccountDetailsDTO[]
@@ -18,7 +17,6 @@ export type AppState = {
 
 const initialState: AppState = {
   isInitialized: false,
-  isAuthenticated: false,
   transactions: [],
   offlineMode: false,
   accountDetails: [],
@@ -32,9 +30,6 @@ const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
-      state.isAuthenticated = action.payload
-    },
     setTransactions: (state, action: PayloadAction<any[]>) => {
       const transactions = action.payload
       state.transactions = transactions
@@ -53,7 +48,7 @@ const appSlice = createSlice({
   },
 })
 
-export const { setIsAuthenticated, setTransactions, setOfflineMode } = appSlice.actions
+export const { setTransactions, setOfflineMode } = appSlice.actions
 
 export function useAppSelector(selector: (state: AppState) => any) {
   return useSelector((state: RootState) => selector(state.app))
