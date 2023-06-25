@@ -5,7 +5,6 @@ import TransactionAggregator from '@/services/TransactionAggregator'
 import { AccountDetailsDTO } from '@/types'
 
 export type AppState = {
-  isInitialized: boolean
   transactions: any[]
   accountDetails: AccountDetailsDTO[]
   categories: string[]
@@ -15,7 +14,6 @@ export type AppState = {
 }
 
 const initialState: AppState = {
-  isInitialized: false,
   transactions: [],
   accountDetails: [],
   categories: [],
@@ -31,7 +29,6 @@ const appSlice = createSlice({
     setTransactions: (state, action: PayloadAction<any[]>) => {
       const transactions = action.payload
       state.transactions = transactions
-      state.isInitialized = true
 
       const transactionAggregator = new TransactionAggregator(transactions)
       state.accountDetails = transactionAggregator.getAccountDetails()

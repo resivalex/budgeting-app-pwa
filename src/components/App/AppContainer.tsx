@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useAppSelector, AppState } from '@/redux/appSlice'
 import Login from './Login'
 import { DbService, BackendService } from '@/services'
 import AuthorizedAppContainer from './AuthorizedAppContainer'
@@ -18,7 +17,6 @@ export default function AppContainer() {
   const [config, setConfig] = useState<ConfigType | null>(null)
   const [backendService, setBackendService] = useState<BackendService | null>(null)
   const [dbService, setDbService] = useState<DbService | null>(null)
-  const isInitialized = useAppSelector((state: AppState) => state.isInitialized)
 
   useEffect(() => {
     const localStorageConfig: ConfigType | null = localStorage.config
@@ -70,7 +68,7 @@ export default function AppContainer() {
     <AuthorizedAppContainer
       backendService={backendService}
       dbService={dbService}
-      isLoading={isLoading || !isInitialized}
+      isLoading={isLoading}
     />
   )
 }
