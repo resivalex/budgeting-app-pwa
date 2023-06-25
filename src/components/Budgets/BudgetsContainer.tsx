@@ -1,14 +1,13 @@
+import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { convertToLocaleTime } from '@/utils'
 import {
   setBudgets,
-  setFocusedBudgetName,
   setBudgetMonthFirstDay,
   setAvailableMonths,
   useBudgetsSelector,
 } from '@/redux/budgetsSlice'
 import { useAppSelector } from '@/redux/appSlice'
-import { useEffect } from 'react'
 import { BackendService } from '@/services'
 import Budgets from './Budgets'
 import { TransactionDTO, BudgetDTO, SpendingLimitsDTO } from '@/types'
@@ -196,10 +195,10 @@ export default function BudgetsContainer({
   transactions: TransactionDTO[]
   onTransactionRemove: (id: string) => void
 }) {
+  const [focusedBudgetName, setFocusedBudgetName] = useState('')
   const dispatch = useDispatch()
   const categories: string[] = useAppSelector((state) => state.categories)
   const budgets: any[] = useBudgetsSelector((state) => state.budgets)
-  const focusedBudgetName = useBudgetsSelector((state) => state.focusedBudgetName)
   const selectedMonth = useBudgetsSelector((state) => state.budgetMonthFirstDay)
   const availableMonths = useBudgetsSelector((state) => state.availableMonths)
 
@@ -235,7 +234,7 @@ export default function BudgetsContainer({
   }, [dispatch, categories, transactions, selectedMonth])
 
   function handleFocus(budgetName: string) {
-    dispatch(setFocusedBudgetName(budgetName))
+    setFocusedBudgetName(budgetName)
   }
 
   const focusedBudget = budgets.find((budget) => budget.name === focusedBudgetName) || null
