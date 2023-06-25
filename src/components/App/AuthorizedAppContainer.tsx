@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import App from './App'
 import { BackendService, DbService } from '@/services'
@@ -8,7 +9,6 @@ import { useReduxTransactions } from './hooks/useReduxTransactions'
 import { v4 as uuidv4 } from 'uuid'
 import { useSyncService } from './hooks/useSyncService'
 import { useLastNotificationText } from './hooks/useLastNotificationText'
-import { setAccountName } from '@/redux/transactionFiltersSlice'
 import { useDispatch } from 'react-redux'
 import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 
@@ -21,6 +21,8 @@ interface Props {
 }
 
 export default function AuthorizedAppContainer({ backendService, dbService, isLoading }: Props) {
+  const [filterAccountName, setFilterAccountName] = useState('')
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -48,7 +50,7 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
     await addDbTransaction(t)
     addReduxTransaction(t)
     setLastNotificationText('Запись добавлена')
-    dispatch(setAccountName(t.account))
+    setFilterAccountName(t.account)
     dispatch(resetFocusedTransactionId())
     navigate('/transactions', { replace: true })
   }
@@ -94,6 +96,8 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
   return (
     <App
       transactions={transactions}
+      filterAccountName={filterAccountName}
+      onFilterAccountNameChange={setFilterAccountName}
       isLoading={isLoading}
       offlineMode={offlineMode}
       lastNotificationText={lastNotificationText}

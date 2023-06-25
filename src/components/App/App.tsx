@@ -12,33 +12,33 @@ import { appVersion } from '@/version'
 import { TransactionsPageContainer } from '../Transactions'
 import OfflineOverlay from '@/components/App/OfflineOverlay'
 
-interface AppProps {
+export default function App({
+  transactions,
+  filterAccountName,
+  isLoading,
+  offlineMode,
+  lastNotificationText,
+  onExport,
+  onLogout,
+  onFilterAccountNameChange,
+  onAddTransaction,
+  onEditTransaction,
+  onRemoveTransaction,
+  onDismissNotification,
+}: {
   transactions: any
+  filterAccountName: string
   isLoading: boolean
   offlineMode: boolean
   lastNotificationText: string
   onExport: () => void
   onLogout: () => void
+  onFilterAccountNameChange: (accountName: string) => void
   onAddTransaction: (transaction: TransactionDTO) => void
   onEditTransaction: (transaction: TransactionDTO) => void
   onRemoveTransaction: (id: string) => void
   onDismissNotification: () => void
-}
-
-export default function App(props: AppProps) {
-  const {
-    transactions,
-    isLoading,
-    offlineMode,
-    lastNotificationText,
-    onExport,
-    onLogout,
-    onAddTransaction,
-    onEditTransaction,
-    onRemoveTransaction,
-    onDismissNotification,
-  } = props
-
+}) {
   return (
     <div>
       {lastNotificationText && (
@@ -74,6 +74,8 @@ export default function App(props: AppProps) {
               element={
                 <TransactionsPageContainer
                   transactions={transactions}
+                  filterAccountName={filterAccountName}
+                  onFilterAccountNameChange={onFilterAccountNameChange}
                   onRemove={onRemoveTransaction}
                 />
               }

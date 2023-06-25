@@ -1,16 +1,17 @@
-import { useTransactionFiltersSelect, setAccountName } from '@/redux/transactionFiltersSlice'
-import { useDispatch } from 'react-redux'
 import { TransactionDTO } from '@/types'
 import TransactionsPage from './TransactionsPage'
 
-interface Props {
+export default function TransactionsPageContainer({
+  transactions,
+  filterAccountName,
+  onFilterAccountNameChange,
+  onRemove,
+}: {
   transactions: TransactionDTO[]
+  filterAccountName: string
+  onFilterAccountNameChange: (accountName: string) => void
   onRemove: (id: string) => void
-}
-
-export default function TransactionsPageContainer({ transactions, onRemove }: Props) {
-  const filterAccountName = useTransactionFiltersSelect((state) => state.accountName)
-
+}) {
   const filteredTransactions = transactions.filter((transaction) => {
     if (filterAccountName === '') return true
     if (transaction.type === 'transfer' && transaction.payee === filterAccountName) {
@@ -19,15 +20,11 @@ export default function TransactionsPageContainer({ transactions, onRemove }: Pr
     return transaction.account === filterAccountName
   })
 
-  const dispatch = useDispatch()
-
   return (
     <TransactionsPage
       filterAccountName={filterAccountName}
       transactions={filteredTransactions}
-      onFilterAccountNameChange={(accountName) => {
-        dispatch(setAccountName(accountName))
-      }}
+      onFilterAccountNameChange={onFilterAccountNameChange}
       onRemove={onRemove}
     />
   )
