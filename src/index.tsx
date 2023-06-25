@@ -4,18 +4,14 @@ import './index.css'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
-import { Provider as ReduxProvider } from 'react-redux'
-import store from './redux/store'
 import { AppContainer } from './components'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <ReduxProvider store={store}>
-      <BrowserRouter>
-        <AppContainer />
-      </BrowserRouter>
-    </ReduxProvider>
+    <BrowserRouter>
+      <AppContainer />
+    </BrowserRouter>
   </React.StrictMode>
 )
 

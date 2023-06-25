@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { convertToLocaleTime } from '@/utils'
 import { BackendService } from '@/services'
 import Budgets from './Budgets'
@@ -196,7 +195,6 @@ export default function BudgetsContainer({
   const [budgetMonthFirstDay, setBudgetMonthFirstDay] = useState(currentMonthFirstDay)
   const [availableMonths, setAvailableMonths] = useState<string[]>([currentMonthFirstDay])
   const [budgets, setBudgets] = useState<BudgetDTO[]>([])
-  const dispatch = useDispatch()
   const categories: string[] = transactionAggregations.categories
   const selectedMonth = budgetMonthFirstDay
 
@@ -229,7 +227,7 @@ export default function BudgetsContainer({
     }
 
     void requestBudgetsFromBackend(backendService)
-  }, [dispatch, categories, transactions, selectedMonth])
+  }, [categories, transactions, selectedMonth])
 
   function handleFocus(budgetName: string) {
     setFocusedBudgetName(budgetName)
