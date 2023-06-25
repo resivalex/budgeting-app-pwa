@@ -5,19 +5,23 @@ import TransactionAggregator from '@/services/TransactionAggregator'
 import { AccountDetailsDTO } from '@/types'
 
 export type AppState = {
-  accountDetails: AccountDetailsDTO[]
-  categories: string[]
-  currencies: string[]
-  payees: string[]
-  comments: string[]
+  aggregations: {
+    accountDetails: AccountDetailsDTO[]
+    categories: string[]
+    currencies: string[]
+    payees: string[]
+    comments: string[]
+  }
 }
 
 const initialState: AppState = {
-  accountDetails: [],
-  categories: [],
-  currencies: [],
-  payees: [],
-  comments: [],
+  aggregations: {
+    accountDetails: [],
+    categories: [],
+    currencies: [],
+    payees: [],
+    comments: [],
+  },
 }
 
 const appSlice = createSlice({
@@ -28,11 +32,11 @@ const appSlice = createSlice({
       const transactions = action.payload
 
       const transactionAggregator = new TransactionAggregator(transactions)
-      state.accountDetails = transactionAggregator.getAccountDetails()
-      state.categories = transactionAggregator.getSortedCategories()
-      state.currencies = transactionAggregator.getSortedCurrencies()
-      state.payees = transactionAggregator.getRecentPayees()
-      state.comments = transactionAggregator.getRecentComments()
+      state.aggregations.accountDetails = transactionAggregator.getAccountDetails()
+      state.aggregations.categories = transactionAggregator.getSortedCategories()
+      state.aggregations.currencies = transactionAggregator.getSortedCurrencies()
+      state.aggregations.payees = transactionAggregator.getRecentPayees()
+      state.aggregations.comments = transactionAggregator.getRecentComments()
     },
   },
 })

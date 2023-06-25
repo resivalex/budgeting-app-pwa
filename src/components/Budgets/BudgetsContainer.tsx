@@ -196,7 +196,8 @@ export default function BudgetsContainer({
   const [availableMonths, setAvailableMonths] = useState<string[]>([currentMonthFirstDay])
   const [budgets, setBudgets] = useState<BudgetDTO[]>([])
   const dispatch = useDispatch()
-  const categories: string[] = useAppSelector((state) => state.categories)
+  const transactionAggregations = useAppSelector((state) => state.aggregations)
+  const categories: string[] = transactionAggregations.categories
   const selectedMonth = budgetMonthFirstDay
 
   useEffect(() => {

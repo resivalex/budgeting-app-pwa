@@ -31,9 +31,10 @@ function useCategoryExtensions(localStorageCategoryExpansions: string): { [name:
   }, [localStorageCategoryExpansions])
 }
 
-function useAccounts(localStorageAccountProperties: string): ColoredAccountDetailsDTO[] {
-  const accountDetails: AccountDetailsDTO[] = useAppSelector((state) => state.accountDetails)
-
+function useAccounts(
+  localStorageAccountProperties: string,
+  accountDetails: AccountDetailsDTO[]
+): ColoredAccountDetailsDTO[] {
   return useMemo(() => {
     const accountProperties: AccountPropertiesDTO = localStorageAccountProperties
       ? JSON.parse(localStorageAccountProperties)
@@ -62,10 +63,12 @@ export default function TransactionFormContainer({
   const [payeeSuggestions, setPayeeSuggestions] = useState<string[]>([])
   const [commentSuggestions, setCommentSuggestions] = useState<string[]>([])
 
-  const appCategories: string[] = useAppSelector((state) => state.categories)
-  const appCurrencies: string[] = useAppSelector((state) => state.currencies)
-  const appPayees: string[] = useAppSelector((state) => state.payees)
-  const appComments: string[] = useAppSelector((state) => state.comments)
+  const transactionAggregations = useAppSelector((state) => state.aggregations)
+  const appCategories: string[] = transactionAggregations.categories
+  const appCurrencies: string[] = transactionAggregations.currencies
+  const appPayees: string[] = transactionAggregations.payees
+  const appComments: string[] = transactionAggregations.comments
+  const accountDetails = transactionAggregations.accountDetails
   const navigate = useNavigate()
   const { transactionId } = useParams()
   const curTransaction = transactions.find((t: TransactionDTO) => t._id === transactionId)
@@ -80,7 +83,7 @@ export default function TransactionFormContainer({
     [appCategories, categoryExtensions]
   )
 
-  const accounts = useAccounts(localStorage.accountProperties || '')
+  const accounts = useAccounts(localStorage.accountProperties || '', accountDetails)
 
   const initializeFormFromTransaction = (t: TransactionDTO) => {
     setType(t.type)

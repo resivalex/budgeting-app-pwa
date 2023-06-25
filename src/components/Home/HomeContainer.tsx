@@ -5,7 +5,8 @@ import { mergeAccountDetailsAndProperties } from '@/utils'
 import Home from './Home'
 
 export default function HomeContainer() {
-  const accountDetails = useAppSelector((state: AppState) => state.accountDetails)
+  const transactionAggregations = useAppSelector((state: AppState) => state.aggregations)
+  const accountDetails = transactionAggregations.accountDetails
   const accountProperties: AccountPropertiesDTO = localStorage.accountProperties
     ? JSON.parse(localStorage.accountProperties)
     : { accounts: [] }
