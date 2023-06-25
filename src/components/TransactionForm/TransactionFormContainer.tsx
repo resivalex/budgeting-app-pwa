@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
@@ -137,27 +137,57 @@ export default function TransactionFormContainer({
     }
   }, [transactionId])
 
+  const getAvailableCurrenciesAndAccounts = useCallback(
+    (type: string, currency: string) => {
+      const availableCurrencies =
+        type === 'transfer'
+          ? appCurrencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
+          : appCurrencies
+      const availableAccounts = accounts.filter((a) => a.currency === currency)
+
+      return {
+        availableCurrencies,
+        availableAccounts,
+      }
+    },
+    [accounts, appCurrencies]
+  )
+
+  const { availableCurrencies, availableAccounts } = useMemo(
+    () => getAvailableCurrenciesAndAccounts(type, currency),
+    [type, currency, getAvailableCurrenciesAndAccounts]
+  )
+
+  const AccountSelect = useMemo(
+    () =>
+      ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
+        const accountOptions = availableAccounts.map((a) => ({
+          value: a.account,
+          label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
+          color: a.color,
+        }))
+        return (
+          <Select
+            className="basic-single"
+            classNamePrefix="select"
+            value={accountOptions.find((option) => option.value === value) || null}
+            onChange={(selectedOption) => {
+              if (!selectedOption) return
+              onChange(selectedOption.value)
+            }}
+            options={accountOptions}
+            isSearchable={false}
+            placeholder="Выберите из списка..."
+            styles={reactSelectColorStyles}
+          />
+        )
+      },
+    [availableAccounts]
+  )
+
   if (accounts.length === 0) {
     return null
   }
-
-  function getAvailableCurrenciesAndAccounts(type: string, currency: string) {
-    const availableCurrencies =
-      type === 'transfer'
-        ? appCurrencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
-        : appCurrencies
-    const availableAccounts = accounts.filter((a) => a.currency === currency)
-
-    return {
-      availableCurrencies,
-      availableAccounts,
-    }
-  }
-
-  const { availableCurrencies, availableAccounts } = getAvailableCurrenciesAndAccounts(
-    type,
-    currency
-  )
 
   const handleDatetimeChange = (value: Date | null) => {
     if (value) {
@@ -274,35 +304,6 @@ export default function TransactionFormContainer({
 
   const isStepByStep = false
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
-
-  function AccountSelect({
-    value,
-    onChange,
-  }: {
-    value: string
-    onChange: (value: string) => void
-  }) {
-    const accountOptions = availableAccounts.map((a) => ({
-      value: a.account,
-      label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
-      color: a.color,
-    }))
-    return (
-      <Select
-        className="basic-single"
-        classNamePrefix="select"
-        value={accountOptions.find((option) => option.value === value) || null}
-        onChange={(selectedOption) => {
-          if (!selectedOption) return
-          onChange(selectedOption.value)
-        }}
-        options={accountOptions}
-        isSearchable={false}
-        placeholder="Выберите из списка..."
-        styles={reactSelectColorStyles}
-      />
-    )
-  }
 
   return (
     <TransactionFormComponent
