@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { convertToLocaleTime } from '@/utils'
-import { useAppSelector } from '@/redux/appSlice'
 import { BackendService } from '@/services'
 import Budgets from './Budgets'
-import { TransactionDTO, BudgetDTO, SpendingLimitsDTO } from '@/types'
+import { TransactionDTO, BudgetDTO, SpendingLimitsDTO, TransactionsAggregations } from '@/types'
 import _ from 'lodash'
 
 type ConversionMapType = { [sourceCurrency: string]: { [targetCurrency: string]: number } }
@@ -186,8 +185,10 @@ const currentMonthFirstDay = new Date().toISOString().slice(0, 7) + '-01'
 
 export default function BudgetsContainer({
   transactions,
+  transactionAggregations,
   onTransactionRemove,
 }: {
+  transactionAggregations: TransactionsAggregations
   transactions: TransactionDTO[]
   onTransactionRemove: (id: string) => void
 }) {
@@ -196,7 +197,6 @@ export default function BudgetsContainer({
   const [availableMonths, setAvailableMonths] = useState<string[]>([currentMonthFirstDay])
   const [budgets, setBudgets] = useState<BudgetDTO[]>([])
   const dispatch = useDispatch()
-  const transactionAggregations = useAppSelector((state) => state.aggregations)
   const categories: string[] = transactionAggregations.categories
   const selectedMonth = budgetMonthFirstDay
 

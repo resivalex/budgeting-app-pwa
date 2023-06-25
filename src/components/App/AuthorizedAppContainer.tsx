@@ -5,7 +5,7 @@ import { BackendService, DbService } from '@/services'
 import { TransactionDTO } from '@/types'
 import { useCategoryExpansions } from './hooks/useCategoryExpansions'
 import { useAccountProperties } from './hooks/useAccountProperties'
-import { useReduxTransactions } from './hooks/useReduxTransactions'
+import { useTransactions } from './hooks/useTransactions'
 import { v4 as uuidv4 } from 'uuid'
 import { useSyncService } from './hooks/useSyncService'
 
@@ -27,14 +27,15 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
 
   const {
     transactions,
-    setReduxTransactions,
-    addReduxTransaction,
-    replaceReduxTransaction,
-    removeReduxTransaction,
-  } = useReduxTransactions()
+    transactionsAggregations,
+    setLocalTransactions,
+    addLocalTransaction,
+    replaceLocalTransaction,
+    removeLocalTransaction,
+  } = useTransactions()
 
   async function handleUpdatedTransactions(transactions: TransactionDTO[]) {
-    setReduxTransactions(transactions)
+    setLocalTransactions(transactions)
   }
 
   const { offlineMode, addDbTransaction, replaceDbTransaction, removeDbTransaction } =
@@ -44,7 +45,7 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
 
   async function addTransaction(t: TransactionDTO) {
     await addDbTransaction(t)
-    addReduxTransaction(t)
+    addLocalTransaction(t)
     setLastNotificationText('Запись добавлена')
     setFilterAccountName(t.account)
     navigate('/transactions', { replace: true })
@@ -52,14 +53,14 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
 
   async function editTransaction(t: TransactionDTO) {
     await replaceDbTransaction(t)
-    replaceReduxTransaction(t)
+    replaceLocalTransaction(t)
     setLastNotificationText('Запись изменена')
     navigate('/transactions', { replace: true })
   }
 
   async function removeTransaction(id: string) {
     await removeDbTransaction(id)
-    removeReduxTransaction(id)
+    removeLocalTransaction(id)
     setLastNotificationText('Запись удалена')
   }
 
@@ -90,6 +91,7 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
   return (
     <App
       transactions={transactions}
+      transactionAggregations={transactionsAggregations}
       filterAccountName={filterAccountName}
       onFilterAccountNameChange={setFilterAccountName}
       isLoading={isLoading}

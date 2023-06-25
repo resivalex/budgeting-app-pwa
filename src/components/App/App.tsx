@@ -7,13 +7,14 @@ import Menu from './Menu'
 import { HomeContainer } from '@/components/Home'
 import { TransactionFormContainer } from '@/components/TransactionForm'
 import { BudgetsContainer } from '../Budgets'
-import { TransactionDTO } from '@/types'
+import { TransactionDTO, TransactionsAggregations } from '@/types'
 import { appVersion } from '@/version'
 import { TransactionsPageContainer } from '../Transactions'
 import OfflineOverlay from './OfflineOverlay'
 
 export default function App({
   transactions,
+  transactionAggregations,
   filterAccountName,
   isLoading,
   offlineMode,
@@ -26,7 +27,8 @@ export default function App({
   onRemoveTransaction,
   onDismissNotification,
 }: {
-  transactions: any
+  transactions: TransactionDTO[]
+  transactionAggregations: TransactionsAggregations
   filterAccountName: string
   isLoading: boolean
   offlineMode: boolean
@@ -68,12 +70,16 @@ export default function App({
           }}
         >
           <Routes>
-            <Route path="/" element={<HomeContainer />} />
+            <Route
+              path="/"
+              element={<HomeContainer accountDetails={transactionAggregations.accountDetails} />}
+            />
             <Route
               path="/transactions"
               element={
                 <TransactionsPageContainer
                   transactions={transactions}
+                  accountDetails={transactionAggregations.accountDetails}
                   filterAccountName={filterAccountName}
                   onFilterAccountNameChange={onFilterAccountNameChange}
                   onRemove={onRemoveTransaction}
@@ -85,6 +91,7 @@ export default function App({
               element={
                 <BudgetsContainer
                   transactions={transactions}
+                  transactionAggregations={transactionAggregations}
                   onTransactionRemove={onRemoveTransaction}
                 />
               }
@@ -92,13 +99,21 @@ export default function App({
             <Route
               path="/add"
               element={
-                <TransactionFormContainer transactions={transactions} onApply={onAddTransaction} />
+                <TransactionFormContainer
+                  transactions={transactions}
+                  transactionsAggregations={transactionAggregations}
+                  onApply={onAddTransaction}
+                />
               }
             />
             <Route
               path="/transactions/:transactionId"
               element={
-                <TransactionFormContainer transactions={transactions} onApply={onEditTransaction} />
+                <TransactionFormContainer
+                  transactions={transactions}
+                  transactionsAggregations={transactionAggregations}
+                  onApply={onEditTransaction}
+                />
               }
             />
             <Route path="*" element={<NotFound />} />

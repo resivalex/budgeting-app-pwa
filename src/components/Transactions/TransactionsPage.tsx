@@ -1,15 +1,17 @@
-import { TransactionDTO } from '@/types'
+import { AccountDetailsDTO, TransactionDTO } from '@/types'
 import TransactionsContainer from './TransactionsContainer'
 import { TransactionFiltersContainer } from './TransactionFilters'
 
 export default function TransactionsPage({
   filterAccountName,
   transactions,
+  accountDetails,
   onFilterAccountNameChange,
   onRemove,
 }: {
   filterAccountName: string
   transactions: TransactionDTO[]
+  accountDetails: AccountDetailsDTO[]
   onFilterAccountNameChange: (accountName: string) => void
   onRemove: (id: string) => void
 }) {
@@ -26,6 +28,7 @@ export default function TransactionsPage({
       <div style={{ flex: 1 }}>
         <TransactionFiltersContainer
           accountName={filterAccountName}
+          accountDetails={accountDetails}
           onAccountNameChange={onFilterAccountNameChange}
         />
       </div>

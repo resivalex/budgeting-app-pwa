@@ -1,12 +1,9 @@
 import React from 'react'
-import { useAppSelector, AppState } from '@/redux/appSlice'
-import { AccountPropertiesDTO, ColoredAccountDetailsDTO } from '@/types'
+import { AccountDetailsDTO, AccountPropertiesDTO, ColoredAccountDetailsDTO } from '@/types'
 import { mergeAccountDetailsAndProperties } from '@/utils'
 import Home from './Home'
 
-export default function HomeContainer() {
-  const transactionAggregations = useAppSelector((state: AppState) => state.aggregations)
-  const accountDetails = transactionAggregations.accountDetails
+export default function HomeContainer({ accountDetails }: { accountDetails: AccountDetailsDTO[] }) {
   const accountProperties: AccountPropertiesDTO = localStorage.accountProperties
     ? JSON.parse(localStorage.accountProperties)
     : { accounts: [] }

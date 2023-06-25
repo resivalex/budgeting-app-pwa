@@ -6,6 +6,7 @@ import { ConfigDataDTO } from './ConfigDataDTO'
 import { CategoryExpansionsDTO } from './CategoryExpansionsDTO'
 import { AccountPropertiesDTO } from './AccountPropertiesDTO'
 import { ColoredAccountDetailsDTO } from './ColoredAccountDetailsDTO'
+import { TransactionsAggregations } from '@/types/TransactionsAggregations'
 
 export type {
   TransactionDTO,
@@ -16,4 +17,5 @@ export type {
   CategoryExpansionsDTO,
   AccountPropertiesDTO,
   ColoredAccountDetailsDTO,
+  TransactionsAggregations,
 }

@@ -1,18 +1,16 @@
-import { useAppSelector } from '@/redux/appSlice'
 import TransactionFilters from './TransactionFilters'
 import { AccountDetailsDTO } from '@/types'
 
 export default function TransactionFiltersContainer({
   accountName,
+  accountDetails,
   onAccountNameChange,
 }: {
   accountName: string
+  accountDetails: AccountDetailsDTO[]
   onAccountNameChange: (accountName: string) => void
 }) {
-  const transactionAggregations = useAppSelector((state) => state.aggregations)
-  const accountNames = transactionAggregations.accountDetails.map(
-    (details: AccountDetailsDTO) => details.account
-  )
+  const accountNames = accountDetails.map((details: AccountDetailsDTO) => details.account)
 
   return (
     <TransactionFilters

@@ -8,13 +8,13 @@ import {
   CategoryExpansionsDTO,
   AccountPropertiesDTO,
   ColoredAccountDetailsDTO,
+  TransactionsAggregations,
 } from '@/types'
 import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties } from '@/utils'
 import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
-import { useAppSelector } from '@/redux/appSlice'
 import { useNavigate, useParams } from 'react-router-dom'
-import TransactionAggregator from '@/services/TransactionAggregator'
+import { TransactionAggregator } from '@/services'
 
 function useCategoryExtensions(localStorageCategoryExpansions: string): { [name: string]: string } {
   return useMemo(() => {
@@ -46,9 +46,11 @@ function useAccounts(
 
 export default function TransactionFormContainer({
   transactions,
+  transactionsAggregations,
   onApply,
 }: {
   transactions: TransactionDTO[]
+  transactionsAggregations: TransactionsAggregations
   onApply: (t: TransactionDTO) => void
 }) {
   const [type, setType] = useState<'income' | 'expense' | 'transfer' | ''>('expense')
@@ -63,12 +65,11 @@ export default function TransactionFormContainer({
   const [payeeSuggestions, setPayeeSuggestions] = useState<string[]>([])
   const [commentSuggestions, setCommentSuggestions] = useState<string[]>([])
 
-  const transactionAggregations = useAppSelector((state) => state.aggregations)
-  const appCategories: string[] = transactionAggregations.categories
-  const appCurrencies: string[] = transactionAggregations.currencies
-  const appPayees: string[] = transactionAggregations.payees
-  const appComments: string[] = transactionAggregations.comments
-  const accountDetails = transactionAggregations.accountDetails
+  const appCategories: string[] = transactionsAggregations.categories
+  const appCurrencies: string[] = transactionsAggregations.currencies
+  const appPayees: string[] = transactionsAggregations.payees
+  const appComments: string[] = transactionsAggregations.comments
+  const accountDetails = transactionsAggregations.accountDetails
   const navigate = useNavigate()
   const { transactionId } = useParams()
   const curTransaction = transactions.find((t: TransactionDTO) => t._id === transactionId)
