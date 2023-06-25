@@ -8,7 +8,6 @@ import { useAccountProperties } from './hooks/useAccountProperties'
 import { useReduxTransactions } from './hooks/useReduxTransactions'
 import { v4 as uuidv4 } from 'uuid'
 import { useSyncService } from './hooks/useSyncService'
-import { useLastNotificationText } from './hooks/useLastNotificationText'
 import { useDispatch } from 'react-redux'
 import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 
@@ -44,7 +43,7 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
   const { offlineMode, addDbTransaction, replaceDbTransaction, removeDbTransaction } =
     useSyncService(backendService, dbService, instanceId, handleUpdatedTransactions)
 
-  const { lastNotificationText, setLastNotificationText } = useLastNotificationText()
+  const [lastNotificationText, setLastNotificationText] = useState('')
 
   async function addTransaction(t: TransactionDTO) {
     await addDbTransaction(t)
