@@ -8,8 +8,6 @@ import { useAccountProperties } from './hooks/useAccountProperties'
 import { useReduxTransactions } from './hooks/useReduxTransactions'
 import { v4 as uuidv4 } from 'uuid'
 import { useSyncService } from './hooks/useSyncService'
-import { useDispatch } from 'react-redux'
-import { resetFocusedTransactionId } from '@/redux/transactionsSlice'
 
 const instanceId = uuidv4()
 
@@ -23,7 +21,6 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
   const [filterAccountName, setFilterAccountName] = useState('')
 
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   useCategoryExpansions(backendService)
   useAccountProperties(backendService)
@@ -50,7 +47,6 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
     addReduxTransaction(t)
     setLastNotificationText('Запись добавлена')
     setFilterAccountName(t.account)
-    dispatch(resetFocusedTransactionId())
     navigate('/transactions', { replace: true })
   }
 
@@ -58,7 +54,6 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
     await replaceDbTransaction(t)
     replaceReduxTransaction(t)
     setLastNotificationText('Запись изменена')
-    dispatch(resetFocusedTransactionId())
     navigate('/transactions', { replace: true })
   }
 

@@ -5,12 +5,10 @@ import { TransactionDTO } from '@/types'
 
 interface TransactionsState {
   transactions: TransactionDTO[]
-  focusedTransactionId: string
 }
 
 const initialState: TransactionsState = {
   transactions: [],
-  focusedTransactionId: '',
 }
 
 export const budgetsSlice = createSlice({
@@ -20,16 +18,10 @@ export const budgetsSlice = createSlice({
     setTransactions: (state, action: PayloadAction<TransactionDTO[]>) => {
       state.transactions = action.payload
     },
-    setFocusedTransactionId: (state, action: PayloadAction<string>) => {
-      state.focusedTransactionId = action.payload
-    },
-    resetFocusedTransactionId: (state) => {
-      state.focusedTransactionId = ''
-    },
   },
 })
 
-export const { setTransactions, setFocusedTransactionId, resetFocusedTransactionId } =
+export const { setTransactions } =
   budgetsSlice.actions
 
 export function useTransactionsSelect(selector: (state: TransactionsState) => any) {

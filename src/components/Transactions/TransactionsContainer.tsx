@@ -1,13 +1,8 @@
-import React, { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Transactions from './Transactions'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import {
-  setTransactions,
-  useTransactionsSelect,
-  setFocusedTransactionId,
-  resetFocusedTransactionId,
-} from '@/redux/transactionsSlice'
+import { setTransactions, useTransactionsSelect } from '@/redux/transactionsSlice'
 import { TransactionDTO } from '@/types'
 
 interface Props {
@@ -16,10 +11,11 @@ interface Props {
 }
 
 export default function TransactionsContainer({ transactions, onRemove }: Props) {
+  const [focusedTransactionId, setFocusedTransactionId] = useState<string>('')
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const storeTransactions: TransactionDTO[] = useTransactionsSelect((state) => state.transactions)
-  const focusedTransactionId = useTransactionsSelect((state) => state.focusedTransactionId)
 
   const focusedTransaction = storeTransactions.find(
     (transaction) => transaction._id === focusedTransactionId
@@ -39,8 +35,8 @@ export default function TransactionsContainer({ transactions, onRemove }: Props)
       focusedTransaction={focusedTransaction}
       onRemove={onRemove}
       onEdit={handleEdit}
-      onFocus={(id: string) => dispatch(setFocusedTransactionId(id))}
-      onUnfocus={() => dispatch(resetFocusedTransactionId())}
+      onFocus={setFocusedTransactionId}
+      onUnfocus={() => setFocusedTransactionId('')}
     />
   )
 }
