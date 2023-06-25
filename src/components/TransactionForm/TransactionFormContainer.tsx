@@ -2,26 +2,14 @@ import { useState, useMemo, useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
-import {
-  TransactionDTO,
-  AccountDetailsDTO,
-  CategoryExpansionsDTO,
-  AccountPropertiesDTO,
-  ColoredAccountDetailsDTO,
-  TransactionsAggregations,
-} from '@/types'
-import {
-  convertCurrencyCodeToSymbol,
-  convertToLocaleTime,
-  convertToUtcTime,
-  mergeAccountDetailsAndProperties,
-  reactSelectColorStyles,
-} from '@/utils'
+import { TransactionDTO, CategoryExpansionsDTO, TransactionsAggregations } from '@/types'
+import { convertToLocaleTime, convertToUtcTime } from '@/utils'
 import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
 import { useNavigate, useParams } from 'react-router-dom'
 import { TransactionAggregator } from '@/services'
-import Select from 'react-select'
+import { useColoredAccounts } from './useColoredAccounts'
+import ColoredAccountSelect from './ColoredAccountSelect'
 
 function useCategoryExtensions(localStorageCategoryExpansions: string): { [name: string]: string } {
   return useMemo(() => {
@@ -36,19 +24,6 @@ function useCategoryExtensions(localStorageCategoryExpansions: string): { [name:
 
     return categoryNameToExtendedMap
   }, [localStorageCategoryExpansions])
-}
-
-function useAccounts(
-  localStorageAccountProperties: string,
-  accountDetails: AccountDetailsDTO[]
-): ColoredAccountDetailsDTO[] {
-  return useMemo(() => {
-    const accountProperties: AccountPropertiesDTO = localStorageAccountProperties
-      ? JSON.parse(localStorageAccountProperties)
-      : { accounts: [] }
-
-    return mergeAccountDetailsAndProperties(accountDetails, accountProperties)
-  }, [accountDetails, localStorageAccountProperties])
 }
 
 export default function TransactionFormContainer({
@@ -91,7 +66,7 @@ export default function TransactionFormContainer({
     [appCategories, categoryExtensions]
   )
 
-  const accounts = useAccounts(localStorage.accountProperties || '', accountDetails)
+  const coloredAccounts = useColoredAccounts(localStorage.accountProperties || '', accountDetails)
 
   const initializeFormFromTransaction = (t: TransactionDTO) => {
     setType(t.type)
@@ -141,51 +116,42 @@ export default function TransactionFormContainer({
     (type: string, currency: string) => {
       const availableCurrencies =
         type === 'transfer'
-          ? appCurrencies.filter((c) => accounts.filter((a) => a.currency === c).length > 1)
+          ? appCurrencies.filter((c) => coloredAccounts.filter((a) => a.currency === c).length > 1)
           : appCurrencies
-      const availableAccounts = accounts.filter((a) => a.currency === currency)
+      const availableColoredAccounts = coloredAccounts.filter((a) => a.currency === currency)
 
       return {
         availableCurrencies,
-        availableAccounts,
+        availableColoredAccounts,
       }
     },
-    [accounts, appCurrencies]
+    [coloredAccounts, appCurrencies]
   )
 
-  const { availableCurrencies, availableAccounts } = useMemo(
+  const { availableCurrencies, availableColoredAccounts } = useMemo(
     () => getAvailableCurrenciesAndAccounts(type, currency),
     [type, currency, getAvailableCurrenciesAndAccounts]
+  )
+  const availableAccountNames = useMemo(
+    () => availableColoredAccounts.map((a) => a.account),
+    [availableColoredAccounts]
   )
 
   const AccountSelect = useMemo(
     () =>
-      ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
-        const accountOptions = availableAccounts.map((a) => ({
-          value: a.account,
-          label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
-          color: a.color,
-        }))
-        return (
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            value={accountOptions.find((option) => option.value === value) || null}
-            onChange={(selectedOption) => {
-              if (!selectedOption) return
-              onChange(selectedOption.value)
-            }}
-            options={accountOptions}
-            isSearchable={false}
-            placeholder="Выберите из списка..."
-            styles={reactSelectColorStyles}
+      ({ value, onChange }: { value: string; onChange: (v: string) => void }) =>
+        (
+          <ColoredAccountSelect
+            value={value}
+            onChange={onChange}
+            accountDetails={accountDetails}
+            availableAccountNames={availableAccountNames}
           />
-        )
-      },
-    [availableAccounts]
+        ),
+    [accountDetails, availableAccountNames]
   )
 
-  if (accounts.length === 0) {
+  if (coloredAccounts.length === 0) {
     return null
   }
 
@@ -237,7 +203,7 @@ export default function TransactionFormContainer({
   }
 
   function adjustCurrencyAndAccounts(type: string, currency: string) {
-    const { availableCurrencies, availableAccounts } = getAvailableCurrenciesAndAccounts(
+    const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
       type,
       currency
     )
@@ -246,7 +212,7 @@ export default function TransactionFormContainer({
     }
     if (
       !_.includes(
-        _.map(availableAccounts, (a) => a.account),
+        _.map(availableColoredAccounts, (a) => a.account),
         account
       )
     ) {
@@ -254,7 +220,7 @@ export default function TransactionFormContainer({
     }
     if (
       !_.includes(
-        _.map(availableAccounts, (a) => a.account),
+        _.map(availableColoredAccounts, (a) => a.account),
         payeeTransferAccount
       )
     ) {
@@ -329,7 +295,7 @@ export default function TransactionFormContainer({
       onCommentChange={handleCommentChange}
       onDatetimeChange={handleDatetimeChange}
       // Dropdown options
-      accounts={isStepByStep ? availableAccounts : []}
+      accounts={isStepByStep ? availableColoredAccounts : []}
       categoryOptions={categoryOptions}
       currencies={availableCurrencies}
       payees={payees}
