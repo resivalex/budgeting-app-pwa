@@ -59,6 +59,23 @@ export default function App({
             value={value}
             onChange={onChange}
             availableAccountNames={availableNames}
+            emptyOption={null}
+          />
+        ),
+    [transactionAggregations.accountDetails]
+  )
+  const FullAccountSelect = React.useMemo(
+    () =>
+      ({ value, onChange }: { value: string; onChange: (value: string) => void }) =>
+        (
+          <ColoredAccountSelect
+            accountDetails={transactionAggregations.accountDetails}
+            value={value}
+            onChange={onChange}
+            availableAccountNames={transactionAggregations.accountDetails.map(
+              (account) => account.account
+            )}
+            emptyOption="Все счета"
           />
         ),
     [transactionAggregations.accountDetails]
@@ -101,6 +118,7 @@ export default function App({
               path="/transactions"
               element={
                 <TransactionsPageContainer
+                  AccountSelect={FullAccountSelect}
                   transactions={transactions}
                   accountDetails={transactionAggregations.accountDetails}
                   filterAccountName={filterAccountName}

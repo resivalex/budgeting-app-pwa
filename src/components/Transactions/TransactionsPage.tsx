@@ -1,36 +1,24 @@
 import { AccountDetailsDTO, TransactionDTO } from '@/types'
+import { FC } from 'react'
 import TransactionsContainer from './TransactionsContainer'
-import { TransactionFiltersContainer } from './TransactionFilters'
 
 export default function TransactionsPage({
+  AccountSelect,
   filterAccountName,
   transactions,
-  accountDetails,
   onFilterAccountNameChange,
   onRemove,
 }: {
+  AccountSelect: FC<{
+    value: string
+    onChange: (value: string) => void
+  }>
   filterAccountName: string
   transactions: TransactionDTO[]
   accountDetails: AccountDetailsDTO[]
   onFilterAccountNameChange: (accountName: string) => void
   onRemove: (id: string) => void
 }) {
-  function AccountSelect({
-    value,
-    onChange,
-  }: {
-    value: string
-    onChange: (value: string) => void
-  }) {
-    return (
-      <TransactionFiltersContainer
-        accountName={value}
-        accountDetails={accountDetails}
-        onAccountNameChange={onChange}
-      />
-    )
-  }
-
   return (
     <div
       style={{

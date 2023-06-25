@@ -1,13 +1,19 @@
+import { FC } from 'react'
 import { TransactionDTO, AccountDetailsDTO } from '@/types'
 import TransactionsPage from './TransactionsPage'
 
 export default function TransactionsPageContainer({
+  AccountSelect,
   transactions,
   accountDetails,
   filterAccountName,
   onFilterAccountNameChange,
   onRemove,
 }: {
+  AccountSelect: FC<{
+    value: string
+    onChange: (value: string) => void
+  }>
   transactions: TransactionDTO[]
   accountDetails: AccountDetailsDTO[]
   filterAccountName: string
@@ -24,6 +30,7 @@ export default function TransactionsPageContainer({
 
   return (
     <TransactionsPage
+      AccountSelect={AccountSelect}
       filterAccountName={filterAccountName}
       transactions={filteredTransactions}
       accountDetails={accountDetails}

@@ -7,32 +7,36 @@ export default function ColoredAccountSelect({
   onChange,
   accountDetails,
   availableAccountNames,
+  emptyOption,
 }: {
   value: string
   onChange: (value: string) => void
   accountDetails: AccountDetailsDTO[]
   availableAccountNames: string[]
+  emptyOption: string | null
 }) {
   const coloredAccounts = useColoredAccounts(localStorage.accountProperties || '', accountDetails)
   const availableColoredAccounts = coloredAccounts.filter((a) =>
     availableAccountNames.includes(a.account)
   )
+  const emptyOptions = emptyOption ? [{ value: '', label: emptyOption, color: '#ffffff' }] : []
   const accountOptions = availableColoredAccounts.map((a) => ({
     value: a.account,
     label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
     color: a.color,
   }))
+  const options = [...emptyOptions, ...accountOptions]
 
   return (
     <Select
       className="basic-single"
       classNamePrefix="select"
-      value={accountOptions.find((option) => option.value === value) || null}
+      value={options.find((option) => option.value === value) || null}
       onChange={(selectedOption) => {
         if (!selectedOption) return
         onChange(selectedOption.value)
       }}
-      options={accountOptions}
+      options={options}
       isSearchable={false}
       placeholder="Выберите из списка..."
       styles={reactSelectColorStyles}
