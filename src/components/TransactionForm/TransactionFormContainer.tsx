@@ -10,11 +10,18 @@ import {
   ColoredAccountDetailsDTO,
   TransactionsAggregations,
 } from '@/types'
-import { convertToLocaleTime, convertToUtcTime, mergeAccountDetailsAndProperties } from '@/utils'
+import {
+  convertCurrencyCodeToSymbol,
+  convertToLocaleTime,
+  convertToUtcTime,
+  mergeAccountDetailsAndProperties,
+  reactSelectColorStyles,
+} from '@/utils'
 import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
 import { useNavigate, useParams } from 'react-router-dom'
 import { TransactionAggregator } from '@/services'
+import Select from 'react-select'
 
 function useCategoryExtensions(localStorageCategoryExpansions: string): { [name: string]: string } {
   return useMemo(() => {
@@ -268,8 +275,39 @@ export default function TransactionFormContainer({
   const isStepByStep = false
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
 
+  function AccountSelect({
+    value,
+    onChange,
+  }: {
+    value: string
+    onChange: (value: string) => void
+  }) {
+    const accountOptions = availableAccounts.map((a) => ({
+      value: a.account,
+      label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
+      color: a.color,
+    }))
+    return (
+      <Select
+        className="basic-single"
+        classNamePrefix="select"
+        value={accountOptions.find((option) => option.value === value) || null}
+        onChange={(selectedOption) => {
+          if (!selectedOption) return
+          onChange(selectedOption.value)
+        }}
+        options={accountOptions}
+        isSearchable={false}
+        placeholder="Выберите из списка..."
+        styles={reactSelectColorStyles}
+      />
+    )
+  }
+
   return (
     <TransactionFormComponent
+      // Functional components
+      AccountSelect={AccountSelect}
       // Basic transaction details
       type={type}
       amount={amount}
@@ -290,7 +328,7 @@ export default function TransactionFormContainer({
       onCommentChange={handleCommentChange}
       onDatetimeChange={handleDatetimeChange}
       // Dropdown options
-      accounts={availableAccounts}
+      accounts={isStepByStep ? availableAccounts : []}
       categoryOptions={categoryOptions}
       currencies={availableCurrencies}
       payees={payees}

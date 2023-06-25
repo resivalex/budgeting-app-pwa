@@ -1,5 +1,4 @@
-import { convertCurrencyCodeToSymbol, reactSelectColorStyles } from '@/utils'
-import { ColoredAccountDetailsDTO } from '@/types'
+import { FC } from 'react'
 import {
   Type as TypeFormInput,
   Currency as CurrencyFormInput,
@@ -11,7 +10,6 @@ import {
   Comment as CommentFormInput,
   Datetime as DatetimeFormInput,
 } from './FormInputs'
-import Select from 'react-select'
 
 // Types
 type TransactionType = 'income' | 'expense' | 'transfer'
@@ -21,7 +19,35 @@ interface SelectOption {
   label: string
 }
 
-interface Props {
+function TransactionForm({
+  AccountSelect,
+  type,
+  onTypeChange,
+  amount,
+  onAmountChange,
+  account,
+  currency,
+  category,
+  onCategoryChange,
+  payee,
+  onPayeeChange,
+  payeeTransferAccount,
+  onPayeeTransferAccountChange,
+  comment,
+  onCommentChange,
+  datetime,
+  onAccountChange,
+  onDatetimeChange,
+  onSave,
+  categoryOptions,
+  currencies,
+  onCurrencyChange,
+  isValid,
+  payees,
+  comments,
+}: {
+  // Function components
+  AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
   // Basic transaction details
   type: TransactionType | ''
   currency: string
@@ -34,7 +60,6 @@ interface Props {
   datetime: Date
 
   // Options for dropdown/select inputs
-  accounts: ColoredAccountDetailsDTO[]
   categoryOptions: SelectOption[]
   currencies: string[]
   payees: string[]
@@ -54,70 +79,13 @@ interface Props {
   // Save event
   isValid: boolean
   onSave: () => void
-}
-
-function TransactionForm({
-  type,
-  onTypeChange,
-  amount,
-  onAmountChange,
-  account,
-  currency,
-  category,
-  onCategoryChange,
-  payee,
-  onPayeeChange,
-  payeeTransferAccount,
-  onPayeeTransferAccountChange,
-  comment,
-  onCommentChange,
-  datetime,
-  onAccountChange,
-  onDatetimeChange,
-  onSave,
-  accounts,
-  categoryOptions,
-  currencies,
-  onCurrencyChange,
-  isValid,
-  payees,
-  comments,
-}: Props) {
+}) {
   const typeOptions = [
     { value: 'expense', label: 'Расход' },
     { value: 'income', label: 'Доход' },
     { value: 'transfer', label: 'Перевод' },
   ]
   const currencyOptions = currencies.map((c) => ({ value: c, label: c }))
-  const accountOptions = accounts.map((a) => ({
-    value: a.account,
-    label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
-    color: a.color,
-  }))
-
-  function AccountSelect({
-    value,
-    onChange,
-  }: {
-    value: string
-    onChange: (value: string) => void
-  }) {
-    return (
-      <Select
-        className="basic-single"
-        classNamePrefix="select"
-        value={accountOptions.find((option) => option.value === value) || null}
-        onChange={(selectedOption) => {
-          if (!selectedOption) return
-          onChange(selectedOption.value)
-        }}
-        options={accountOptions}
-        isSearchable={false}
-        placeholder="Выберите из списка..."
-        styles={reactSelectColorStyles}
-      />
-    )
-  }
 
   return (
     <div className="field p-2">
