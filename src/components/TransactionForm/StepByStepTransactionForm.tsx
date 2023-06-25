@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
@@ -21,7 +21,46 @@ interface SelectOption {
   label: string
 }
 
-interface Props {
+const typeStep = 'type'
+const currencyStep = 'currency'
+const amountStep = 'amount'
+const accountStep = 'account'
+const categoryStep = 'category'
+const payeeStep = 'payee'
+const payeeTransferAccountStep = 'payeeTransferAccount'
+const commentStep = 'comment'
+const datetimeStep = 'datetime'
+
+function StepByStepTransactionForm({
+                                     AccountSelect,
+  type,
+  onTypeChange,
+  amount,
+  onAmountChange,
+  account,
+  currency,
+  category,
+  onCategoryChange,
+  payee,
+  onPayeeChange,
+  payeeTransferAccount,
+  onPayeeTransferAccountChange,
+  comment,
+  onCommentChange,
+  datetime,
+  onAccountChange,
+  onDatetimeChange,
+  onSave,
+  accounts,
+  categoryOptions,
+  currencies,
+  onCurrencyChange,
+  isValid,
+  payees,
+  comments,
+}: {
+  // Functional components
+  AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
   // Basic transaction details
   type: TransactionType | ''
   currency: string
@@ -54,45 +93,7 @@ interface Props {
   // Save event
   isValid: boolean
   onSave: () => void
-}
-
-const typeStep = 'type'
-const currencyStep = 'currency'
-const amountStep = 'amount'
-const accountStep = 'account'
-const categoryStep = 'category'
-const payeeStep = 'payee'
-const payeeTransferAccountStep = 'payeeTransferAccount'
-const commentStep = 'comment'
-const datetimeStep = 'datetime'
-
-function StepByStepTransactionForm({
-  type,
-  onTypeChange,
-  amount,
-  onAmountChange,
-  account,
-  currency,
-  category,
-  onCategoryChange,
-  payee,
-  onPayeeChange,
-  payeeTransferAccount,
-  onPayeeTransferAccountChange,
-  comment,
-  onCommentChange,
-  datetime,
-  onAccountChange,
-  onDatetimeChange,
-  onSave,
-  accounts,
-  categoryOptions,
-  currencies,
-  onCurrencyChange,
-  isValid,
-  payees,
-  comments,
-}: Props) {
+}) {
   const [currentStep, setCurrentStep] = useState(amountStep)
 
   const currencyOptions = currencies.map((currency) => ({
@@ -142,6 +143,7 @@ function StepByStepTransactionForm({
   function renderAccountStep() {
     return (
       <AccountFormInput
+        AccountSelect={AccountSelect}
         account={account}
         accountOptions={accountOptions}
         isExpanded={currentStep === accountStep}
@@ -179,6 +181,7 @@ function StepByStepTransactionForm({
   function renderPayeeTransferAccountStep() {
     return (
       <PayeeTransferAccountFormInput
+        AccountSelect={AccountSelect}
         payeeTransferAccount={payeeTransferAccount}
         accountOptions={accountOptions}
         isExpanded={currentStep === payeeTransferAccountStep}

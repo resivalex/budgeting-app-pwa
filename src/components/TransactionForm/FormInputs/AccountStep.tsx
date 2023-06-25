@@ -1,14 +1,5 @@
-import { reactSelectColorStyles } from '@/utils'
-import Select from 'react-select'
 import styled from 'styled-components'
-
-interface Props {
-  account: string
-  isExpanded: boolean
-  onAccountChange: (account: string) => void
-  onExpand: () => void
-  accountOptions: { value: string; label: string; color: string }[]
-}
+import { FC } from 'react'
 
 const SelectContainer = styled.div<{ isExpanded: boolean }>`
   font-size: ${(props) => (props.isExpanded ? '1rem' : '0.8rem')};
@@ -26,12 +17,20 @@ const SelectedOption = styled.div<{ color?: string }>`
 `
 
 export default function AccountStep({
+  AccountSelect,
   account,
   isExpanded,
   onAccountChange,
   onExpand,
   accountOptions,
-}: Props) {
+}: {
+  AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
+  account: string
+  isExpanded: boolean
+  onAccountChange: (account: string) => void
+  onExpand: () => void
+  accountOptions: { value: string; label: string; color: string }[]
+}) {
   const selectedOption = accountOptions.find((option) => option.value === account)
 
   if (!isExpanded) {
@@ -53,18 +52,7 @@ export default function AccountStep({
         Счёт
       </AccountLabel>
       <SelectContainer className="control" isExpanded={isExpanded}>
-        <Select
-          className="basic-single"
-          classNamePrefix="select"
-          value={selectedOption}
-          onChange={(selectedOption) => {
-            if (!selectedOption) return
-            onAccountChange(selectedOption.value)
-          }}
-          options={accountOptions}
-          isSearchable={false}
-          styles={reactSelectColorStyles}
-        />
+        <AccountSelect value={account} onChange={onAccountChange} />
       </SelectContainer>
     </div>
   )
