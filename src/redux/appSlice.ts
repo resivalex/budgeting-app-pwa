@@ -8,7 +8,6 @@ export type AppState = {
   isInitialized: boolean
   isAuthenticated: boolean
   transactions: any[]
-  isLoading: boolean
   offlineMode: boolean
   accountDetails: AccountDetailsDTO[]
   categories: string[]
@@ -21,7 +20,6 @@ const initialState: AppState = {
   isInitialized: false,
   isAuthenticated: false,
   transactions: [],
-  isLoading: false,
   offlineMode: false,
   accountDetails: [],
   categories: [],
@@ -49,17 +47,13 @@ const appSlice = createSlice({
       state.payees = transactionAggregator.getRecentPayees()
       state.comments = transactionAggregator.getRecentComments()
     },
-    setIsLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload
-    },
     setOfflineMode: (state, action: PayloadAction<boolean>) => {
       state.offlineMode = action.payload
     },
   },
 })
 
-export const { setIsAuthenticated, setTransactions, setIsLoading, setOfflineMode } =
-  appSlice.actions
+export const { setIsAuthenticated, setTransactions, setOfflineMode } = appSlice.actions
 
 export function useAppSelector(selector: (state: AppState) => any) {
   return useSelector((state: RootState) => selector(state.app))

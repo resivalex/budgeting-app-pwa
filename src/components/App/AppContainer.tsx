@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { setIsAuthenticated, useAppSelector, AppState, setIsLoading } from '@/redux/appSlice'
+import { setIsAuthenticated, useAppSelector, AppState } from '@/redux/appSlice'
 import Login from './Login'
 import { DbService, BackendService } from '@/services'
 import AuthorizedAppContainer from './AuthorizedAppContainer'
@@ -12,12 +12,12 @@ type ConfigType = {
 }
 
 export default function AppContainer() {
+  const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
   const isAuthenticated = useAppSelector((state: AppState) => state.isAuthenticated)
   const [config, setConfig] = useState<ConfigType | null>(null)
   const [backendService, setBackendService] = useState<BackendService | null>(null)
   const [dbService, setDbService] = useState<DbService | null>(null)
-  const isLoading = useAppSelector((state: AppState) => state.isLoading)
   const isInitialized = useAppSelector((state: AppState) => state.isInitialized)
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function AppContainer() {
     }
     const service = new DbService({
       dbUrl: config.dbUrl,
-      onLoading: (value) => dispatch(setIsLoading(value)),
+      onLoading: setIsLoading
     })
     setDbService(service)
   }, [config, dispatch])
