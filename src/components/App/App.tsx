@@ -10,7 +10,7 @@ import { BudgetsContainer } from '../Budgets'
 import { TransactionDTO } from '@/types'
 import { appVersion } from '@/version'
 import { TransactionsPageContainer } from '../Transactions'
-import OfflineOverlay from '@/components/App/OfflineOverlay'
+import OfflineOverlay from './OfflineOverlay'
 
 export default function App({
   transactions,

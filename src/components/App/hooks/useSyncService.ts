@@ -1,8 +1,6 @@
-import { AppState, setOfflineMode, useAppSelector } from '@/redux/appSlice'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
 import { BackendService, DbService } from '@/services'
 import { useInterval } from './useInterval'
-import { useEffect, useState } from 'react'
 import { TransactionDTO } from '@/types'
 
 export function useSyncService(
@@ -12,8 +10,7 @@ export function useSyncService(
   onTransactionsPull: (transactions: TransactionDTO[]) => void
 ) {
   const [isFailedPush, setIsFailedPush] = useState(false)
-  const dispatch = useDispatch()
-  const offlineMode = useAppSelector((state: AppState) => state.offlineMode)
+  const [offlineMode, setOfflineMode] = useState(false)
 
   async function loadTransactionsFromLocal() {
     const docs = await dbService.readAllDocs()
@@ -38,9 +35,9 @@ export function useSyncService(
       if (await dbService.pullChanges()) {
         await loadTransactionsFromLocal()
       }
-      dispatch(setOfflineMode(false))
+      setOfflineMode(false)
     } catch (error: any) {
-      dispatch(setOfflineMode(true))
+      setOfflineMode(true)
     }
   }
 

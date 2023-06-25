@@ -7,7 +7,6 @@ import { AccountDetailsDTO } from '@/types'
 export type AppState = {
   isInitialized: boolean
   transactions: any[]
-  offlineMode: boolean
   accountDetails: AccountDetailsDTO[]
   categories: string[]
   currencies: string[]
@@ -18,7 +17,6 @@ export type AppState = {
 const initialState: AppState = {
   isInitialized: false,
   transactions: [],
-  offlineMode: false,
   accountDetails: [],
   categories: [],
   currencies: [],
@@ -42,13 +40,10 @@ const appSlice = createSlice({
       state.payees = transactionAggregator.getRecentPayees()
       state.comments = transactionAggregator.getRecentComments()
     },
-    setOfflineMode: (state, action: PayloadAction<boolean>) => {
-      state.offlineMode = action.payload
-    },
   },
 })
 
-export const { setTransactions, setOfflineMode } = appSlice.actions
+export const { setTransactions } = appSlice.actions
 
 export function useAppSelector(selector: (state: AppState) => any) {
   return useSelector((state: RootState) => selector(state.app))
