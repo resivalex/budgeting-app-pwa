@@ -5,16 +5,10 @@ import { BudgetDTO } from '@/types'
 
 interface BudgetsState {
   budgets: BudgetDTO[]
-  budgetMonthFirstDay: string
-  availableMonths: string[]
 }
-
-const currentMonthFirstDay = new Date().toISOString().slice(0, 7) + '-01'
 
 const initialState: BudgetsState = {
   budgets: [],
-  budgetMonthFirstDay: currentMonthFirstDay,
-  availableMonths: [currentMonthFirstDay],
 }
 
 export const budgetsSlice = createSlice({
@@ -24,16 +18,10 @@ export const budgetsSlice = createSlice({
     setBudgets: (state, action: PayloadAction<BudgetDTO[]>) => {
       state.budgets = action.payload
     },
-    setBudgetMonthFirstDay: (state, action: PayloadAction<string>) => {
-      state.budgetMonthFirstDay = action.payload
-    },
-    setAvailableMonths: (state, action: PayloadAction<string[]>) => {
-      state.availableMonths = action.payload
-    },
   },
 })
 
-export const { setBudgets, setBudgetMonthFirstDay, setAvailableMonths } = budgetsSlice.actions
+export const { setBudgets } = budgetsSlice.actions
 
 export function useBudgetsSelector(selector: (state: BudgetsState) => any) {
   return useSelector((state: RootState) => selector(state.budgets))

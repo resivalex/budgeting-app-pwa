@@ -1,12 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { convertToLocaleTime } from '@/utils'
-import {
-  setBudgets,
-  setBudgetMonthFirstDay,
-  setAvailableMonths,
-  useBudgetsSelector,
-} from '@/redux/budgetsSlice'
+import { setBudgets, useBudgetsSelector } from '@/redux/budgetsSlice'
 import { useAppSelector } from '@/redux/appSlice'
 import { BackendService } from '@/services'
 import Budgets from './Budgets'
@@ -188,6 +183,8 @@ function calculateExpectationRatioByCurrentDate(selectedMonth: string) {
   return millisecondsFromSelectedMonth / millisecondsInMonth
 }
 
+const currentMonthFirstDay = new Date().toISOString().slice(0, 7) + '-01'
+
 export default function BudgetsContainer({
   transactions,
   onTransactionRemove,
@@ -196,11 +193,12 @@ export default function BudgetsContainer({
   onTransactionRemove: (id: string) => void
 }) {
   const [focusedBudgetName, setFocusedBudgetName] = useState('')
+  const [budgetMonthFirstDay, setBudgetMonthFirstDay] = useState(currentMonthFirstDay)
+  const [availableMonths, setAvailableMonths] = useState<string[]>([currentMonthFirstDay])
   const dispatch = useDispatch()
   const categories: string[] = useAppSelector((state) => state.categories)
   const budgets: any[] = useBudgetsSelector((state) => state.budgets)
-  const selectedMonth = useBudgetsSelector((state) => state.budgetMonthFirstDay)
-  const availableMonths = useBudgetsSelector((state) => state.availableMonths)
+  const selectedMonth = budgetMonthFirstDay
 
   useEffect(() => {
     const config = JSON.parse(localStorage.config)
@@ -227,7 +225,7 @@ export default function BudgetsContainer({
       const budgets = calculateBudgets(transactions, categories, spendingLimits, selectedMonth)
       const availableMonths = getAvailableMonths(spendingLimits)
       dispatch(setBudgets(budgets))
-      dispatch(setAvailableMonths(availableMonths))
+      setAvailableMonths(availableMonths)
     }
 
     void requestBudgetsFromBackend(backendService)
@@ -245,7 +243,7 @@ export default function BudgetsContainer({
       budgets={budgets}
       selectedMonth={selectedMonth}
       availableMonths={availableMonths}
-      onMonthSelect={(month) => dispatch(setBudgetMonthFirstDay(month))}
+      onMonthSelect={(month) => setBudgetMonthFirstDay(month)}
       onFocus={handleFocus}
       focusedBudget={focusedBudget}
       commonBudgetsExpectationRatio={commonBudgetsExpectationRatio}
