@@ -1,4 +1,4 @@
-import { convertCurrencyCodeToSymbol } from '@/utils'
+import { convertCurrencyCodeToSymbol, reactSelectColorStyles } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
   Type as TypeFormInput,
@@ -11,6 +11,7 @@ import {
   Comment as CommentFormInput,
   Datetime as DatetimeFormInput,
 } from './FormInputs'
+import Select from 'react-select'
 
 // Types
 type TransactionType = 'income' | 'expense' | 'transfer'
@@ -94,6 +95,30 @@ function TransactionForm({
     color: a.color,
   }))
 
+  function AccountSelect({
+    value,
+    onChange,
+  }: {
+    value: string
+    onChange: (value: string) => void
+  }) {
+    return (
+      <Select
+        className="basic-single"
+        classNamePrefix="select"
+        value={accountOptions.find((option) => option.value === value) || null}
+        onChange={(selectedOption) => {
+          if (!selectedOption) return
+          onChange(selectedOption.value)
+        }}
+        options={accountOptions}
+        isSearchable={false}
+        placeholder="Выберите из списка..."
+        styles={reactSelectColorStyles}
+      />
+    )
+  }
+
   return (
     <div className="field p-2">
       <AmountFormInput amount={amount} onAmountChange={onAmountChange} />
@@ -104,15 +129,15 @@ function TransactionForm({
         currencyOptions={currencyOptions}
       />
       <AccountFormInput
+        AccountSelect={AccountSelect}
         account={account}
         onAccountChange={onAccountChange}
-        accountOptions={accountOptions}
       />
       {type === 'transfer' ? (
         <PayeeTransferAccountFormInput
+          AccountSelect={AccountSelect}
           payeeTransferAccount={payeeTransferAccount}
           onPayeeTransferAccountChange={onPayeeTransferAccountChange}
-          accountOptions={accountOptions}
         />
       ) : (
         <>
