@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { convertToLocaleTime } from '@/utils'
-import { setBudgets, useBudgetsSelector } from '@/redux/budgetsSlice'
 import { useAppSelector } from '@/redux/appSlice'
 import { BackendService } from '@/services'
 import Budgets from './Budgets'
@@ -195,9 +194,9 @@ export default function BudgetsContainer({
   const [focusedBudgetName, setFocusedBudgetName] = useState('')
   const [budgetMonthFirstDay, setBudgetMonthFirstDay] = useState(currentMonthFirstDay)
   const [availableMonths, setAvailableMonths] = useState<string[]>([currentMonthFirstDay])
+  const [budgets, setBudgets] = useState<BudgetDTO[]>([])
   const dispatch = useDispatch()
   const categories: string[] = useAppSelector((state) => state.categories)
-  const budgets: any[] = useBudgetsSelector((state) => state.budgets)
   const selectedMonth = budgetMonthFirstDay
 
   useEffect(() => {
@@ -224,7 +223,7 @@ export default function BudgetsContainer({
 
       const budgets = calculateBudgets(transactions, categories, spendingLimits, selectedMonth)
       const availableMonths = getAvailableMonths(spendingLimits)
-      dispatch(setBudgets(budgets))
+      setBudgets(budgets)
       setAvailableMonths(availableMonths)
     }
 
