@@ -1,4 +1,9 @@
-import { convertCurrencyCodeToSymbol, reactSelectColorStyles, useColoredAccounts } from '@/utils'
+import {
+  convertCurrencyCodeToSymbol,
+  reactSelectColorStyles,
+  useColoredAccounts,
+  formatFinancialAmount,
+} from '@/utils'
 import Select from 'react-select'
 import { AccountDetailsDTO } from '@/types'
 
@@ -22,7 +27,9 @@ export default function ColoredAccountSelect({
   const emptyOptions = emptyOption ? [{ value: '', label: emptyOption, color: '#ffffff' }] : []
   const accountOptions = availableColoredAccounts.map((a) => ({
     value: a.account,
-    label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
+    label: `${formatFinancialAmount(a.balance)} ${convertCurrencyCodeToSymbol(a.currency)} | ${
+      a.account
+    }`,
     color: a.color,
   }))
   const options = [...emptyOptions, ...accountOptions]
