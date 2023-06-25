@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, FC } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
@@ -8,8 +8,7 @@ import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
 import { useNavigate, useParams } from 'react-router-dom'
 import { TransactionAggregator } from '@/services'
-import { useColoredAccounts } from './useColoredAccounts'
-import ColoredAccountSelect from './ColoredAccountSelect'
+import { useColoredAccounts } from '@/utils'
 
 function useCategoryExtensions(localStorageCategoryExpansions: string): { [name: string]: string } {
   return useMemo(() => {
@@ -27,10 +26,16 @@ function useCategoryExtensions(localStorageCategoryExpansions: string): { [name:
 }
 
 export default function TransactionFormContainer({
+  LimitedAccountSelect,
   transactions,
   transactionsAggregations,
   onApply,
 }: {
+  LimitedAccountSelect: FC<{
+    value: string
+    onChange: (value: string) => void
+    availableNames: string[]
+  }>
   transactions: TransactionDTO[]
   transactionsAggregations: TransactionsAggregations
   onApply: (t: TransactionDTO) => void
@@ -141,14 +146,13 @@ export default function TransactionFormContainer({
     () =>
       ({ value, onChange }: { value: string; onChange: (v: string) => void }) =>
         (
-          <ColoredAccountSelect
+          <LimitedAccountSelect
             value={value}
             onChange={onChange}
-            accountDetails={accountDetails}
-            availableAccountNames={availableAccountNames}
+            availableNames={availableAccountNames}
           />
         ),
-    [accountDetails, availableAccountNames]
+    [availableAccountNames, LimitedAccountSelect]
   )
 
   if (coloredAccounts.length === 0) {

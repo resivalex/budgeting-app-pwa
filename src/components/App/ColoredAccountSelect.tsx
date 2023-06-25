@@ -1,6 +1,5 @@
-import { convertCurrencyCodeToSymbol, reactSelectColorStyles } from '@/utils'
+import { convertCurrencyCodeToSymbol, reactSelectColorStyles, useColoredAccounts } from '@/utils'
 import Select from 'react-select'
-import { useColoredAccounts } from './useColoredAccounts'
 import { AccountDetailsDTO } from '@/types'
 
 export default function ColoredAccountSelect({

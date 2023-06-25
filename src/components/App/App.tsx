@@ -11,6 +11,7 @@ import { TransactionDTO, TransactionsAggregations } from '@/types'
 import { appVersion } from '@/version'
 import { TransactionsPageContainer } from '../Transactions'
 import OfflineOverlay from './OfflineOverlay'
+import ColoredAccountSelect from './ColoredAccountSelect'
 
 export default function App({
   transactions,
@@ -41,6 +42,28 @@ export default function App({
   onRemoveTransaction: (id: string) => void
   onDismissNotification: () => void
 }) {
+  const LimitedAccountSelect = React.useMemo(
+    () =>
+      ({
+        value,
+        onChange,
+        availableNames,
+      }: {
+        value: string
+        onChange: (value: string) => void
+        availableNames: string[]
+      }) =>
+        (
+          <ColoredAccountSelect
+            accountDetails={transactionAggregations.accountDetails}
+            value={value}
+            onChange={onChange}
+            availableAccountNames={availableNames}
+          />
+        ),
+    [transactionAggregations.accountDetails]
+  )
+
   return (
     <div>
       {lastNotificationText && (
@@ -100,6 +123,7 @@ export default function App({
               path="/add"
               element={
                 <TransactionFormContainer
+                  LimitedAccountSelect={LimitedAccountSelect}
                   transactions={transactions}
                   transactionsAggregations={transactionAggregations}
                   onApply={onAddTransaction}
@@ -110,6 +134,7 @@ export default function App({
               path="/transactions/:transactionId"
               element={
                 <TransactionFormContainer
+                  LimitedAccountSelect={LimitedAccountSelect}
                   transactions={transactions}
                   transactionsAggregations={transactionAggregations}
                   onApply={onEditTransaction}
