@@ -22,8 +22,8 @@ interface Props {
 
 function useCategoryExtensions(localStorageCategoryExpansions: string): { [name: string]: string } {
   return useMemo(() => {
-    const categoryExpansions: CategoryExpansionsDTO = localStorage.categoryExpansions
-      ? JSON.parse(localStorage.categoryExpansions)
+    const categoryExpansions: CategoryExpansionsDTO = localStorageCategoryExpansions
+      ? JSON.parse(localStorageCategoryExpansions)
       : { expansions: [] }
 
     const categoryNameToExtendedMap: { [name: string]: string } = {}
@@ -42,7 +42,6 @@ function useAccounts(localStorageAccountProperties: string): ColoredAccountDetai
     const accountProperties: AccountPropertiesDTO = localStorageAccountProperties
       ? JSON.parse(localStorageAccountProperties)
       : { accounts: [] }
-
 
     return mergeAccountDetailsAndProperties(accountDetails, accountProperties)
   }, [accountDetails, localStorageAccountProperties])
