@@ -2,12 +2,17 @@ import { TransactionDTO } from '@/types'
 import TransactionsContainer from './TransactionsContainer'
 import { TransactionFiltersContainer } from './TransactionFilters'
 
-interface Props {
+export default function TransactionsPage({
+  filterAccountName,
+  transactions,
+  onFilterAccountNameChange,
+  onRemove,
+}: {
+  filterAccountName: string
   transactions: TransactionDTO[]
+  onFilterAccountNameChange: (accountName: string) => void
   onRemove: (id: string) => void
-}
-
-export default function TransactionsPage({ transactions, onRemove }: Props) {
+}) {
   return (
     <div
       style={{
@@ -19,7 +24,10 @@ export default function TransactionsPage({ transactions, onRemove }: Props) {
       }}
     >
       <div style={{ flex: 1 }}>
-        <TransactionFiltersContainer />
+        <TransactionFiltersContainer
+          accountName={filterAccountName}
+          onAccountNameChange={onFilterAccountNameChange}
+        />
       </div>
       <div
         style={{
