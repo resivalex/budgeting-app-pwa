@@ -6,7 +6,7 @@ interface Props {
   onFilterAccountNameChange: (accountName: string) => void
 }
 
-export default function Transactions({
+export default function TransactionFilters({
   filterAccountName,
   accountNames,
   onFilterAccountNameChange,

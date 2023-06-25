@@ -15,6 +15,22 @@ export default function TransactionsPage({
   onFilterAccountNameChange: (accountName: string) => void
   onRemove: (id: string) => void
 }) {
+  function AccountSelect({
+    value,
+    onChange,
+  }: {
+    value: string
+    onChange: (value: string) => void
+  }) {
+    return (
+      <TransactionFiltersContainer
+        accountName={value}
+        accountDetails={accountDetails}
+        onAccountNameChange={onChange}
+      />
+    )
+  }
+
   return (
     <div
       style={{
@@ -26,11 +42,7 @@ export default function TransactionsPage({
       }}
     >
       <div style={{ flex: 1 }}>
-        <TransactionFiltersContainer
-          accountName={filterAccountName}
-          accountDetails={accountDetails}
-          onAccountNameChange={onFilterAccountNameChange}
-        />
+        <AccountSelect value={filterAccountName} onChange={onFilterAccountNameChange} />
       </div>
       <div
         style={{
