@@ -49,8 +49,6 @@ export default function TransactionFormContainer({
   const [payee, setPayee] = useState('')
   const [comment, setComment] = useState('')
   const [datetime, setDatetime] = useState(new Date().toISOString())
-  const [payeeSuggestions, setPayeeSuggestions] = useState<string[]>([])
-  const [commentSuggestions, setCommentSuggestions] = useState<string[]>([])
 
   const appCategories: string[] = transactionsAggregations.categories
   const appCurrencies: string[] = transactionsAggregations.currencies
@@ -155,6 +153,22 @@ export default function TransactionFormContainer({
     [availableAccountNames, LimitedAccountSelect]
   )
 
+  const payees = useMemo(() => {
+    if (!category) {
+      return appPayees
+    }
+    const transactionAggregator = new TransactionAggregator(transactions)
+    return transactionAggregator.getRecentPayeesByCategory(category)
+  }, [category, transactions, appPayees])
+
+  const comments = useMemo(() => {
+    if (!category) {
+      return appComments
+    }
+    const transactionAggregator = new TransactionAggregator(transactions)
+    return transactionAggregator.getRecentCommentsByCategory(category)
+  }, [category, transactions, appComments])
+
   if (coloredAccounts.length === 0) {
     return null
   }
@@ -195,15 +209,6 @@ export default function TransactionFormContainer({
       payee: type === 'transfer' ? payeeTransferAccount : payee,
       comment: comment,
     })
-  }
-
-  const handleCategoryChange = (category: string) => {
-    setCategory(category)
-    const transactionAggregator = new TransactionAggregator(transactions)
-    const payeeSuggestions = transactionAggregator.getRecentPayeesByCategory(category)
-    setPayeeSuggestions(payeeSuggestions)
-    const commentSuggestions = transactionAggregator.getRecentCommentsByCategory(category)
-    setCommentSuggestions(commentSuggestions)
   }
 
   function adjustCurrencyAndAccounts(type: string, currency: string) {
@@ -268,9 +273,11 @@ export default function TransactionFormContainer({
     adjustCurrencyAndAccounts(type, currency)
   }
 
+  const handleCategoryChange = (category: string) => {
+    setCategory(category)
+  }
+
   const viewDatetime = new Date(datetime)
-  const payees = category ? payeeSuggestions : appPayees
-  const comments = category ? commentSuggestions : appComments
 
   const isStepByStep = false
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
