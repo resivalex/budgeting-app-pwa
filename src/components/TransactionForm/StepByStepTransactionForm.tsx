@@ -32,7 +32,7 @@ const commentStep = 'comment'
 const datetimeStep = 'datetime'
 
 function StepByStepTransactionForm({
-                                     AccountSelect,
+  AccountSelect,
   type,
   onTypeChange,
   amount,
@@ -95,6 +95,7 @@ function StepByStepTransactionForm({
   onSave: () => void
 }) {
   const [currentStep, setCurrentStep] = useState(amountStep)
+  const [isLoading, setIsLoading] = useState(false)
 
   const currencyOptions = currencies.map((currency) => ({
     value: currency,
@@ -214,6 +215,12 @@ function StepByStepTransactionForm({
     )
   }
 
+  const handleSave = async () => {
+    setIsLoading(true)
+    await onSave()
+    setIsLoading(false)
+  }
+
   return (
     <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
       {renderAmountStep()}
@@ -232,8 +239,9 @@ function StepByStepTransactionForm({
       {renderDatetimeStep()}
       <div className="field">
         <div className="control">
-          <button className="button is-info" onClick={onSave} disabled={!isValid}>
+          <button className="button is-info" onClick={handleSave} disabled={!isValid || isLoading}>
             {isValid ? 'Сохранить' : 'Заполните необходимые поля'}
+            {isLoading && '...'}
           </button>
         </div>
       </div>

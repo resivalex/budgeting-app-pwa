@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import {
   Type as TypeFormInput,
   Currency as CurrencyFormInput,
@@ -80,12 +80,20 @@ function TransactionForm({
   isValid: boolean
   onSave: () => void
 }) {
+  const [isLoading, setIsLoading] = useState(false)
+
   const typeOptions = [
     { value: 'expense', label: 'Расход' },
     { value: 'income', label: 'Доход' },
     { value: 'transfer', label: 'Перевод' },
   ]
   const currencyOptions = currencies.map((c) => ({ value: c, label: c }))
+
+  const handleSave = async () => {
+    setIsLoading(true)
+    await onSave()
+    setIsLoading(false)
+  }
 
   return (
     <div className="field p-2">
@@ -121,8 +129,9 @@ function TransactionForm({
       <DatetimeFormInput datetime={datetime} onDatetimeChange={onDatetimeChange} />
       <div className="field">
         <div className="control">
-          <button className="button is-info" onClick={onSave} disabled={!isValid}>
+          <button className="button is-info" onClick={handleSave} disabled={!isValid || isLoading}>
             {isValid ? 'Сохранить' : 'Заполните необходимые поля'}
+            {isLoading && '...'}
           </button>
         </div>
       </div>
