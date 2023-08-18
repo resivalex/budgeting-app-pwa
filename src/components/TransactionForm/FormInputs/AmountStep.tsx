@@ -5,6 +5,7 @@ interface Props {
   isExpanded: boolean
   onAmountChange: (amount: string) => void
   onExpand: () => void
+  onComplete: () => void
 }
 
 const InputContainer = styled.div`
@@ -16,7 +17,19 @@ const AmountLabel = styled.div<{ isExpanded: boolean }>`
   color: ${(props) => (props.isExpanded ? 'black' : 'gray')};
 `
 
-export default function AmountStep({ amount, isExpanded, onAmountChange, onExpand }: Props) {
+export default function AmountStep({
+  amount,
+  isExpanded,
+  onAmountChange,
+  onExpand,
+  onComplete,
+}: Props) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onComplete()
+    }
+  }
+
   return (
     <div className="field" onClick={() => onExpand()}>
       <AmountLabel className="is-size-7" isExpanded={isExpanded}>
@@ -29,6 +42,7 @@ export default function AmountStep({ amount, isExpanded, onAmountChange, onExpan
           placeholder="Сумма"
           value={amount}
           onChange={(e) => onAmountChange(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
       </InputContainer>
     </div>

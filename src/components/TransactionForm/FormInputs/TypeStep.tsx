@@ -5,6 +5,7 @@ interface Props {
   isExpanded: boolean
   onChange: (type: 'income' | 'expense' | 'transfer') => void
   onExpand: () => void
+  onComplete: () => void
 }
 
 const Option = styled.div<{ isActive: boolean }>`
@@ -39,7 +40,7 @@ const Container = styled.div`
   }
 `
 
-export default function TypeStep({ value, isExpanded, onChange, onExpand }: Props) {
+export default function TypeStep({ value, isExpanded, onChange, onExpand, onComplete }: Props) {
   function renderSelectedOption() {
     switch (value) {
       case 'expense':
@@ -51,6 +52,11 @@ export default function TypeStep({ value, isExpanded, onChange, onExpand }: Prop
       default:
         return 'Тип?'
     }
+  }
+
+  const handleOptionClick = (type: 'income' | 'expense' | 'transfer') => {
+    onChange(type)
+    onComplete()
   }
 
   if (!isExpanded) {
@@ -66,13 +72,13 @@ export default function TypeStep({ value, isExpanded, onChange, onExpand }: Prop
   return (
     <div className="field">
       <Container tabIndex={0}>
-        <Option isActive={value === 'expense'} onClick={() => onChange('expense')}>
+        <Option isActive={value === 'expense'} onClick={() => handleOptionClick('expense')}>
           Расход
         </Option>
-        <Option isActive={value === 'income'} onClick={() => onChange('income')}>
+        <Option isActive={value === 'income'} onClick={() => handleOptionClick('income')}>
           Доход
         </Option>
-        <Option isActive={value === 'transfer'} onClick={() => onChange('transfer')}>
+        <Option isActive={value === 'transfer'} onClick={() => handleOptionClick('transfer')}>
           Перевод
         </Option>
       </Container>
