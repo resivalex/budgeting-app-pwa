@@ -1,5 +1,6 @@
 import React, { useState, useRef, useMemo } from 'react'
 import styled from 'styled-components'
+import { AiOutlineCloseCircle } from 'react-icons/ai'
 
 const Wrapper = styled.div`
   position: relative;
@@ -33,6 +34,17 @@ const Suggestions = styled.div`
   z-index: 1;
   background-color: white;
   border-radius: 5px;
+`
+
+const CloseIcon = styled(AiOutlineCloseCircle)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  font-size: 30px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 2px;
 `
 
 interface SuggestingInputProps {
@@ -83,6 +95,7 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
       />
       {showSuggestions && (
         <Suggestions>
+          <CloseIcon onClick={() => setShowSuggestions(false)} />
           {filteredSuggestions.map((suggestion, index) => (
             <Suggestion key={index} onMouseDown={() => handleSuggestionClick(suggestion)}>
               {suggestion}
