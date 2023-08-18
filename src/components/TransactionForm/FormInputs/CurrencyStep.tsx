@@ -5,6 +5,7 @@ interface Props {
   isExpanded: boolean
   onChange: (currency: string) => void
   onExpand: () => void
+  onComplete: () => void
   options: { value: string; label: string }[]
 }
 
@@ -40,10 +41,22 @@ const Container = styled.div`
   }
 `
 
-export default function CurrencyStep({ value, isExpanded, onChange, onExpand, options }: Props) {
+export default function CurrencyStep({
+  value,
+  isExpanded,
+  onChange,
+  onExpand,
+  onComplete,
+  options,
+}: Props) {
   function renderSelectedOptionLabel() {
     const selectedOption = options.find((option) => option.value === value)
     return selectedOption ? selectedOption.label : 'Валюта?'
+  }
+
+  const handleOptionClick = (currency: string) => {
+    onChange(currency)
+    onComplete()
   }
 
   if (!isExpanded) {
@@ -63,7 +76,7 @@ export default function CurrencyStep({ value, isExpanded, onChange, onExpand, op
           <Option
             key={option.value}
             isActive={value === option.value}
-            onClick={() => onChange(option.value)}
+            onClick={() => handleOptionClick(option.value)}
           >
             {option.label}
           </Option>

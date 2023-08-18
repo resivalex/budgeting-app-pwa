@@ -127,6 +127,7 @@ function StepByStepTransactionForm({
         isExpanded={currentStep === currencyStep}
         onChange={onCurrencyChange}
         onExpand={() => setCurrentStep(currencyStep)}
+        onComplete={() => setCurrentStep(accountStep)}
       />
     )
   }
