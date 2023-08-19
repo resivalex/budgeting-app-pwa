@@ -1,3 +1,4 @@
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -24,9 +25,12 @@ export default function AmountStep({
   onExpand,
   onComplete,
 }: Props) {
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onComplete()
+      inputRef.current?.blur()
     }
   }
 
@@ -37,6 +41,7 @@ export default function AmountStep({
       </AmountLabel>
       <InputContainer className="control">
         <input
+          ref={inputRef}
           className="input is-small"
           type="number"
           placeholder="Сумма"
