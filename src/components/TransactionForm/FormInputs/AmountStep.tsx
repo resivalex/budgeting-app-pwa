@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -30,9 +30,16 @@ export default function AmountStep({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onComplete()
-      inputRef.current?.blur()
     }
   }
+
+  useEffect(() => {
+    if (isExpanded) {
+      inputRef.current?.focus()
+    } else {
+      inputRef.current?.blur()
+    }
+  }, [isExpanded])
 
   return (
     <div className="field" onClick={() => onExpand()}>
