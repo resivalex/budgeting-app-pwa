@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -41,6 +42,8 @@ const Container = styled.div`
 `
 
 export default function TypeStep({ value, isExpanded, onChange, onExpand, onComplete }: Props) {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
   function renderSelectedOption() {
     switch (value) {
       case 'expense':
@@ -54,6 +57,12 @@ export default function TypeStep({ value, isExpanded, onChange, onExpand, onComp
     }
   }
 
+  useEffect(() => {
+    if (isExpanded) {
+      containerRef.current?.focus()
+    }
+  }, [isExpanded])
+
   const handleOptionClick = (type: 'income' | 'expense' | 'transfer') => {
     onChange(type)
     onComplete()
@@ -62,7 +71,7 @@ export default function TypeStep({ value, isExpanded, onChange, onExpand, onComp
   if (!isExpanded) {
     return (
       <div className="field">
-        <Container tabIndex={0} onClick={onExpand}>
+        <Container ref={containerRef} tabIndex={0} onClick={onExpand}>
           <Option isActive>{renderSelectedOption()}</Option>
         </Container>
       </div>
@@ -71,7 +80,7 @@ export default function TypeStep({ value, isExpanded, onChange, onExpand, onComp
 
   return (
     <div className="field">
-      <Container tabIndex={0}>
+      <Container ref={containerRef} tabIndex={0}>
         <Option isActive={value === 'expense'} onClick={() => handleOptionClick('expense')}>
           Расход
         </Option>
