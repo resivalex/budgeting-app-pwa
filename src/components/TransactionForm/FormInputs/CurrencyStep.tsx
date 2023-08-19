@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 interface Props {
@@ -49,6 +50,14 @@ export default function CurrencyStep({
   onComplete,
   options,
 }: Props) {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (isExpanded) {
+      containerRef.current?.focus()
+    }
+  }, [isExpanded])
+
   function renderSelectedOptionLabel() {
     const selectedOption = options.find((option) => option.value === value)
     return selectedOption ? selectedOption.label : 'Валюта?'
@@ -62,7 +71,7 @@ export default function CurrencyStep({
   if (!isExpanded) {
     return (
       <div className="field">
-        <Container tabIndex={0} onClick={onExpand}>
+        <Container ref={containerRef} tabIndex={0} onClick={onExpand}>
           <Option isActive>{renderSelectedOptionLabel()}</Option>
         </Container>
       </div>
@@ -71,7 +80,7 @@ export default function CurrencyStep({
 
   return (
     <div className="field">
-      <Container tabIndex={0}>
+      <Container ref={containerRef} tabIndex={0}>
         {options.map((option) => (
           <Option
             key={option.value}
