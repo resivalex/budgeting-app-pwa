@@ -6,6 +6,7 @@ interface Props {
   isExpanded: boolean
   onCommentChange: (comment: string) => void
   onExpand: () => void
+  onComplete: () => void
   comments: string[]
 }
 
@@ -23,8 +24,14 @@ export default function CommentStep({
   isExpanded,
   onCommentChange,
   onExpand,
+  onComplete,
   comments,
 }: Props) {
+  const handleCommentChange = (newComment: string) => {
+    onCommentChange(newComment)
+    onComplete()
+  }
+
   if (!isExpanded) {
     return (
       <div className="field" onClick={onExpand}>
@@ -42,7 +49,7 @@ export default function CommentStep({
         Комментарий
       </CommentLabel>
       <div className="control">
-        <SuggestingInput2 suggestions={comments} value={comment} onChange={onCommentChange} />
+        <SuggestingInput2 suggestions={comments} value={comment} onChange={handleCommentChange} />
       </div>
     </div>
   )

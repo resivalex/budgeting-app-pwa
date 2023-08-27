@@ -208,6 +208,7 @@ function StepByStepTransactionForm({
         isExpanded={currentStep === commentStep}
         onCommentChange={onCommentChange}
         onExpand={() => setCurrentStep(commentStep)}
+        onComplete={() => setCurrentStep(datetimeStep)}
       />
     )
   }
