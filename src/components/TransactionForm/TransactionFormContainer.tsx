@@ -279,7 +279,7 @@ export default function TransactionFormContainer({
 
   const viewDatetime = new Date(datetime)
 
-  const isStepByStep = true
+  const isStepByStep = false
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
 
   return (
