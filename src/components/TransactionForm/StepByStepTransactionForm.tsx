@@ -182,6 +182,7 @@ function StepByStepTransactionForm({
         isExpanded={currentStep === payeeStep}
         onPayeeChange={onPayeeChange}
         onExpand={() => setCurrentStep(payeeStep)}
+        onComplete={() => setCurrentStep(commentStep)}
       />
     )
   }
