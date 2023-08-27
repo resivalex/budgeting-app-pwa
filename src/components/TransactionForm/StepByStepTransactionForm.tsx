@@ -153,6 +153,9 @@ function StepByStepTransactionForm({
         isExpanded={currentStep === accountStep}
         onAccountChange={onAccountChange}
         onExpand={() => setCurrentStep(accountStep)}
+        onComplete={() =>
+          setCurrentStep(type === 'transfer' ? payeeTransferAccountStep : categoryStep)
+        }
       />
     )
   }

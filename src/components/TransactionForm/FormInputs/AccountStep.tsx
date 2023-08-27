@@ -22,16 +22,23 @@ export default function AccountStep({
   isExpanded,
   onAccountChange,
   onExpand,
+  onComplete,
   accountOptions,
 }: {
   AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
   account: string
   isExpanded: boolean
   onAccountChange: (account: string) => void
+  onComplete: () => void
   onExpand: () => void
   accountOptions: { value: string; label: string; color: string }[]
 }) {
   const selectedOption = accountOptions.find((option) => option.value === account)
+
+  const handleAccountChange = (value: string) => {
+    onAccountChange(value)
+    onComplete()
+  }
 
   if (!isExpanded) {
     return (
@@ -52,7 +59,7 @@ export default function AccountStep({
         Счёт
       </AccountLabel>
       <SelectContainer className="control" isExpanded={isExpanded}>
-        <AccountSelect value={account} onChange={onAccountChange} />
+        <AccountSelect value={account} onChange={handleAccountChange} />
       </SelectContainer>
     </div>
   )
