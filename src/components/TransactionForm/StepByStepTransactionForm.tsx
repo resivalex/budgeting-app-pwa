@@ -194,6 +194,7 @@ function StepByStepTransactionForm({
         isExpanded={currentStep === payeeTransferAccountStep}
         onPayeeTransferAccountChange={onPayeeTransferAccountChange}
         onExpand={() => setCurrentStep(payeeTransferAccountStep)}
+        onComplete={() => setCurrentStep(commentStep)}
       />
     )
   }

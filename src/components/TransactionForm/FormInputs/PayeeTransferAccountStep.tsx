@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import styled from 'styled-components'
 
 const SelectContainer = styled.div<{ isExpanded: boolean }>`
@@ -21,16 +22,23 @@ export default function PayeeTransferAccountStep({
   isExpanded,
   onPayeeTransferAccountChange,
   onExpand,
+  onComplete,
   accountOptions,
 }: {
-  AccountSelect: any //FC<{ value: string; onChange: (value: string) => void }>
+  AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
   payeeTransferAccount: string
   isExpanded: boolean
   onPayeeTransferAccountChange: (payeeTransferAccount: string) => void
+  onComplete: () => void
   onExpand: () => void
   accountOptions: { value: string; label: string; color: string }[]
 }) {
   const selectedOption = accountOptions.find((option) => option.value === payeeTransferAccount)
+
+  const handlePayeeTransferAccountChange = (value: string) => {
+    onPayeeTransferAccountChange(value)
+    onComplete()
+  }
 
   if (!isExpanded) {
     return (
@@ -51,7 +59,7 @@ export default function PayeeTransferAccountStep({
         Перевод на счёт
       </AccountLabel>
       <SelectContainer className="control" isExpanded={isExpanded}>
-        <AccountSelect value={payeeTransferAccount} onChange={onPayeeTransferAccountChange} />
+        <AccountSelect value={payeeTransferAccount} onChange={handlePayeeTransferAccountChange} />
       </SelectContainer>
     </div>
   )
