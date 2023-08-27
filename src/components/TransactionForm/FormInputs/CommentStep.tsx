@@ -29,7 +29,9 @@ export default function CommentStep({
 }: Props) {
   const handleCommentChange = (newComment: string) => {
     onCommentChange(newComment)
-    onComplete()
+    if (comments.includes(newComment)) {
+      onComplete()
+    }
   }
 
   if (!isExpanded) {
