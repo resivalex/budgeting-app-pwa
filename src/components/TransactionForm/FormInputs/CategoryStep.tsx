@@ -7,6 +7,7 @@ interface Props {
   isExpanded: boolean
   onCategoryChange: (category: string) => void
   onExpand: () => void
+  onComplete: () => void
   categoryOptions: { value: string; label: string }[]
 }
 
@@ -24,9 +25,15 @@ export default function CategoryStep({
   isExpanded,
   onCategoryChange,
   onExpand,
+  onComplete,
   categoryOptions,
 }: Props) {
   const selectedOption = categoryOptions.find((option) => option.value === category)
+
+  const handleCategoryChange = (value: string) => {
+    onCategoryChange(value)
+    onComplete()
+  }
 
   if (!isExpanded) {
     return (
@@ -51,7 +58,7 @@ export default function CategoryStep({
           value={selectedOption}
           onChange={(selectedOption) => {
             if (!selectedOption) return
-            onCategoryChange(selectedOption.value)
+            handleCategoryChange(selectedOption.value)
           }}
           options={categoryOptions}
           styles={reactSelectSmallStyles}
