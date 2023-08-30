@@ -47,6 +47,8 @@ export default function AccountStep({
   }
 
   useEffect(() => {
+    console.log('Effect running, isExpanded: ', isExpanded)
+    console.log('accountSelectRef: ', accountSelectRef)
     if (isExpanded && accountSelectRef.current) {
       accountSelectRef.current.focus()
     }
@@ -71,7 +73,7 @@ export default function AccountStep({
         Счёт
       </AccountLabel>
       <SelectContainer className="control" isExpanded={isExpanded}>
-        <AccountSelect value={account} onChange={handleAccountChange} />
+        <AccountSelect value={account} onChange={handleAccountChange} ref={accountSelectRef} />
       </SelectContainer>
     </div>
   )

@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, forwardRef, useRef, MutableRefObject } from 'react'
+import React, { useImperativeHandle, forwardRef, useRef, MutableRefObject, useState } from 'react'
 import Select from 'react-select'
 import {
   convertCurrencyCodeToSymbol,
@@ -25,6 +25,7 @@ const ColoredAccountSelect = forwardRef(
     },
     ref
   ) => {
+    const [menuIsOpen, setMenuOpen] = useState(false)
     const coloredAccounts = useColoredAccounts(localStorage.accountProperties || '', accountDetails)
     const availableColoredAccounts = coloredAccounts.filter((a) =>
       availableAccountNames.includes(a.account)
@@ -45,6 +46,7 @@ const ColoredAccountSelect = forwardRef(
       focus: () => {
         if (selectRef.current) {
           selectRef.current.focus()
+          setMenuOpen(true)
         }
       },
     }))
@@ -52,6 +54,9 @@ const ColoredAccountSelect = forwardRef(
     return (
       <Select
         ref={selectRef}
+        menuIsOpen={menuIsOpen}
+        onMenuOpen={() => setMenuOpen(true)}
+        onMenuClose={() => setMenuOpen(false)}
         className="basic-single"
         classNamePrefix="select"
         value={options.find((option) => option.value === value) || null}
