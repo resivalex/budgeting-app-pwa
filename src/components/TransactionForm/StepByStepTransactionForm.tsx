@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, Ref } from 'react'
 import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
@@ -60,7 +60,11 @@ function StepByStepTransactionForm({
   comments,
 }: {
   // Functional components
-  AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
+  AccountSelect: FC<{
+    value: string
+    onChange: (value: string) => void
+    ref?: Ref<{ focus: () => void }>
+  }>
   // Basic transaction details
   type: TransactionType | ''
   currency: string

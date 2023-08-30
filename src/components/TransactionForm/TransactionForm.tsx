@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, Ref, useState } from 'react'
 import {
   Type as TypeFormInput,
   Currency as CurrencyFormInput,
@@ -47,7 +47,11 @@ function TransactionForm({
   comments,
 }: {
   // Function components
-  AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
+  AccountSelect: FC<{
+    value: string
+    onChange: (value: string) => void
+    ref?: Ref<{ focus: () => void }>
+  }>
   // Basic transaction details
   type: TransactionType | ''
   currency: string

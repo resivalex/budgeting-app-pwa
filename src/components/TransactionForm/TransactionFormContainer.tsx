@@ -1,4 +1,13 @@
-import { useState, useMemo, useCallback, FC } from 'react'
+import {
+  useState,
+  useMemo,
+  useCallback,
+  FC,
+  Ref,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
@@ -35,6 +44,7 @@ export default function TransactionFormContainer({
     value: string
     onChange: (value: string) => void
     availableNames: string[]
+    ref?: Ref<{ focus: () => void }>
   }>
   transactions: TransactionDTO[]
   transactionsAggregations: TransactionsAggregations
@@ -140,16 +150,32 @@ export default function TransactionFormContainer({
     [availableColoredAccounts]
   )
 
-  const AccountSelect = useMemo(
+  const AccountSelect: FC<{
+    value: string
+    onChange: (value: string) => void
+    ref?: Ref<{ focus: () => void }>
+  }> = useMemo(
     () =>
-      ({ value, onChange }: { value: string; onChange: (v: string) => void }) =>
-        (
+      forwardRef(({ value, onChange }: { value: string; onChange: (v: string) => void }, ref) => {
+        const limitedAccountSelectRef = useRef<any>(null)
+
+        useImperativeHandle(ref, () => ({
+          focus: () => {
+            if (limitedAccountSelectRef.current && limitedAccountSelectRef.current.focus) {
+              limitedAccountSelectRef.current.focus()
+            }
+          },
+        }))
+
+        return (
           <LimitedAccountSelect
+            ref={limitedAccountSelectRef}
             value={value}
             onChange={onChange}
             availableNames={availableAccountNames}
           />
-        ),
+        )
+      }),
     [availableAccountNames, LimitedAccountSelect]
   )
 

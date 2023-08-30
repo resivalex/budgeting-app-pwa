@@ -1,4 +1,4 @@
-import { useEffect, FC } from 'react'
+import { useEffect, FC, Ref, useRef } from 'react'
 import styled from 'styled-components'
 
 const SelectContainer = styled.div<{ isExpanded: boolean }>`
@@ -25,7 +25,11 @@ export default function AccountStep({
   onComplete,
   accountOptions,
 }: {
-  AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
+  AccountSelect: FC<{
+    value: string
+    onChange: (value: string) => void
+    ref?: Ref<{ focus: () => void }>
+  }>
   account: string
   isExpanded: boolean
   onAccountChange: (account: string) => void
@@ -33,6 +37,8 @@ export default function AccountStep({
   onExpand: () => void
   accountOptions: { value: string; label: string; color: string }[]
 }) {
+  const accountSelectRef = useRef<{ focus: () => void }>(null)
+
   const selectedOption = accountOptions.find((option) => option.value === account)
 
   const handleAccountChange = (value: string) => {
@@ -41,8 +47,8 @@ export default function AccountStep({
   }
 
   useEffect(() => {
-    if (isExpanded) {
-      // Perform action to open AccountSelect here
+    if (isExpanded && accountSelectRef.current) {
+      accountSelectRef.current.focus()
     }
   }, [isExpanded])
 

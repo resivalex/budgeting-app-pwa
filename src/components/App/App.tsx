@@ -1,4 +1,4 @@
-import React from 'react'
+import { useRef, forwardRef, useImperativeHandle, useMemo, FC, Ref } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Status from './Status'
 import NotFound from './NotFound'
@@ -12,6 +12,19 @@ import { appVersion } from '@/version'
 import { TransactionsPageContainer } from '../Transactions'
 import OfflineOverlay from './OfflineOverlay'
 import ColoredAccountSelect from './ColoredAccountSelect'
+
+type LimitedAccountSelectType = FC<{
+  value: string
+  onChange: (value: string) => void
+  availableNames: string[]
+  ref?: Ref<{ focus: () => void }>
+}>
+
+type FullAccountSelectType = FC<{
+  value: string
+  onChange: (value: string) => void
+  ref?: Ref<{ focus: () => void }>
+}>
 
 export default function App({
   transactions,
@@ -42,33 +55,45 @@ export default function App({
   onRemoveTransaction: (id: string) => void
   onDismissNotification: () => void
 }) {
-  const LimitedAccountSelect = React.useMemo(
+  const LimitedAccountSelect: LimitedAccountSelectType = useMemo(
     () =>
-      ({
-        value,
-        onChange,
-        availableNames,
-      }: {
-        value: string
-        onChange: (value: string) => void
-        availableNames: string[]
-      }) =>
-        (
+      forwardRef(({ value, onChange, availableNames }: any, ref) => {
+        const limitedSelectRef = useRef<any>(null)
+        useImperativeHandle(ref, () => ({
+          focus: () => {
+            if (limitedSelectRef.current) {
+              limitedSelectRef.current.focus()
+            }
+          },
+        }))
+        return (
           <ColoredAccountSelect
+            ref={limitedSelectRef}
             accountDetails={transactionAggregations.accountDetails}
             value={value}
             onChange={onChange}
             availableAccountNames={availableNames}
             emptyOption={null}
           />
-        ),
+        )
+      }),
     [transactionAggregations.accountDetails]
   )
-  const FullAccountSelect = React.useMemo(
+
+  const FullAccountSelect: FullAccountSelectType = useMemo(
     () =>
-      ({ value, onChange }: { value: string; onChange: (value: string) => void }) =>
-        (
+      forwardRef(({ value, onChange }: any, ref) => {
+        const fullSelectRef = useRef<any>(null)
+        useImperativeHandle(ref, () => ({
+          focus: () => {
+            if (fullSelectRef.current) {
+              fullSelectRef.current.focus()
+            }
+          },
+        }))
+        return (
           <ColoredAccountSelect
+            ref={fullSelectRef}
             accountDetails={transactionAggregations.accountDetails}
             value={value}
             onChange={onChange}
@@ -77,7 +102,8 @@ export default function App({
             )}
             emptyOption="Все счета"
           />
-        ),
+        )
+      }),
     [transactionAggregations.accountDetails]
   )
 
