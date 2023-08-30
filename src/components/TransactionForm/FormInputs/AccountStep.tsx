@@ -1,5 +1,5 @@
+import { useEffect, FC } from 'react'
 import styled from 'styled-components'
-import { FC } from 'react'
 
 const SelectContainer = styled.div<{ isExpanded: boolean }>`
   font-size: ${(props) => (props.isExpanded ? '1rem' : '0.8rem')};
@@ -39,6 +39,12 @@ export default function AccountStep({
     onAccountChange(value)
     onComplete()
   }
+
+  useEffect(() => {
+    if (isExpanded) {
+      // Perform action to open AccountSelect here
+    }
+  }, [isExpanded])
 
   if (!isExpanded) {
     return (
