@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react'
+import React, { useState, useRef, useMemo, useImperativeHandle, forwardRef } from 'react'
 import styled from 'styled-components'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 
@@ -53,9 +53,20 @@ interface SuggestingInputProps {
   onChange: (value: string) => void
 }
 
-export default function SuggestingInput({ suggestions, value, onChange }: SuggestingInputProps) {
+const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
+  const { suggestions, value, onChange } = props
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const wrapperRef = useRef<HTMLInputElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      if (inputRef.current) {
+        inputRef.current.focus()
+        setShowSuggestions(true)
+      }
+    },
+  }))
 
   const filteredSuggestions = useMemo(() => {
     if (!value) {
@@ -85,8 +96,9 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
   }
 
   return (
-    <Wrapper ref={inputRef}>
+    <Wrapper ref={wrapperRef}>
       <Input
+        ref={inputRef}
         type="text"
         value={value}
         onChange={handleChange}
@@ -105,4 +117,6 @@ export default function SuggestingInput({ suggestions, value, onChange }: Sugges
       )}
     </Wrapper>
   )
-}
+})
+
+export default SuggestingInput

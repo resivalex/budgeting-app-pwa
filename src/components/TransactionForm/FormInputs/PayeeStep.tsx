@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import SuggestingInput2 from '@/components/SuggestingInput2'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -36,6 +37,14 @@ export default function PayeeStep({
   payees,
   type,
 }: Props) {
+  const inputRef = useRef<any>(null)
+
+  useEffect(() => {
+    if (isExpanded && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [isExpanded])
+
   function labelText() {
     return type === 'income' ? 'Плательщик' : 'Получатель'
   }
@@ -57,7 +66,12 @@ export default function PayeeStep({
         {labelText()}
       </PayeeLabel>
       <ControlContainer className="control">
-        <SuggestingInput2 value={payee} suggestions={payees} onChange={onPayeeChange} />
+        <SuggestingInput2
+          ref={inputRef}
+          value={payee}
+          suggestions={payees}
+          onChange={onPayeeChange}
+        />
         <button onClick={onComplete}>
           <FontAwesomeIcon icon={faCheckCircle} />
         </button>
