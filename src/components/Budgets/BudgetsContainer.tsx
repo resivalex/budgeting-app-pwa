@@ -169,12 +169,12 @@ function calculateExpectationRatioByCurrentDate(selectedMonth: string) {
     selectedMonthDate.getMonth(),
     1
   )
-  const selectedMonthLastDay = new Date(
+  const nextMonthFirstDay = new Date(
     selectedMonthDate.getFullYear(),
     selectedMonthDate.getMonth() + 1,
-    0
+    1
   )
-  const millisecondsInMonth = selectedMonthLastDay.getTime() - selectedMonthFirstDay.getTime()
+  const millisecondsInMonth = nextMonthFirstDay.getTime() - selectedMonthFirstDay.getTime()
   const millisecondsFromSelectedMonth = currentDate.getTime() - selectedMonthFirstDay.getTime()
 
   return millisecondsFromSelectedMonth / millisecondsInMonth
