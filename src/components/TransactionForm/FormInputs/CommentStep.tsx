@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import SuggestingInput2 from '@/components/SuggestingInput2'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -34,6 +35,14 @@ export default function CommentStep({
   onComplete,
   comments,
 }: Props) {
+  const inputRef = useRef<any>(null)
+
+  useEffect(() => {
+    if (isExpanded && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [isExpanded])
+
   if (!isExpanded) {
     return (
       <div className="field" onClick={onExpand}>
@@ -51,7 +60,12 @@ export default function CommentStep({
         Комментарий
       </CommentLabel>
       <ControlContainer className="control">
-        <SuggestingInput2 suggestions={comments} value={comment} onChange={onCommentChange} />
+        <SuggestingInput2
+          ref={inputRef}
+          suggestions={comments}
+          value={comment}
+          onChange={onCommentChange}
+        />
         <button onClick={onComplete}>
           <FontAwesomeIcon icon={faCheckCircle} />
         </button>
