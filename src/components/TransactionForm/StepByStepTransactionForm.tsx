@@ -236,7 +236,7 @@ function StepByStepTransactionForm({
   }
 
   return (
-    <div className="field p-2" style={{ backgroundColor: 'rgba(255, 0, 0, 0.05)' }}>
+    <div className="field p-2">
       {renderAmountStep()}
       {renderTypeStep()}
       {renderCurrencyStep()}

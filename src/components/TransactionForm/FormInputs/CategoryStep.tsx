@@ -1,3 +1,4 @@
+import React, { useRef, useState, useEffect } from 'react'
 import { reactSelectSmallStyles } from '@/utils'
 import Select from 'react-select'
 import styled from 'styled-components'
@@ -28,6 +29,16 @@ export default function CategoryStep({
   onComplete,
   categoryOptions,
 }: Props) {
+  const [menuIsOpen, setMenuOpen] = useState(false)
+  const selectRef = useRef<any>(null)
+
+  useEffect(() => {
+    if (isExpanded && selectRef.current) {
+      selectRef.current.focus()
+      setMenuOpen(true)
+    }
+  }, [isExpanded])
+
   const selectedOption = categoryOptions.find((option) => option.value === category)
 
   const handleCategoryChange = (value: string) => {
@@ -53,6 +64,10 @@ export default function CategoryStep({
       </CategoryLabel>
       <div className="control">
         <Select
+          ref={selectRef}
+          menuIsOpen={menuIsOpen}
+          onMenuOpen={() => setMenuOpen(true)}
+          onMenuClose={() => setMenuOpen(false)}
           className="basic-single"
           classNamePrefix="select"
           value={selectedOption}
