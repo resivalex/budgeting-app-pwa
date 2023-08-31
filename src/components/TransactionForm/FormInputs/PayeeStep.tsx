@@ -49,6 +49,11 @@ export default function PayeeStep({
     return type === 'income' ? 'Плательщик' : 'Получатель'
   }
 
+  const handlePayeeChange = (value: string) => {
+    onPayeeChange(value)
+    onComplete()
+  }
+
   if (!isExpanded) {
     return (
       <div className="field" onClick={onExpand}>
@@ -70,7 +75,7 @@ export default function PayeeStep({
           ref={inputRef}
           value={payee}
           suggestions={payees}
-          onChange={onPayeeChange}
+          onChange={handlePayeeChange}
         />
         <button onClick={onComplete}>
           <FontAwesomeIcon icon={faCheckCircle} />
