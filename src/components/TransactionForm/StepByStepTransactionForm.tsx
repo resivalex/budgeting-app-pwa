@@ -116,6 +116,7 @@ function StepByStepTransactionForm({
       <TypeFormInput
         value={type}
         isExpanded={currentStep === typeStep}
+        alwaysShowOptionsIfEmpty={true}
         onChange={onTypeChange}
         onExpand={() => setCurrentStep(typeStep)}
         onComplete={() => setCurrentStep(currencyStep)}

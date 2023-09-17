@@ -4,6 +4,7 @@ import styled from 'styled-components'
 interface Props {
   value: string
   isExpanded: boolean
+  alwaysShowOptionsIfEmpty: boolean
   onChange: (type: 'income' | 'expense' | 'transfer') => void
   onExpand: () => void
   onComplete: () => void
@@ -41,7 +42,14 @@ const Container = styled.div`
   }
 `
 
-export default function TypeStep({ value, isExpanded, onChange, onExpand, onComplete }: Props) {
+export default function TypeStep({
+  value,
+  isExpanded,
+  alwaysShowOptionsIfEmpty,
+  onChange,
+  onExpand,
+  onComplete,
+}: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   function renderSelectedOption() {
@@ -64,15 +72,42 @@ export default function TypeStep({ value, isExpanded, onChange, onExpand, onComp
   }, [isExpanded])
 
   const handleOptionClick = (type: 'income' | 'expense' | 'transfer') => {
-    onChange(type)
-    onComplete()
+    if (!isExpanded) {
+      onExpand()
+      // to prevent calling onComplete before onExpand
+      setTimeout(() => {
+        onChange(type)
+        onComplete()
+      }, 0)
+    } else {
+      onChange(type)
+      onComplete()
+    }
   }
+
+  const renderOptions = () => (
+    <>
+      <Option isActive={value === 'expense'} onClick={() => handleOptionClick('expense')}>
+        Расход
+      </Option>
+      <Option isActive={value === 'income'} onClick={() => handleOptionClick('income')}>
+        Доход
+      </Option>
+      <Option isActive={value === 'transfer'} onClick={() => handleOptionClick('transfer')}>
+        Перевод
+      </Option>
+    </>
+  )
 
   if (!isExpanded) {
     return (
       <div className="field">
         <Container ref={containerRef} tabIndex={0} onClick={onExpand}>
-          <Option isActive>{renderSelectedOption()}</Option>
+          {alwaysShowOptionsIfEmpty && !value ? (
+            renderOptions()
+          ) : (
+            <Option isActive>{renderSelectedOption()}</Option>
+          )}
         </Container>
       </div>
     )
@@ -81,15 +116,7 @@ export default function TypeStep({ value, isExpanded, onChange, onExpand, onComp
   return (
     <div className="field">
       <Container ref={containerRef} tabIndex={0}>
-        <Option isActive={value === 'expense'} onClick={() => handleOptionClick('expense')}>
-          Расход
-        </Option>
-        <Option isActive={value === 'income'} onClick={() => handleOptionClick('income')}>
-          Доход
-        </Option>
-        <Option isActive={value === 'transfer'} onClick={() => handleOptionClick('transfer')}>
-          Перевод
-        </Option>
+        {renderOptions()}
       </Container>
     </div>
   )
