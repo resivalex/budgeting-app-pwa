@@ -19,6 +19,8 @@ interface Props {
 
 export default function AuthorizedAppContainer({ backendService, dbService, isLoading }: Props) {
   const [filterAccountName, setFilterAccountName] = useState('')
+  const [filterPayee, setFilterPayee] = useState('')
+  const [filterComment, setFilterComment] = useState('')
 
   const navigate = useNavigate()
 
@@ -93,7 +95,11 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
       transactions={transactions}
       transactionAggregations={transactionsAggregations}
       filterAccountName={filterAccountName}
+      filterPayee={filterPayee}
+      filterComment={filterComment}
       onFilterAccountNameChange={setFilterAccountName}
+      onFilterPayeeChange={setFilterPayee}
+      onFilterCommentChange={setFilterComment}
       isLoading={isLoading}
       offlineMode={offlineMode}
       lastNotificationText={lastNotificationText}

@@ -10,6 +10,8 @@ export default function TransactionsPageContainer({
   filterPayee,
   filterComment,
   onFilterAccountNameChange,
+  onFilterPayeeChange,
+  onFilterCommentChange,
   onRemove,
 }: {
   AccountSelect: FC<{
@@ -22,6 +24,8 @@ export default function TransactionsPageContainer({
   filterPayee: string
   filterComment: string
   onFilterAccountNameChange: (accountName: string) => void
+  onFilterPayeeChange: (payee: string) => void
+  onFilterCommentChange: (comment: string) => void
   onRemove: (id: string) => void
 }) {
   const filteredTransactions = transactions.filter((transaction) => {
@@ -59,9 +63,13 @@ export default function TransactionsPageContainer({
     <TransactionsPage
       AccountSelect={AccountSelect}
       filterAccountName={filterAccountName}
+      filterPayee={filterPayee}
+      filterComment={filterComment}
       transactions={filteredTransactions}
       accountDetails={accountDetails}
       onFilterAccountNameChange={onFilterAccountNameChange}
+      onFilterPayeeChange={onFilterPayeeChange}
+      onFilterCommentChange={onFilterCommentChange}
       onRemove={onRemove}
     />
   )

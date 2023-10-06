@@ -30,12 +30,16 @@ export default function App({
   transactions,
   transactionAggregations,
   filterAccountName,
+  filterPayee,
+  filterComment,
   isLoading,
   offlineMode,
   lastNotificationText,
   onExport,
   onLogout,
   onFilterAccountNameChange,
+  onFilterPayeeChange,
+  onFilterCommentChange,
   onAddTransaction,
   onEditTransaction,
   onRemoveTransaction,
@@ -44,12 +48,16 @@ export default function App({
   transactions: TransactionDTO[]
   transactionAggregations: TransactionsAggregations
   filterAccountName: string
+  filterPayee: string
+  filterComment: string
   isLoading: boolean
   offlineMode: boolean
   lastNotificationText: string
   onExport: () => void
   onLogout: () => void
   onFilterAccountNameChange: (accountName: string) => void
+  onFilterPayeeChange: (payee: string) => void
+  onFilterCommentChange: (comment: string) => void
   onAddTransaction: (transaction: TransactionDTO) => void
   onEditTransaction: (transaction: TransactionDTO) => void
   onRemoveTransaction: (id: string) => void
@@ -148,9 +156,11 @@ export default function App({
                   transactions={transactions}
                   accountDetails={transactionAggregations.accountDetails}
                   filterAccountName={filterAccountName}
-                  filterPayee={''}
-                  filterComment={''}
+                  filterPayee={filterPayee}
+                  filterComment={filterComment}
                   onFilterAccountNameChange={onFilterAccountNameChange}
+                  onFilterPayeeChange={onFilterPayeeChange}
+                  onFilterCommentChange={onFilterCommentChange}
                   onRemove={onRemoveTransaction}
                 />
               }
