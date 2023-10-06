@@ -25,13 +25,14 @@ export default function TransactionsPageContainer({
   onRemove: (id: string) => void
 }) {
   const filteredTransactions = transactions.filter((transaction) => {
-    // Exclude transfers if filterPayee is set
-    if (filterPayee && transaction.type === 'transfer') {
-      return false
-    }
-    // Filter by payee (only for income and expense)
-    if (filterPayee && !transaction.payee.toLowerCase().includes(filterPayee.toLowerCase())) {
-      return false
+    // Filter by payee (exclude transfers and check for payee match if filterPayee is set)
+    if (filterPayee) {
+      if (
+        transaction.type === 'transfer' ||
+        !transaction.payee.toLowerCase().includes(filterPayee.toLowerCase())
+      ) {
+        return false
+      }
     }
 
     // Filter by account name
