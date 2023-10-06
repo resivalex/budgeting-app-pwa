@@ -7,6 +7,8 @@ export default function TransactionsPageContainer({
   transactions,
   accountDetails,
   filterAccountName,
+  filterPayee,
+  filterComment,
   onFilterAccountNameChange,
   onRemove,
 }: {
@@ -17,15 +19,35 @@ export default function TransactionsPageContainer({
   transactions: TransactionDTO[]
   accountDetails: AccountDetailsDTO[]
   filterAccountName: string
+  filterPayee: string
+  filterComment: string
   onFilterAccountNameChange: (accountName: string) => void
   onRemove: (id: string) => void
 }) {
   const filteredTransactions = transactions.filter((transaction) => {
-    if (filterAccountName === '') return true
-    if (transaction.type === 'transfer' && transaction.payee === filterAccountName) {
-      return true
+    // Filter by account name
+    if (
+      filterAccountName &&
+      transaction.type === 'transfer' &&
+      transaction.payee !== filterAccountName
+    ) {
+      return false
     }
-    return transaction.account === filterAccountName
+    if (filterAccountName && transaction.account !== filterAccountName) {
+      return false
+    }
+
+    // Filter by payee (only for income and expense)
+    if (filterPayee && !transaction.payee.toLowerCase().includes(filterPayee.toLowerCase())) {
+      return false
+    }
+
+    // Filter by comment
+    if (filterComment && !transaction.comment.toLowerCase().includes(filterComment.toLowerCase())) {
+      return false
+    }
+
+    return true
   })
 
   return (

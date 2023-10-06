@@ -148,6 +148,8 @@ export default function App({
                   transactions={transactions}
                   accountDetails={transactionAggregations.accountDetails}
                   filterAccountName={filterAccountName}
+                  filterPayee={''}
+                  filterComment={''}
                   onFilterAccountNameChange={onFilterAccountNameChange}
                   onRemove={onRemoveTransaction}
                 />
