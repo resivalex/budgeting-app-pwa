@@ -1,7 +1,8 @@
 import { AccountDetailsDTO, TransactionDTO } from '@/types'
 import { FC, useState } from 'react'
 import TransactionsContainer from './TransactionsContainer'
-import { Search } from '@material-ui/icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 export default function TransactionsPage({
   AccountSelect,
@@ -29,12 +30,16 @@ export default function TransactionsPage({
   onRemove: (id: string) => void
 }) {
   const [isFilterExpanded, setIsFilterExpanded] = useState(false)
+  const [localFilterPayee, setLocalFilterPayee] = useState(filterPayee)
+  const [localFilterComment, setLocalFilterComment] = useState(filterComment)
 
-  const handleSearchClick = () => {
+  const handleSearchIconClick = () => {
     setIsFilterExpanded(!isFilterExpanded)
   }
 
   const handleApplyFilters = () => {
+    onFilterPayeeChange(localFilterPayee)
+    onFilterCommentChange(localFilterComment)
     setIsFilterExpanded(false)
   }
 
@@ -50,21 +55,21 @@ export default function TransactionsPage({
     >
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <AccountSelect value={filterAccountName} onChange={onFilterAccountNameChange} />
-        <button onClick={handleSearchClick}>
-          <Search />
+        <button onClick={handleSearchIconClick}>
+          <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
       {isFilterExpanded && (
         <>
           <input
-            value={filterPayee}
+            value={localFilterPayee}
             placeholder="Filter by Payee"
-            onChange={(e) => onFilterPayeeChange(e.target.value)}
+            onChange={(e) => setLocalFilterPayee(e.target.value)}
           />
           <input
-            value={filterComment}
+            value={localFilterComment}
             placeholder="Filter by Comment"
-            onChange={(e) => onFilterCommentChange(e.target.value)}
+            onChange={(e) => setLocalFilterComment(e.target.value)}
           />
           <button onClick={handleApplyFilters}>Search</button>
         </>
