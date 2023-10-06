@@ -43,6 +43,20 @@ export default function TransactionsPage({
     setIsFilterExpanded(false)
   }
 
+  const displayFilters = () => {
+    let filters = []
+
+    if (filterPayee) {
+      filters.push(`Payee: ${filterPayee}`)
+    }
+
+    if (filterComment) {
+      filters.push(`Comment: ${filterComment}`)
+    }
+
+    return filters.join(', ')
+  }
+
   return (
     <div
       style={{
@@ -53,14 +67,23 @@ export default function TransactionsPage({
         overflow: 'auto',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <AccountSelect value={filterAccountName} onChange={onFilterAccountNameChange} />
-        <button onClick={handleSearchIconClick}>
-          <FontAwesomeIcon icon={faSearch} />
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div style={{ flex: 1, marginRight: '8px' }}>
+          <AccountSelect value={filterAccountName} onChange={onFilterAccountNameChange} />
+        </div>
+        <button onClick={handleSearchIconClick} style={{ background: 'none', border: 'none' }}>
+          <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
       </div>
-      {isFilterExpanded && (
-        <>
+      {isFilterExpanded ? (
+        <div style={{ marginTop: '10px' }}>
           <input
             value={localFilterPayee}
             placeholder="Filter by Payee"
@@ -72,14 +95,14 @@ export default function TransactionsPage({
             onChange={(e) => setLocalFilterComment(e.target.value)}
           />
           <button onClick={handleApplyFilters}>Search</button>
-        </>
+        </div>
+      ) : (
+        <div style={{ color: '#777' }}>{displayFilters()}</div>
       )}
       <div
         style={{
           width: '100%',
           height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
           overflow: 'auto',
         }}
       >
