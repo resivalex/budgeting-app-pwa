@@ -40,15 +40,16 @@ export default function TransactionsPageContainer({
     }
 
     // Filter by account name
-    if (
-      filterAccountName &&
-      transaction.type === 'transfer' &&
-      transaction.payee !== filterAccountName
-    ) {
-      return false
-    }
-    if (filterAccountName && transaction.account !== filterAccountName) {
-      return false
+    if (filterAccountName) {
+      if (transaction.type === 'transfer') {
+        if (![transaction.account, transaction.payee].includes(filterAccountName)) {
+          return false
+        }
+      } else {
+        if (transaction.account !== filterAccountName) {
+          return false
+        }
+      }
     }
 
     // Filter by comment
