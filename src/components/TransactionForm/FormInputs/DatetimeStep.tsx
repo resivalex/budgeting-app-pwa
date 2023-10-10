@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import DateTimePicker from 'react-datetime-picker'
+import { convertToLocaleTime } from '@/utils'
 
 interface Props {
   datetime: Date
@@ -24,9 +25,7 @@ export default function DatetimeStep({ datetime, isExpanded, onDatetimeChange, o
         <DateTimeLabel className="is-size-7" isExpanded={isExpanded}>
           Дата и время
         </DateTimeLabel>
-        <SelectedDateTime>
-          {datetime ? datetime.toISOString().slice(0, 19).replace('T', ' ') : 'Select'}
-        </SelectedDateTime>
+        <SelectedDateTime>{datetime ? convertToLocaleTime(datetime) : 'Select'}</SelectedDateTime>
       </div>
     )
   }
