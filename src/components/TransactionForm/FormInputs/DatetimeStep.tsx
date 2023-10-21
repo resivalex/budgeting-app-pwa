@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { convertToLocaleTime } from '@/utils'
@@ -40,7 +40,7 @@ export default function DatetimeStep({ datetime, isExpanded, onDatetimeChange, o
       </DateTimeLabel>
       <div className="control">
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
-          <DateTimePicker
+          <DesktopDateTimePicker
             value={datetime}
             onChange={onDatetimeChange as any}
             views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
