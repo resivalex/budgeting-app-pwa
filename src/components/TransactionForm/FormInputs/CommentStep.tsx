@@ -42,7 +42,7 @@ export default function CommentStep({
         <CommentLabel className="is-size-7" isExpanded={isExpanded}>
           Комментарий
         </CommentLabel>
-        <SelectedComment>{comment || '(без комментария)'}</SelectedComment>
+        <SelectedComment>{comment || '(пусто)'}</SelectedComment>
       </div>
     )
   }

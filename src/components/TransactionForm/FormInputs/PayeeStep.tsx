@@ -48,7 +48,7 @@ export default function PayeeStep({
         <PayeeLabel className="is-size-7" isExpanded={isExpanded}>
           {labelText()}
         </PayeeLabel>
-        <SelectedPayee>{payee || 'Select'}</SelectedPayee>
+        <SelectedPayee>{payee || '(пусто)'}</SelectedPayee>
       </div>
     )
   }
