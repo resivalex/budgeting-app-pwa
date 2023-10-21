@@ -47,8 +47,6 @@ export default function AccountStep({
   }
 
   useEffect(() => {
-    console.log('Effect running, isExpanded: ', isExpanded)
-    console.log('accountSelectRef: ', accountSelectRef)
     if (isExpanded && accountSelectRef.current) {
       accountSelectRef.current.focus()
     }

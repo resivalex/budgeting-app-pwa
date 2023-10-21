@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { useEffect, FC, Ref, useRef } from 'react'
 import styled from 'styled-components'
 
 const SelectContainer = styled.div<{ isExpanded: boolean }>`
@@ -25,7 +25,11 @@ export default function PayeeTransferAccountStep({
   onComplete,
   accountOptions,
 }: {
-  AccountSelect: FC<{ value: string; onChange: (value: string) => void }>
+  AccountSelect: FC<{
+    value: string
+    onChange: (value: string) => void
+    ref?: Ref<{ focus: () => void }>
+  }>
   payeeTransferAccount: string
   isExpanded: boolean
   onPayeeTransferAccountChange: (payeeTransferAccount: string) => void
@@ -33,12 +37,20 @@ export default function PayeeTransferAccountStep({
   onExpand: () => void
   accountOptions: { value: string; label: string; color: string }[]
 }) {
+  const accountSelectRef = useRef<{ focus: () => void }>(null)
+
   const selectedOption = accountOptions.find((option) => option.value === payeeTransferAccount)
 
   const handlePayeeTransferAccountChange = (value: string) => {
     onPayeeTransferAccountChange(value)
     onComplete()
   }
+
+  useEffect(() => {
+    if (isExpanded && accountSelectRef.current) {
+      accountSelectRef.current.focus()
+    }
+  }, [isExpanded])
 
   if (!isExpanded) {
     return (
@@ -59,7 +71,11 @@ export default function PayeeTransferAccountStep({
         Перевод на счёт
       </AccountLabel>
       <SelectContainer className="control" isExpanded={isExpanded}>
-        <AccountSelect value={payeeTransferAccount} onChange={handlePayeeTransferAccountChange} />
+        <AccountSelect
+          value={payeeTransferAccount}
+          onChange={handlePayeeTransferAccountChange}
+          ref={accountSelectRef}
+        />
       </SelectContainer>
     </div>
   )
