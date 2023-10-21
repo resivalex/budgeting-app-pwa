@@ -52,7 +52,7 @@ export default function CategoryStep({
         <CategoryLabel className="is-size-7" isExpanded={isExpanded}>
           Категория
         </CategoryLabel>
-        <SelectedCategory>{selectedOption ? selectedOption.label : 'Select'}</SelectedCategory>
+        <SelectedCategory>{selectedOption ? selectedOption.label : '(пусто)'}</SelectedCategory>
       </div>
     )
   }

@@ -59,7 +59,7 @@ export default function PayeeTransferAccountStep({
           Перевод на счёт
         </AccountLabel>
         <SelectedOption color={selectedOption?.color}>
-          {selectedOption ? selectedOption.label : 'Select'}
+          {selectedOption ? selectedOption.label : '(пусто)'}
         </SelectedOption>
       </div>
     )
