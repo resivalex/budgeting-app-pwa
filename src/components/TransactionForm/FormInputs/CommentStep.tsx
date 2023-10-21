@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import SuggestingInput2 from '@/components/SuggestingInput2'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   comment: string
@@ -20,11 +18,6 @@ const CommentLabel = styled.div<{ isExpanded: boolean }>`
 
 const SelectedComment = styled.div`
   font-size: 0.8rem;
-`
-
-const ControlContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
 `
 
 export default function CommentStep({
@@ -49,7 +42,7 @@ export default function CommentStep({
         <CommentLabel className="is-size-7" isExpanded={isExpanded}>
           Комментарий
         </CommentLabel>
-        <SelectedComment>{comment || 'Add Comment'}</SelectedComment>
+        <SelectedComment>{comment || '(без комментария)'}</SelectedComment>
       </div>
     )
   }
@@ -59,17 +52,15 @@ export default function CommentStep({
       <CommentLabel className="is-size-7" isExpanded={isExpanded}>
         Комментарий
       </CommentLabel>
-      <ControlContainer className="control">
+      <div className="control">
         <SuggestingInput2
           ref={inputRef}
           suggestions={comments}
           value={comment}
           onChange={onCommentChange}
+          onConfirm={onComplete}
         />
-        <button onClick={onComplete}>
-          <FontAwesomeIcon icon={faCheckCircle} />
-        </button>
-      </ControlContainer>
+      </div>
     </div>
   )
 }

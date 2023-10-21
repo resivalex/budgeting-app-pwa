@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import SuggestingInput2 from '@/components/SuggestingInput2'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
   payee: string
@@ -21,11 +19,6 @@ const PayeeLabel = styled.div<{ isExpanded: boolean }>`
 
 const SelectedPayee = styled.div`
   font-size: 0.8rem;
-`
-
-const ControlContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
 `
 
 export default function PayeeStep({
@@ -65,17 +58,15 @@ export default function PayeeStep({
       <PayeeLabel className="is-size-7" isExpanded={isExpanded}>
         {labelText()}
       </PayeeLabel>
-      <ControlContainer className="control">
+      <div className="control">
         <SuggestingInput2
           ref={inputRef}
           value={payee}
           suggestions={payees}
           onChange={onPayeeChange}
+          onConfirm={onComplete}
         />
-        <button onClick={onComplete}>
-          <FontAwesomeIcon icon={faCheckCircle} />
-        </button>
-      </ControlContainer>
+      </div>
     </div>
   )
 }

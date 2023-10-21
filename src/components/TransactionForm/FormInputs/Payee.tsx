@@ -12,7 +12,12 @@ export default function Payee({ payee, onPayeeChange, payees, type }: Props) {
     <div className="field">
       <div className="is-size-7">{type === 'income' ? 'Плательщик' : 'Получатель'}</div>
       <div className="control">
-        <SuggestingInput2 value={payee} suggestions={payees} onChange={onPayeeChange} />
+        <SuggestingInput2
+          value={payee}
+          suggestions={payees}
+          onChange={onPayeeChange}
+          onConfirm={() => {}}
+        />
       </div>
     </div>
   )

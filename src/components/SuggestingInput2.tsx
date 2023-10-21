@@ -1,14 +1,24 @@
 import React, { useState, useRef, useMemo, useImperativeHandle, forwardRef } from 'react'
 import styled from 'styled-components'
-import { AiOutlineCloseCircle } from 'react-icons/ai'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`
+
+const InputGroup = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
 `
 
 const Input = styled.input`
-  width: 100%;
+  flex: 1;
   height: 30px;
   box-sizing: border-box;
   padding: 5px;
@@ -27,6 +37,8 @@ const Suggestion = styled.div`
 
 const Suggestions = styled.div`
   position: absolute;
+  top: 100%;
+  left: 0;
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
@@ -34,29 +46,29 @@ const Suggestions = styled.div`
   z-index: 1;
   background-color: white;
   border-radius: 5px;
+  margin-top: 2px;
 `
 
-const CloseIcon = styled(AiOutlineCloseCircle)`
-  position: absolute;
-  top: 0;
-  right: 0;
+const ConfirmButton = styled.button`
+  font-size: 20px;
+  background-color: transparent;
+  border: none;
   cursor: pointer;
-  font-size: 30px;
-  background-color: white;
-  border-radius: 50%;
-  padding: 2px;
+  padding: 0;
+  margin-left: 10px;
 `
 
 interface SuggestingInputProps {
   suggestions: string[]
   value: string
   onChange: (value: string) => void
+  onConfirm: () => void
 }
 
 const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
-  const { suggestions, value, onChange } = props
+  const { suggestions, value, onChange, onConfirm } = props
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const wrapperRef = useRef<HTMLInputElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useImperativeHandle(ref, () => ({
@@ -72,7 +84,6 @@ const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
     if (!value) {
       return suggestions
     }
-
     return suggestions.filter(
       (suggestion) => suggestion.toLowerCase().includes(value.toLowerCase()) && suggestion !== value
     )
@@ -93,21 +104,27 @@ const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
 
   const handleSuggestionClick = (suggestion: string) => {
     onChange(suggestion)
+    onConfirm()
+    setShowSuggestions(false)
   }
 
   return (
     <Wrapper ref={wrapperRef}>
-      <Input
-        ref={inputRef}
-        type="text"
-        value={value}
-        onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
+      <InputGroup>
+        <Input
+          ref={inputRef}
+          type="text"
+          value={value}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        <ConfirmButton onClick={onConfirm}>
+          <FontAwesomeIcon icon={faCheckCircle} color={"rgb(50, 115, 220)"} />
+        </ConfirmButton>
+      </InputGroup>
       {showSuggestions && (
         <Suggestions>
-          <CloseIcon onClick={() => setShowSuggestions(false)} />
           {filteredSuggestions.map((suggestion, index) => (
             <Suggestion key={index} onMouseDown={() => handleSuggestionClick(suggestion)}>
               {suggestion}

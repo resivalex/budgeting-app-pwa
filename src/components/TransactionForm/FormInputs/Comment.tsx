@@ -11,7 +11,12 @@ export default function Comment({ comment, onCommentChange, comments }: Props) {
     <div className="field">
       <div className="is-size-7">Комментарий</div>
       <div className="control">
-        <SuggestingInput2 suggestions={comments} value={comment} onChange={onCommentChange} />
+        <SuggestingInput2
+          suggestions={comments}
+          value={comment}
+          onChange={onCommentChange}
+          onConfirm={() => {}}
+        />
       </div>
     </div>
   )
