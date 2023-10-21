@@ -1,6 +1,9 @@
 import styled from 'styled-components'
-import DateTimePicker from 'react-datetime-picker'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { convertToLocaleTime } from '@/utils'
+import ru from 'date-fns/locale/ru';
 
 interface Props {
   datetime: Date
@@ -36,12 +39,18 @@ export default function DatetimeStep({ datetime, isExpanded, onDatetimeChange, o
         Дата и время
       </DateTimeLabel>
       <div className="control">
-        <DateTimePicker
-          onChange={onDatetimeChange}
-          value={datetime}
-          format="y-MM-dd HH:mm:ss"
-          disableClock
-        />
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
+          <DateTimePicker
+            value={datetime}
+            onChange={onDatetimeChange as any}
+            views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
+            viewRenderers={{
+              hours: null,
+              minutes: null,
+              seconds: null,
+            }}
+          />
+        </LocalizationProvider>
       </div>
     </div>
   )
