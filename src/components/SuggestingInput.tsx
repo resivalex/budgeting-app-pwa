@@ -68,6 +68,7 @@ interface SuggestingInputProps {
 const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
   const { suggestions, value, onChange, onConfirm } = props
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [delayHideDropdown, setDelayHideDropdown] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -99,12 +100,19 @@ const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
   }
 
   const handleBlur = () => {
-    setShowSuggestions(false)
+    if (!delayHideDropdown) {
+      setTimeout(() => {
+        setShowSuggestions(false)
+      }, 150)
+    } else {
+      setDelayHideDropdown(false)
+    }
   }
 
   const handleSuggestionClick = (suggestion: string) => {
     onChange(suggestion)
     onConfirm()
+    setDelayHideDropdown(true)
     setShowSuggestions(false)
   }
 
@@ -126,7 +134,7 @@ const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
       {showSuggestions && (
         <Suggestions>
           {filteredSuggestions.map((suggestion, index) => (
-            <Suggestion key={index} onMouseDown={() => handleSuggestionClick(suggestion)}>
+            <Suggestion key={index} onClick={() => handleSuggestionClick(suggestion)}>
               {suggestion}
             </Suggestion>
           ))}
