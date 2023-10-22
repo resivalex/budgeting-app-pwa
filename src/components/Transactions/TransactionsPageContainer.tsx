@@ -26,7 +26,7 @@ export default function TransactionsPageContainer({
   onFilterAccountNameChange: (accountName: string) => void
   onFilterPayeeChange: (payee: string) => void
   onFilterCommentChange: (comment: string) => void
-  onRemove: (id: string) => void
+  onRemove: (id: string) => Promise<void>
 }) {
   const filteredTransactions = transactions.filter((transaction) => {
     // Filter by payee (exclude transfers and check for payee match if filterPayee is set)

@@ -96,7 +96,7 @@ function StepByStepTransactionForm({
 
   // Save event
   isValid: boolean
-  onSave: () => void
+  onSave: () => Promise<void>
 }) {
   const [currentStep, setCurrentStep] = useState(amountStep)
   const [isLoading, setIsLoading] = useState(false)

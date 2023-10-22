@@ -53,14 +53,14 @@ export default function App({
   isLoading: boolean
   offlineMode: boolean
   lastNotificationText: string
-  onExport: () => void
+  onExport: () => Promise<void>
   onLogout: () => void
   onFilterAccountNameChange: (accountName: string) => void
   onFilterPayeeChange: (payee: string) => void
   onFilterCommentChange: (comment: string) => void
-  onAddTransaction: (transaction: TransactionDTO) => void
-  onEditTransaction: (transaction: TransactionDTO) => void
-  onRemoveTransaction: (id: string) => void
+  onAddTransaction: (transaction: TransactionDTO) => Promise<void>
+  onEditTransaction: (transaction: TransactionDTO) => Promise<void>
+  onRemoveTransaction: (id: string) => Promise<void>
   onDismissNotification: () => void
 }) {
   const LimitedAccountSelect: LimitedAccountSelectType = useMemo(

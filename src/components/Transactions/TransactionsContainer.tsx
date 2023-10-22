@@ -8,7 +8,7 @@ export default function TransactionsContainer({
   onRemove,
 }: {
   transactions: TransactionDTO[]
-  onRemove: (id: string) => void
+  onRemove: (id: string) => Promise<void>
 }) {
   const [focusedTransactionId, setFocusedTransactionId] = useState<string>('')
 

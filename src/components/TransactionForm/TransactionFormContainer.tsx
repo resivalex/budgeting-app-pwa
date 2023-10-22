@@ -48,7 +48,7 @@ export default function TransactionFormContainer({
   }>
   transactions: TransactionDTO[]
   transactionsAggregations: TransactionsAggregations
-  onApply: (t: TransactionDTO) => void
+  onApply: (t: TransactionDTO) => Promise<void>
 }) {
   const [type, setType] = useState<'income' | 'expense' | 'transfer' | ''>('expense')
   const [amount, setAmount] = useState('')
@@ -217,14 +217,14 @@ export default function TransactionFormContainer({
     (type !== 'transfer' || payeeTransferAccount)
   )
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (type === '') {
       return
     }
     if (!isValid) {
       return
     }
-    onApply({
+    await onApply({
       _id: transactionId || uuidv4(),
       datetime: convertToUtcTime(datetime),
       account: account,

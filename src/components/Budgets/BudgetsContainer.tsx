@@ -189,7 +189,7 @@ export default function BudgetsContainer({
 }: {
   transactionAggregations: TransactionsAggregations
   transactions: TransactionDTO[]
-  onTransactionRemove: (id: string) => void
+  onTransactionRemove: (id: string) => Promise<void>
 }) {
   const [focusedBudgetName, setFocusedBudgetName] = useState('')
   const [budgetMonthFirstDay, setBudgetMonthFirstDay] = useState(currentMonthFirstDay)

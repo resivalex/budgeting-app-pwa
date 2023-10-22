@@ -7,7 +7,7 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 interface Props {
   transaction: TransactionDTO
   onEdit: (id: string) => void
-  onRemove: (id: string) => void
+  onRemove: (id: string) => Promise<void>
   onClose: () => void
 }
 
@@ -19,9 +19,9 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove, o
 
   const datetimeString = convertToLocaleTime(datetime)
 
-  function handleRemoveClick(transactionId: string) {
+  async function handleRemoveClick(transactionId: string) {
     if (isRemoveActive) {
-      onRemove(transactionId)
+      await onRemove(transactionId)
     } else {
       setIsRemoveActive(true)
     }

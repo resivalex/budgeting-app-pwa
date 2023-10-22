@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
 interface Props {
   transactions: TransactionDTO[]
   focusedTransaction?: TransactionDTO
-  onRemove: (id: string) => void
+  onRemove: (id: string) => Promise<void>
   onEdit: (id: string) => void
   onFocus: (id: string) => void
   onUnfocus: () => void
@@ -72,6 +72,11 @@ export default function Transactions({
     )
   }
 
+  const handleRemove = async (id: string) => {
+    await onRemove(id)
+    onUnfocus()
+  }
+
   return (
     <>
       {/* @ts-ignore */}
@@ -97,10 +102,7 @@ export default function Transactions({
         <TransactionInfoModal
           transaction={focusedTransaction}
           onClose={() => onUnfocus()}
-          onRemove={() => {
-            onUnfocus()
-            onRemove(focusedTransaction._id)
-          }}
+          onRemove={handleRemove}
           onEdit={onEdit}
         />
       )}

@@ -5,7 +5,7 @@ import { BudgetDTO } from '@/types'
 interface Props {
   budget: BudgetDTO
   onClose: () => void
-  onTransactionRemove: (id: string) => void
+  onTransactionRemove: (id: string) => Promise<void>
 }
 
 export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }: Props) {

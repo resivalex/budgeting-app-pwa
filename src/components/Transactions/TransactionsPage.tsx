@@ -27,7 +27,7 @@ export default function TransactionsPage({
   onFilterAccountNameChange: (accountName: string) => void
   onFilterPayeeChange: (payee: string) => void
   onFilterCommentChange: (comment: string) => void
-  onRemove: (id: string) => void
+  onRemove: (id: string) => Promise<void>
 }) {
   const [isFilterExpanded, setIsFilterExpanded] = useState(false)
   const [localFilterPayee, setLocalFilterPayee] = useState(filterPayee)

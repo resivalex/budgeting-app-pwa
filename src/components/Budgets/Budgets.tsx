@@ -13,7 +13,7 @@ interface Props {
   onFocus: (name: string) => void
   focusedBudget: BudgetDTO | null
   commonBudgetsExpectationRatio: number | null
-  onTransactionRemove: (id: string) => void
+  onTransactionRemove: (id: string) => Promise<void>
 }
 
 export default function Budgets({
