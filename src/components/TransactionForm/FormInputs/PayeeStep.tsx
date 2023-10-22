@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import SuggestingInput2 from '@/components/SuggestingInput2'
+import SuggestingInput from '@/components/SuggestingInput'
 
 interface Props {
   payee: string
@@ -59,7 +59,7 @@ export default function PayeeStep({
         {labelText()}
       </PayeeLabel>
       <div className="control">
-        <SuggestingInput2
+        <SuggestingInput
           ref={inputRef}
           value={payee}
           suggestions={payees}

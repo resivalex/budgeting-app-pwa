@@ -1,4 +1,4 @@
-import SuggestingInput2 from '@/components/SuggestingInput2'
+import SuggestingInput from '@/components/SuggestingInput'
 
 interface Props {
   payee: string
@@ -12,7 +12,7 @@ export default function Payee({ payee, onPayeeChange, payees, type }: Props) {
     <div className="field">
       <div className="is-size-7">{type === 'income' ? 'Плательщик' : 'Получатель'}</div>
       <div className="control">
-        <SuggestingInput2
+        <SuggestingInput
           value={payee}
           suggestions={payees}
           onChange={onPayeeChange}

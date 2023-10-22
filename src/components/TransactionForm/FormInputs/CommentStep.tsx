@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import SuggestingInput2 from '@/components/SuggestingInput2'
+import SuggestingInput from '@/components/SuggestingInput'
 
 interface Props {
   comment: string
@@ -53,7 +53,7 @@ export default function CommentStep({
         Комментарий
       </CommentLabel>
       <div className="control">
-        <SuggestingInput2
+        <SuggestingInput
           ref={inputRef}
           suggestions={comments}
           value={comment}
