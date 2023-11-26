@@ -30,6 +30,7 @@ export default function Budgets({
     value: month,
     label: dayjs(month).format('MMMM YYYY'),
   }))
+  monthOptions.reverse()
 
   return (
     <>
