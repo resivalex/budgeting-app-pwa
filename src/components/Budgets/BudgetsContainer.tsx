@@ -57,6 +57,12 @@ function calculateBudgets(
     return []
   }
   const currencyConfig = monthCurrencyConfig.config
+
+  // TODO: refactor this rate reversion
+  for (const conversionRate of currencyConfig.conversionRates) {
+    conversionRate.rate = 1.0 / conversionRate.rate
+  }
+
   const conversionMap: ConversionMapType = {
     [currencyConfig.mainCurrency]: { [currencyConfig.mainCurrency]: 1 },
   }
