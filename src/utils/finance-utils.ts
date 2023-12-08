@@ -22,7 +22,7 @@ export function formatFinancialAmount(amount: number): string {
     useGrouping: true,
   })
     .format(amount)
-    .replace(',', ' ') // Replace commas with spaces
+    .replace(/,/g, ' ') // Replace all commas with spaces
 }
 
 export function formatFinancialAmountRounded(amount: number): string {
