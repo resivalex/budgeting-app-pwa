@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '@/utils'
 import { TransactionsContainer } from '@/components/Transactions'
 import { BudgetDTO } from '@/types'
@@ -11,14 +13,20 @@ interface Props {
 
 export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }: Props) {
   const [isExpanded, setIsExpanded] = useState(false)
-
   if (!budget) return null
 
   const { name, currency, amount, categories, transactions, spentAmount } = budget
 
-  const handleToggle = () => {
-    setIsExpanded(!isExpanded)
+  let displayCategories = categories.join(', ')
+  const initialDisplayCategoryLength = 2
+  if (categories.length > initialDisplayCategoryLength && !isExpanded) {
+    displayCategories = categories.slice(0, initialDisplayCategoryLength).join(', ') + ' и ещё ' + (categories.length - initialDisplayCategoryLength) + '...'
   }
+  const toggleButton = categories.length > initialDisplayCategoryLength && (
+    <button onClick={() => setIsExpanded(!isExpanded)}>
+      <FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} />
+    </button>
+  )
 
   return (
     <div className="modal is-active">
@@ -48,8 +56,8 @@ export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }
             </strong>
           </p>
           <p>
-            Категории: <strong>{isExpanded || categories.length <= 3 ? categories.join(', ') : categories.slice(0, 3).join(', ') + '...'}</strong>
-            {categories.length > 3 && <button onClick={handleToggle}>{isExpanded ? 'Свернуть' : 'Развернуть'}</button>}
+            Категории: <strong>{displayCategories}</strong>
+            {' '}{toggleButton}
           </p>
           <div style={{ height: 300, display: 'flex' }}>
             <TransactionsContainer transactions={transactions} onRemove={onTransactionRemove} />
