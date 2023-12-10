@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '@/utils'
 import { TransactionsContainer } from '@/components/Transactions'
 import { BudgetDTO } from '@/types'
@@ -9,9 +10,15 @@ interface Props {
 }
 
 export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }: Props) {
+  const [isExpanded, setIsExpanded] = useState(false)
+
   if (!budget) return null
 
   const { name, currency, amount, categories, transactions, spentAmount } = budget
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded)
+  }
 
   return (
     <div className="modal is-active">
@@ -41,7 +48,8 @@ export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }
             </strong>
           </p>
           <p>
-            Категории: <strong>{categories.join(', ')}</strong>
+            Категории: <strong>{isExpanded || categories.length <= 3 ? categories.join(', ') : categories.slice(0, 3).join(', ') + '...'}</strong>
+            {categories.length > 3 && <button onClick={handleToggle}>{isExpanded ? 'Свернуть' : 'Развернуть'}</button>}
           </p>
           <div style={{ height: 300, display: 'flex' }}>
             <TransactionsContainer transactions={transactions} onRemove={onTransactionRemove} />
