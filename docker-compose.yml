@@ -1,7 +1,7 @@
 version: '3.9'
 services:
-  app:
-    container_name: budgeting-app-pwa
+  budgeting_app_pwa:
+    container_name: budgeting_app_pwa
     command: yarn run serve --single build --listen tcp://0.0.0.0:3000
     build: .
     volumes:
@@ -10,3 +10,8 @@ services:
       - .env
     ports:
       - "${PORT:-3000}:3000"
+    networks:
+      - web
+networks:
+  web:
+    external: true
