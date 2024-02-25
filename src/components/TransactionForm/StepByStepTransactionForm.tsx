@@ -111,28 +111,25 @@ function StepByStepTransactionForm({
     color: a.color,
   }))
 
-  function renderAmountStep() {
+  function renderAmountAndCurrencySteps(compact: boolean) {
     return (
-      <AmountFormInput
-        amount={amount}
-        isExpanded={currentStep === amountStep}
-        onAmountChange={onAmountChange}
-        onExpand={() => setCurrentStep(amountStep)}
-        onComplete={() => setCurrentStep(currencyStep)}
-      />
-    )
-  }
-
-  function renderCurrencyStep() {
-    return (
-      <CurrencyFormInput
-        value={currency}
-        options={currencyOptions}
-        isExpanded={currentStep === currencyStep}
-        onChange={onCurrencyChange}
-        onExpand={() => setCurrentStep(currencyStep)}
-        onComplete={() => setCurrentStep(typeStep)}
-      />
+      <>
+        <AmountFormInput
+          amount={amount}
+          isExpanded={currentStep === amountStep}
+          onAmountChange={onAmountChange}
+          onExpand={() => setCurrentStep(amountStep)}
+          onComplete={() => setCurrentStep(currencyStep)}
+        />
+        <CurrencyFormInput
+          value={currency}
+          options={currencyOptions}
+          isExpanded={currentStep === currencyStep}
+          onChange={onCurrencyChange}
+          onExpand={() => setCurrentStep(currencyStep)}
+          onComplete={() => setCurrentStep(typeStep)}
+        />
+      </>
     )
   }
 
@@ -239,10 +236,11 @@ function StepByStepTransactionForm({
     setIsLoading(false)
   }
 
+  const combineAmountAndCurrency = currentStep !== amountStep && currentStep !== currencyStep
+
   return (
     <div className="field p-2">
-      {renderAmountStep()}
-      {renderCurrencyStep()}
+      {renderAmountAndCurrencySteps(combineAmountAndCurrency)}
       {renderTypeStep()}
       {renderAccountStep()}
       {type === 'transfer' ? (
