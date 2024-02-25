@@ -112,7 +112,29 @@ function StepByStepTransactionForm({
   }))
 
   function renderAmountAndCurrencySteps(compact: boolean) {
-    return (
+    return compact ? (
+      <div className="field is-flex is-flex-direction-row">
+        <div>
+          <CurrencyFormInput
+            value={currency}
+            options={currencyOptions}
+            isExpanded={currentStep === currencyStep}
+            onChange={onCurrencyChange}
+            onExpand={() => setCurrentStep(currencyStep)}
+            onComplete={() => setCurrentStep(typeStep)}
+          />
+        </div>
+        <div className="is-flex-grow-1">
+          <AmountFormInput
+            amount={amount}
+            isExpanded={currentStep === amountStep}
+            onAmountChange={onAmountChange}
+            onExpand={() => setCurrentStep(amountStep)}
+            onComplete={() => setCurrentStep(currencyStep)}
+          />
+        </div>
+      </div>
+    ) : (
       <>
         <AmountFormInput
           amount={amount}
