@@ -111,14 +111,13 @@ function StepByStepTransactionForm({
     color: a.color,
   }))
 
-  function renderTypeStep() {
+  function renderAmountStep() {
     return (
-      <TypeFormInput
-        value={type}
-        isExpanded={currentStep === typeStep}
-        alwaysShowOptionsIfEmpty={true}
-        onChange={onTypeChange}
-        onExpand={() => setCurrentStep(typeStep)}
+      <AmountFormInput
+        amount={amount}
+        isExpanded={currentStep === amountStep}
+        onAmountChange={onAmountChange}
+        onExpand={() => setCurrentStep(amountStep)}
         onComplete={() => setCurrentStep(currencyStep)}
       />
     )
@@ -132,19 +131,20 @@ function StepByStepTransactionForm({
         isExpanded={currentStep === currencyStep}
         onChange={onCurrencyChange}
         onExpand={() => setCurrentStep(currencyStep)}
-        onComplete={() => setCurrentStep(accountStep)}
+        onComplete={() => setCurrentStep(typeStep)}
       />
     )
   }
 
-  function renderAmountStep() {
+  function renderTypeStep() {
     return (
-      <AmountFormInput
-        amount={amount}
-        isExpanded={currentStep === amountStep}
-        onAmountChange={onAmountChange}
-        onExpand={() => setCurrentStep(amountStep)}
-        onComplete={() => setCurrentStep(typeStep)}
+      <TypeFormInput
+        value={type}
+        isExpanded={currentStep === typeStep}
+        alwaysShowOptionsIfEmpty={true}
+        onChange={onTypeChange}
+        onExpand={() => setCurrentStep(typeStep)}
+        onComplete={() => setCurrentStep(accountStep)}
       />
     )
   }
@@ -242,8 +242,8 @@ function StepByStepTransactionForm({
   return (
     <div className="field p-2">
       {renderAmountStep()}
-      {renderTypeStep()}
       {renderCurrencyStep()}
+      {renderTypeStep()}
       {renderAccountStep()}
       {type === 'transfer' ? (
         renderPayeeTransferAccountStep()
