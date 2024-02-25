@@ -11,7 +11,7 @@ const AccountLabel = styled.div<{ isExpanded: boolean }>`
 `
 
 const SelectedOption = styled.div<{ color?: string }>`
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   background: ${(props) => props.color};
   padding: 2px 5px;
 `
@@ -55,9 +55,11 @@ export default function AccountStep({
   if (!isExpanded) {
     return (
       <div className="field" onClick={onExpand}>
-        <AccountLabel className="is-size-7" isExpanded={isExpanded}>
-          Счёт
-        </AccountLabel>
+        {!selectedOption && (
+          <AccountLabel className="is-size-7" isExpanded={isExpanded}>
+            Счёт
+          </AccountLabel>
+        )}
         <SelectedOption color={selectedOption?.color}>
           {selectedOption ? selectedOption.label : '(пусто)'}
         </SelectedOption>
