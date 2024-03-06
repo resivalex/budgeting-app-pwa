@@ -122,6 +122,7 @@ function StepByStepTransactionForm({
             onChange={onCurrencyChange}
             onExpand={() => setCurrentStep(currencyStep)}
             onComplete={() => setCurrentStep(typeStep)}
+            alwaysShowOptionsIfEmpty
           />
         </div>
         <div className="is-flex-grow-1">
@@ -150,6 +151,7 @@ function StepByStepTransactionForm({
           onChange={onCurrencyChange}
           onExpand={() => setCurrentStep(currencyStep)}
           onComplete={() => setCurrentStep(typeStep)}
+          alwaysShowOptionsIfEmpty
         />
       </>
     )

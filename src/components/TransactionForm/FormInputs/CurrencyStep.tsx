@@ -8,6 +8,7 @@ interface Props {
   onExpand: () => void
   onComplete: () => void
   options: { value: string; label: string }[]
+  alwaysShowOptionsIfEmpty: boolean
 }
 
 const Option = styled.div<{ isActive: boolean }>`
@@ -49,6 +50,7 @@ export default function CurrencyStep({
   onExpand,
   onComplete,
   options,
+  alwaysShowOptionsIfEmpty,
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -64,15 +66,38 @@ export default function CurrencyStep({
   }
 
   const handleOptionClick = (currency: string) => {
-    onChange(currency)
-    onComplete()
+    if (!isExpanded) {
+      onExpand()
+      // to prevent calling onComplete before onExpand
+      setTimeout(() => {
+        onChange(currency)
+        onComplete()
+      }, 0)
+    } else {
+      onChange(currency)
+      onComplete()
+    }
   }
+
+  const renderOptions = () => (<>{options.map((option) => (
+    <Option
+      key={option.value}
+      isActive={value === option.value}
+      onClick={() => handleOptionClick(option.value)}
+    >
+      {option.label}
+    </Option>
+  ))}</>)
 
   if (!isExpanded) {
     return (
       <div className="field">
         <Container ref={containerRef} tabIndex={0} onClick={onExpand}>
-          <Option isActive>{renderSelectedOptionLabel()}</Option>
+          {alwaysShowOptionsIfEmpty && !value ? (
+            renderOptions()
+          ) : (
+            <Option isActive>{renderSelectedOptionLabel()}</Option>
+          )}
         </Container>
       </div>
     )
@@ -81,15 +106,7 @@ export default function CurrencyStep({
   return (
     <div className="field">
       <Container ref={containerRef} tabIndex={0}>
-        {options.map((option) => (
-          <Option
-            key={option.value}
-            isActive={value === option.value}
-            onClick={() => handleOptionClick(option.value)}
-          >
-            {option.label}
-          </Option>
-        ))}
+        {renderOptions()}
       </Container>
     </div>
   )
