@@ -1,4 +1,17 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
+
+export interface AmountStepProps {
+  isExpanded: boolean
+  onExpand: () => void
+  onComplete: () => void
+}
+
+export interface CurrencyStepProps {
+  alwaysShowOptionsIfEmpty: boolean
+  isExpanded: boolean
+  onExpand: () => void
+  onComplete: () => void
+}
 
 export interface TypeStepProps {
   alwaysShowOptionsIfEmpty: boolean
@@ -55,6 +68,9 @@ const commentStep = 'comment'
 const datetimeStep = 'datetime'
 
 function FormLayout({
+  type,
+  AmountStep,
+  CurrencyStep,
   TypeStep,
   AccountStep,
   CategoryStep,
@@ -63,10 +79,10 @@ function FormLayout({
   CommentStep,
   DatetimeStep,
   SaveButton,
-  type,
-  currentStep,
-  onCurrentStepChange,
 }: {
+  type: 'expense' | 'income' | 'transfer' | ''
+  AmountStep: FC<AmountStepProps>
+  CurrencyStep: FC<CurrencyStepProps>
   TypeStep: FC<TypeStepProps>
   AccountStep: FC<AccountStepProps>
   CategoryStep: FC<CategoryStepProps>
@@ -75,56 +91,89 @@ function FormLayout({
   CommentStep: FC<CommentStepProps>
   DatetimeStep: FC<DatetimeStepProps>
   SaveButton: FC<SaveButtonProps>
-  type: 'expense' | 'income' | 'transfer' | ''
-  currentStep: string
-  onCurrentStepChange: (step: string) => void
 }) {
+  const [currentStep, setCurrentStep] = useState(amountStep)
+  const combineAmountAndCurrency = currentStep !== amountStep && currentStep !== currencyStep
+
   return (
     <>
+      {combineAmountAndCurrency ? (
+        <div className="field is-flex is-flex-direction-row">
+          <div>
+            <CurrencyStep
+              alwaysShowOptionsIfEmpty={true}
+              isExpanded={currentStep === currencyStep}
+              onExpand={() => setCurrentStep(currencyStep)}
+              onComplete={() => setCurrentStep(typeStep)}
+            />
+          </div>
+          <div className="is-flex-grow-1">
+            <AmountStep
+              isExpanded={currentStep === amountStep}
+              onExpand={() => setCurrentStep(amountStep)}
+              onComplete={() => setCurrentStep(currencyStep)}
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <AmountStep
+            isExpanded={currentStep === amountStep}
+            onExpand={() => setCurrentStep(amountStep)}
+            onComplete={() => setCurrentStep(currencyStep)}
+          />
+          <CurrencyStep
+            alwaysShowOptionsIfEmpty={true}
+            isExpanded={currentStep === currencyStep}
+            onExpand={() => setCurrentStep(currencyStep)}
+            onComplete={() => setCurrentStep(typeStep)}
+          />
+        </>
+      )}
       <TypeStep
         alwaysShowOptionsIfEmpty={true}
         isExpanded={currentStep === typeStep}
-        onExpand={() => onCurrentStepChange(typeStep)}
-        onComplete={() => onCurrentStepChange(accountStep)}
+        onExpand={() => setCurrentStep(typeStep)}
+        onComplete={() => setCurrentStep(accountStep)}
       />
       <AccountStep
         isExpanded={currentStep === accountStep}
-        onExpand={() => onCurrentStepChange(accountStep)}
+        onExpand={() => setCurrentStep(accountStep)}
         onComplete={() =>
-          onCurrentStepChange(type === 'transfer' ? payeeTransferAccountStep : categoryStep)
+          setCurrentStep(type === 'transfer' ? payeeTransferAccountStep : categoryStep)
         }
       />
       {type === 'transfer' ? (
         <PayeeTransferAccountStep
           isExpanded={currentStep === payeeTransferAccountStep}
-          onExpand={() => onCurrentStepChange(payeeTransferAccountStep)}
+          onExpand={() => setCurrentStep(payeeTransferAccountStep)}
           onComplete={() => {
             const nextStep = type === 'transfer' ? '' : commentStep
-            onCurrentStepChange(nextStep)
+            setCurrentStep(nextStep)
           }}
         />
       ) : (
         <>
           <CategoryStep
             isExpanded={currentStep === categoryStep}
-            onExpand={() => onCurrentStepChange(categoryStep)}
-            onComplete={() => onCurrentStepChange(payeeStep)}
+            onExpand={() => setCurrentStep(categoryStep)}
+            onComplete={() => setCurrentStep(payeeStep)}
           />
           <PayeeStep
             isExpanded={currentStep === payeeStep}
-            onExpand={() => onCurrentStepChange(payeeStep)}
-            onComplete={() => onCurrentStepChange(commentStep)}
+            onExpand={() => setCurrentStep(payeeStep)}
+            onComplete={() => setCurrentStep(commentStep)}
           />
         </>
       )}
       <CommentStep
         isExpanded={currentStep === commentStep}
-        onExpand={() => onCurrentStepChange(commentStep)}
-        onComplete={() => onCurrentStepChange(datetimeStep)}
+        onExpand={() => setCurrentStep(commentStep)}
+        onComplete={() => setCurrentStep(datetimeStep)}
       />
       <DatetimeStep
         isExpanded={currentStep === datetimeStep}
-        onExpand={() => onCurrentStepChange(datetimeStep)}
+        onExpand={() => setCurrentStep(datetimeStep)}
       />
       <SaveButton />
     </>

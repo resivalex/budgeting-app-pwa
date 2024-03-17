@@ -13,6 +13,8 @@ import {
   DatetimeStep as DatetimeFormInput,
 } from './FormInputs'
 import FormLayout, {
+  AmountStepProps,
+  CurrencyStepProps,
   TypeStepProps,
   AccountStepProps,
   CategoryStepProps,
@@ -108,7 +110,6 @@ function StepByStepTransactionForm({
   isValid: boolean
   onSave: () => Promise<void>
 }) {
-  const [currentStep, setCurrentStep] = useState(amountStep)
   const [isLoading, setIsLoading] = useState(false)
 
   const currencyOptions = currencies.map((currency) => ({
@@ -121,49 +122,34 @@ function StepByStepTransactionForm({
     color: a.color,
   }))
 
-  function renderAmountAndCurrencySteps(compact: boolean) {
-    return compact ? (
-      <div className="field is-flex is-flex-direction-row">
-        <div>
-          <CurrencyFormInput
-            value={currency}
-            options={currencyOptions}
-            isExpanded={currentStep === currencyStep}
-            onChange={onCurrencyChange}
-            onExpand={() => setCurrentStep(currencyStep)}
-            onComplete={() => setCurrentStep(typeStep)}
-            alwaysShowOptionsIfEmpty
-          />
-        </div>
-        <div className="is-flex-grow-1">
-          <AmountFormInput
-            amount={amount}
-            isExpanded={currentStep === amountStep}
-            onAmountChange={onAmountChange}
-            onExpand={() => setCurrentStep(amountStep)}
-            onComplete={() => setCurrentStep(currencyStep)}
-          />
-        </div>
-      </div>
-    ) : (
-      <>
-        <AmountFormInput
-          amount={amount}
-          isExpanded={currentStep === amountStep}
-          onAmountChange={onAmountChange}
-          onExpand={() => setCurrentStep(amountStep)}
-          onComplete={() => setCurrentStep(currencyStep)}
-        />
-        <CurrencyFormInput
-          value={currency}
-          options={currencyOptions}
-          isExpanded={currentStep === currencyStep}
-          onChange={onCurrencyChange}
-          onExpand={() => setCurrentStep(currencyStep)}
-          onComplete={() => setCurrentStep(typeStep)}
-          alwaysShowOptionsIfEmpty
-        />
-      </>
+  function AmountStep({ isExpanded, onExpand, onComplete }: AmountStepProps) {
+    return (
+      <AmountFormInput
+        amount={amount}
+        onAmountChange={onAmountChange}
+        isExpanded={isExpanded}
+        onExpand={onExpand}
+        onComplete={onComplete}
+      />
+    )
+  }
+
+  function CurrencyStep({
+    alwaysShowOptionsIfEmpty,
+    isExpanded,
+    onExpand,
+    onComplete,
+  }: CurrencyStepProps) {
+    return (
+      <CurrencyFormInput
+        value={currency}
+        options={currencyOptions}
+        onChange={onCurrencyChange}
+        alwaysShowOptionsIfEmpty={alwaysShowOptionsIfEmpty}
+        isExpanded={isExpanded}
+        onExpand={onExpand}
+        onComplete={onComplete}
+      />
     )
   }
 
@@ -282,12 +268,12 @@ function StepByStepTransactionForm({
     setIsLoading(false)
   }
 
-  const combineAmountAndCurrency = currentStep !== amountStep && currentStep !== currencyStep
-
   return (
     <div className="field p-2">
-      {renderAmountAndCurrencySteps(combineAmountAndCurrency)}
       <FormLayout
+        type={type}
+        AmountStep={AmountStep}
+        CurrencyStep={CurrencyStep}
         TypeStep={TypeStep}
         AccountStep={AccountStep}
         CategoryStep={CategoryStep}
@@ -296,9 +282,6 @@ function StepByStepTransactionForm({
         CommentStep={CommentStep}
         DatetimeStep={DatetimeStep}
         SaveButton={SaveButton}
-        type={type}
-        currentStep={currentStep}
-        onCurrentStepChange={setCurrentStep}
       />
     </div>
   )
