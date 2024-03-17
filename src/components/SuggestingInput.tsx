@@ -27,7 +27,7 @@ const Input = styled.input`
 `
 
 const Suggestion = styled.div`
-  padding: 5px 10px;
+  padding: 10px 10px;
   cursor: pointer;
   font-size: 14px;
   &:hover {

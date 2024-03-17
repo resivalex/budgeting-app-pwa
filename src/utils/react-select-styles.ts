@@ -23,7 +23,8 @@ export const reactSelectSmallStyles = {
   }),
   option: (provided: any) => ({
     ...provided,
-    fontSize: '0.75rem',
+    fontSize: '14px',
+    padding: '10px 10px',
   }),
 }
 
