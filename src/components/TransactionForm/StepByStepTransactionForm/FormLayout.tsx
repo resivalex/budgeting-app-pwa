@@ -96,7 +96,7 @@ function FormLayout({
   const combineAmountAndCurrency = currentStep !== amountStep && currentStep !== currencyStep
 
   return (
-    <>
+    <div className="field p-2">
       {combineAmountAndCurrency ? (
         <div className="field is-flex is-flex-direction-row">
           <div>
@@ -176,7 +176,7 @@ function FormLayout({
         onExpand={() => setCurrentStep(datetimeStep)}
       />
       <SaveButton />
-    </>
+    </div>
   )
 }
 

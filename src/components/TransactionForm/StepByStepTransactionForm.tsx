@@ -258,21 +258,19 @@ function StepByStepTransactionForm({
   }
 
   return (
-    <div className="field p-2">
-      <FormLayout
-        type={type}
-        AmountStep={AmountStep}
-        CurrencyStep={CurrencyStep}
-        TypeStep={TypeStep}
-        AccountStep={AccountStep}
-        CategoryStep={CategoryStep}
-        PayeeStep={PayeeStep}
-        PayeeTransferAccountStep={PayeeTransferAccountStep}
-        CommentStep={CommentStep}
-        DatetimeStep={DatetimeStep}
-        SaveButton={SaveButton}
-      />
-    </div>
+    <FormLayout
+      type={type}
+      AmountStep={AmountStep}
+      CurrencyStep={CurrencyStep}
+      TypeStep={TypeStep}
+      AccountStep={AccountStep}
+      CategoryStep={CategoryStep}
+      PayeeStep={PayeeStep}
+      PayeeTransferAccountStep={PayeeTransferAccountStep}
+      CommentStep={CommentStep}
+      DatetimeStep={DatetimeStep}
+      SaveButton={SaveButton}
+    />
   )
 }
 
