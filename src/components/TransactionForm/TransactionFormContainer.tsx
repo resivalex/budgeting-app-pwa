@@ -298,7 +298,7 @@ export default function TransactionFormContainer({
         setPayeeTransferAccount(account)
       }
     },
-    [payeeTransferAccount]
+    [payeeTransferAccount, account]
   )
 
   const handleCurrencyChange = useMemo(
