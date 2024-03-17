@@ -195,17 +195,16 @@ export default function TransactionFormContainer({
     return transactionAggregator.getRecentCommentsByCategory(category)
   }, [category, transactions, appComments])
 
-  if (coloredAccounts.length === 0) {
-    return null
-  }
-
-  const handleDatetimeChange = (value: Date | null) => {
-    if (value) {
-      setDatetime(value.toISOString())
-    } else {
-      setDatetime(new Date().toISOString())
-    }
-  }
+  const handleDatetimeChange = useMemo(
+    () => (value: Date | null) => {
+      if (value) {
+        setDatetime(value.toISOString())
+      } else {
+        setDatetime(new Date().toISOString())
+      }
+    },
+    []
+  )
 
   const isValid = !!(
     datetime &&
@@ -237,76 +236,94 @@ export default function TransactionFormContainer({
     })
   }
 
-  function adjustCurrencyAndAccounts(type: string, currency: string) {
-    const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
-      type,
-      currency
-    )
-    if (!_.includes(availableCurrencies, currency)) {
-      setCurrency('')
-    }
-    if (
-      !_.includes(
-        _.map(availableColoredAccounts, (a) => a.account),
-        account
-      )
-    ) {
-      setAccount('')
-    }
-    if (
-      !_.includes(
-        _.map(availableColoredAccounts, (a) => a.account),
-        payeeTransferAccount
-      )
-    ) {
-      setPayeeTransferAccount('')
-    }
-  }
+  const adjustCurrencyAndAccounts = useMemo(
+    () =>
+      function (type: string, currency: string) {
+        const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
+          type,
+          currency
+        )
+        if (!_.includes(availableCurrencies, currency)) {
+          setCurrency('')
+        }
+        if (
+          !_.includes(
+            _.map(availableColoredAccounts, (a) => a.account),
+            account
+          )
+        ) {
+          setAccount('')
+        }
+        if (
+          !_.includes(
+            _.map(availableColoredAccounts, (a) => a.account),
+            payeeTransferAccount
+          )
+        ) {
+          setPayeeTransferAccount('')
+        }
+      },
+    [getAvailableCurrenciesAndAccounts, account, payeeTransferAccount]
+  )
 
-  const handleTypeChange = (type: 'income' | 'expense' | 'transfer') => {
-    setType(type)
-    adjustCurrencyAndAccounts(type, currency)
-  }
+  const handleTypeChange = useMemo(
+    () =>
+      function (type: 'income' | 'expense' | 'transfer') {
+        setType(type)
+        adjustCurrencyAndAccounts(type, currency)
+      },
+    [adjustCurrencyAndAccounts, currency]
+  )
 
-  const handleAmountChange = (amount: string) => {
-    setAmount(amount)
-  }
+  const handleAmountChange = useMemo(() => (amount: string) => setAmount(amount), [])
 
-  const handlePayeeChange = (payee: string) => {
-    setPayee(payee)
-  }
+  const handlePayeeChange = useMemo(() => (payee: string) => setPayee(payee), [])
 
-  const handlePayeeTransferAccountChange = (value: string) => {
-    setPayeeTransferAccount(value)
-    if (account === value) {
-      setAccount(payeeTransferAccount)
-    }
-  }
+  const handlePayeeTransferAccountChange = useMemo(
+    () => (value: string) => {
+      setPayeeTransferAccount(value)
+      if (account === value) {
+        setAccount(payeeTransferAccount)
+      }
+    },
+    [account, payeeTransferAccount]
+  )
 
-  const handleCommentChange = (comment: string) => {
-    setComment(comment)
-  }
+  const handleCommentChange = useMemo(() => (comment: string) => setComment(comment), [])
 
-  const handleAccountChange = (value: string) => {
-    setAccount(value)
-    if (payeeTransferAccount === value) {
-      setPayeeTransferAccount(account)
-    }
-  }
+  const handleAccountChange = useMemo(
+    () => (value: string) => {
+      setAccount(value)
+      if (payeeTransferAccount === value) {
+        setPayeeTransferAccount(account)
+      }
+    },
+    [payeeTransferAccount]
+  )
 
-  const handleCurrencyChange = (currency: string) => {
-    setCurrency(currency)
-    adjustCurrencyAndAccounts(type, currency)
-  }
+  const handleCurrencyChange = useMemo(
+    () => (currency: string) => {
+      setCurrency(currency)
+      adjustCurrencyAndAccounts(type, currency)
+    },
+    [adjustCurrencyAndAccounts, type]
+  )
 
-  const handleCategoryChange = (category: string) => {
-    setCategory(category)
-  }
+  const handleCategoryChange = useMemo(
+    () => (category: string) => {
+      setCategory(category)
+    },
+    []
+  )
 
   const viewDatetime = new Date(datetime)
 
   const isStepByStep = true
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
+
+  if (coloredAccounts.length === 0) {
+    return null
+  }
 
   return (
     <TransactionFormComponent

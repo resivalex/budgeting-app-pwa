@@ -1,4 +1,4 @@
-import { FC, useState, Ref } from 'react'
+import { FC, useState, Ref, useMemo, useCallback } from 'react'
 import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
@@ -102,152 +102,180 @@ function StepByStepTransactionForm({
 }) {
   const [isLoading, setIsLoading] = useState(false)
 
-  const currencyOptions = currencies.map((currency) => ({
-    value: currency,
-    label: currency,
-  }))
-  const accountOptions = accounts.map((a) => ({
-    value: a.account,
-    label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
-    color: a.color,
-  }))
+  const currencyOptions = useMemo(
+    () =>
+      currencies.map((currency) => ({
+        value: currency,
+        label: currency,
+      })),
+    [currencies]
+  )
 
-  function AmountStep({ isExpanded, onExpand, onComplete }: AmountStepProps) {
-    return (
-      <AmountFormInput
-        amount={amount}
-        onAmountChange={onAmountChange}
-        isExpanded={isExpanded}
-        onExpand={onExpand}
-        onComplete={onComplete}
-      />
-    )
-  }
+  const accountOptions = useMemo(
+    () =>
+      accounts.map((a) => ({
+        value: a.account,
+        label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
+        color: a.color,
+      })),
+    [accounts]
+  )
 
-  function CurrencyStep({
-    alwaysShowOptionsIfEmpty,
-    isExpanded,
-    onExpand,
-    onComplete,
-  }: CurrencyStepProps) {
-    return (
-      <CurrencyFormInput
-        value={currency}
-        options={currencyOptions}
-        onChange={onCurrencyChange}
-        alwaysShowOptionsIfEmpty={alwaysShowOptionsIfEmpty}
-        isExpanded={isExpanded}
-        onExpand={onExpand}
-        onComplete={onComplete}
-      />
-    )
-  }
+  const AmountStep = useMemo(
+    () =>
+      ({ isExpanded, onExpand, onComplete }: AmountStepProps) =>
+        (
+          <AmountFormInput
+            amount={amount}
+            onAmountChange={onAmountChange}
+            isExpanded={isExpanded}
+            onExpand={onExpand}
+            onComplete={onComplete}
+          />
+        ),
+    [amount, onAmountChange]
+  )
 
-  function TypeStep({ alwaysShowOptionsIfEmpty, isExpanded, onExpand, onComplete }: TypeStepProps) {
-    return (
-      <TypeFormInput
-        value={type}
-        onChange={onTypeChange}
-        alwaysShowOptionsIfEmpty={alwaysShowOptionsIfEmpty}
-        isExpanded={isExpanded}
-        onExpand={onExpand}
-        onComplete={onComplete}
-      />
-    )
-  }
+  const CurrencyStep = useMemo(
+    () =>
+      ({ alwaysShowOptionsIfEmpty, isExpanded, onExpand, onComplete }: CurrencyStepProps) =>
+        (
+          <CurrencyFormInput
+            value={currency}
+            options={currencyOptions}
+            onChange={onCurrencyChange}
+            alwaysShowOptionsIfEmpty={alwaysShowOptionsIfEmpty}
+            isExpanded={isExpanded}
+            onExpand={onExpand}
+            onComplete={onComplete}
+          />
+        ),
+    [currency, currencyOptions, onCurrencyChange]
+  )
 
-  function AccountStep({ isExpanded, onExpand, onComplete }: AccountStepProps) {
-    return (
-      <AccountFormInput
-        AccountSelect={AccountSelect}
-        account={account}
-        accountOptions={accountOptions}
-        onAccountChange={onAccountChange}
-        isExpanded={isExpanded}
-        onExpand={onExpand}
-        onComplete={onComplete}
-      />
-    )
-  }
+  const TypeStep = useMemo(
+    () =>
+      ({ alwaysShowOptionsIfEmpty, isExpanded, onExpand, onComplete }: TypeStepProps) =>
+        (
+          <TypeFormInput
+            value={type}
+            onChange={onTypeChange}
+            alwaysShowOptionsIfEmpty={alwaysShowOptionsIfEmpty}
+            isExpanded={isExpanded}
+            onExpand={onExpand}
+            onComplete={onComplete}
+          />
+        ),
+    [type, onTypeChange]
+  )
 
-  function CategoryStep({ isExpanded, onExpand, onComplete }: CategoryStepProps) {
-    return (
-      <CategoryFormInput
-        category={category}
-        categoryOptions={categoryOptions}
-        onCategoryChange={onCategoryChange}
-        isExpanded={isExpanded}
-        onExpand={onExpand}
-        onComplete={onComplete}
-      />
-    )
-  }
+  const AccountStep = useMemo(
+    () =>
+      ({ isExpanded, onExpand, onComplete }: AccountStepProps) =>
+        (
+          <AccountFormInput
+            AccountSelect={AccountSelect}
+            account={account}
+            accountOptions={accountOptions}
+            onAccountChange={onAccountChange}
+            isExpanded={isExpanded}
+            onExpand={onExpand}
+            onComplete={onComplete}
+          />
+        ),
+    [AccountSelect, account, accountOptions, onAccountChange]
+  )
 
-  function PayeeStep({ isExpanded, onExpand, onComplete }: PayeeStepProps) {
-    return (
-      <PayeeFormInput
-        type={type}
-        payee={payee}
-        payees={payees}
-        onPayeeChange={onPayeeChange}
-        isExpanded={isExpanded}
-        onExpand={onExpand}
-        onComplete={onComplete}
-      />
-    )
-  }
+  const CategoryStep = useMemo(
+    () =>
+      ({ isExpanded, onExpand, onComplete }: CategoryStepProps) =>
+        (
+          <CategoryFormInput
+            category={category}
+            categoryOptions={categoryOptions}
+            onCategoryChange={onCategoryChange}
+            isExpanded={isExpanded}
+            onExpand={onExpand}
+            onComplete={onComplete}
+          />
+        ),
+    [category, categoryOptions, onCategoryChange]
+  )
 
-  function PayeeTransferAccountStep({
-    isExpanded,
-    onExpand,
-    onComplete,
-  }: PayeeTransferAccountStepProps) {
-    return (
-      <PayeeTransferAccountFormInput
-        AccountSelect={AccountSelect}
-        payeeTransferAccount={payeeTransferAccount}
-        accountOptions={accountOptions}
-        onPayeeTransferAccountChange={onPayeeTransferAccountChange}
-        isExpanded={isExpanded}
-        onExpand={onExpand}
-        onComplete={onComplete}
-      />
-    )
-  }
+  const PayeeStep = useMemo(
+    () =>
+      ({ isExpanded, onExpand, onComplete }: PayeeStepProps) =>
+        (
+          <PayeeFormInput
+            type={type}
+            payee={payee}
+            payees={payees}
+            onPayeeChange={onPayeeChange}
+            isExpanded={isExpanded}
+            onExpand={onExpand}
+            onComplete={onComplete}
+          />
+        ),
+    [type, payee, payees, onPayeeChange]
+  )
 
-  function CommentStep({ isExpanded, onExpand, onComplete }: CommentStepProps) {
-    return (
-      <CommentFormInput
-        comment={comment}
-        comments={comments}
-        isExpanded={isExpanded}
-        onCommentChange={onCommentChange}
-        onExpand={onExpand}
-        onComplete={onComplete}
-      />
-    )
-  }
+  const PayeeTransferAccountStep = useMemo(
+    () =>
+      ({ isExpanded, onExpand, onComplete }: PayeeTransferAccountStepProps) =>
+        (
+          <PayeeTransferAccountFormInput
+            AccountSelect={AccountSelect}
+            payeeTransferAccount={payeeTransferAccount}
+            accountOptions={accountOptions}
+            onPayeeTransferAccountChange={onPayeeTransferAccountChange}
+            isExpanded={isExpanded}
+            onExpand={onExpand}
+            onComplete={onComplete}
+          />
+        ),
+    [AccountSelect, payeeTransferAccount, accountOptions, onPayeeTransferAccountChange]
+  )
 
-  function DatetimeStep({ isExpanded, onExpand }: DatetimeStepProps) {
-    return (
-      <DatetimeFormInput
-        datetime={datetime}
-        onDatetimeChange={onDatetimeChange}
-        isExpanded={isExpanded}
-        onExpand={onExpand}
-      />
-    )
-  }
+  const CommentStep = useMemo(
+    () =>
+      ({ isExpanded, onExpand, onComplete }: CommentStepProps) =>
+        (
+          <CommentFormInput
+            comment={comment}
+            comments={comments}
+            isExpanded={isExpanded}
+            onCommentChange={onCommentChange}
+            onExpand={onExpand}
+            onComplete={onComplete}
+          />
+        ),
+    [comment, comments, onCommentChange]
+  )
 
-  function SaveButton() {
-    return <SaveButtonFormInput isValid={isValid} isLoading={isLoading} onSave={handleSave} />
-  }
+  const DatetimeStep = useMemo(
+    () =>
+      ({ isExpanded, onExpand }: DatetimeStepProps) =>
+        (
+          <DatetimeFormInput
+            datetime={datetime}
+            onDatetimeChange={onDatetimeChange}
+            isExpanded={isExpanded}
+            onExpand={onExpand}
+          />
+        ),
+    [datetime, onDatetimeChange]
+  )
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     setIsLoading(true)
     await onSave()
     setIsLoading(false)
-  }
+  }, [onSave])
+
+  const SaveButton = useMemo(
+    () => () => <SaveButtonFormInput isValid={isValid} isLoading={isLoading} onSave={handleSave} />,
+    [isValid, isLoading, handleSave]
+  )
 
   return (
     <FormLayout
