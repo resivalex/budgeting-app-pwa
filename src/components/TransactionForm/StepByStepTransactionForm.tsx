@@ -13,6 +13,7 @@ import {
   DatetimeStep as DatetimeFormInput,
 } from './FormInputs'
 import FormLayout, {
+  CommentStepProps,
   DatetimeStepProps,
   SaveButtonProps,
 } from './StepByStepTransactionForm/FormLayout'
@@ -234,15 +235,15 @@ function StepByStepTransactionForm({
     )
   }
 
-  function renderCommentStep() {
+  function CommentStep({ isExpanded, onExpand, onComplete }: CommentStepProps) {
     return (
       <CommentFormInput
         comment={comment}
         comments={comments}
-        isExpanded={currentStep === commentStep}
+        isExpanded={isExpanded}
         onCommentChange={onCommentChange}
-        onExpand={() => setCurrentStep(commentStep)}
-        onComplete={() => setCurrentStep(datetimeStep)}
+        onExpand={onExpand}
+        onComplete={onComplete}
       />
     )
   }
@@ -292,8 +293,8 @@ function StepByStepTransactionForm({
           {renderPayeeStep()}
         </>
       )}
-      {renderCommentStep()}
       <FormLayout
+        CommentStep={CommentStep}
         DatetimeStep={DatetimeStep}
         SaveButton={SaveButton}
         currentStep={currentStep}

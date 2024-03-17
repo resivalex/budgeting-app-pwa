@@ -1,5 +1,11 @@
 import { FC } from 'react'
 
+export interface CommentStepProps {
+  isExpanded: boolean
+  onExpand: () => void
+  onComplete: () => void
+}
+
 export interface DatetimeStepProps {
   isExpanded: boolean
   onExpand: () => void
@@ -18,11 +24,13 @@ const commentStep = 'comment'
 const datetimeStep = 'datetime'
 
 function FormLayout({
+  CommentStep,
   DatetimeStep,
   SaveButton,
   currentStep,
   onCurrentStepChange,
 }: {
+  CommentStep: FC<CommentStepProps>
   DatetimeStep: FC<DatetimeStepProps>
   SaveButton: FC<SaveButtonProps>
   currentStep: string
@@ -30,6 +38,11 @@ function FormLayout({
 }) {
   return (
     <>
+      <CommentStep
+        isExpanded={currentStep === commentStep}
+        onExpand={() => onCurrentStepChange(commentStep)}
+        onComplete={() => onCurrentStepChange(datetimeStep)}
+      />
       <DatetimeStep
         isExpanded={currentStep === datetimeStep}
         onExpand={() => onCurrentStepChange(datetimeStep)}
