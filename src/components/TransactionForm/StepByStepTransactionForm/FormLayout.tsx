@@ -1,5 +1,11 @@
 import { FC } from 'react'
 
+export interface AccountStepProps {
+  isExpanded: boolean
+  onExpand: () => void
+  onComplete: () => void
+}
+
 export interface CategoryStepProps {
   isExpanded: boolean
   onExpand: () => void
@@ -42,6 +48,7 @@ const commentStep = 'comment'
 const datetimeStep = 'datetime'
 
 function FormLayout({
+  AccountStep,
   CategoryStep,
   PayeeStep,
   PayeeTransferAccountStep,
@@ -52,6 +59,7 @@ function FormLayout({
   currentStep,
   onCurrentStepChange,
 }: {
+  AccountStep: FC<AccountStepProps>
   CategoryStep: FC<CategoryStepProps>
   PayeeStep: FC<PayeeStepProps>
   PayeeTransferAccountStep: FC<PayeeTransferAccountStepProps>
@@ -64,6 +72,13 @@ function FormLayout({
 }) {
   return (
     <>
+      <AccountStep
+        isExpanded={currentStep === accountStep}
+        onExpand={() => onCurrentStepChange(accountStep)}
+        onComplete={() =>
+          onCurrentStepChange(type === 'transfer' ? payeeTransferAccountStep : categoryStep)
+        }
+      />
       {type === 'transfer' ? (
         <PayeeTransferAccountStep
           isExpanded={currentStep === payeeTransferAccountStep}

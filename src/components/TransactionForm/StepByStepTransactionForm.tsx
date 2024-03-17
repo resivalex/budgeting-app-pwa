@@ -13,6 +13,7 @@ import {
   DatetimeStep as DatetimeFormInput,
 } from './FormInputs'
 import FormLayout, {
+  AccountStepProps,
   CategoryStepProps,
   PayeeStepProps,
   PayeeTransferAccountStepProps,
@@ -178,18 +179,16 @@ function StepByStepTransactionForm({
     )
   }
 
-  function renderAccountStep() {
+  function AccountStep({ isExpanded, onExpand, onComplete }: AccountStepProps) {
     return (
       <AccountFormInput
         AccountSelect={AccountSelect}
         account={account}
         accountOptions={accountOptions}
-        isExpanded={currentStep === accountStep}
         onAccountChange={onAccountChange}
-        onExpand={() => setCurrentStep(accountStep)}
-        onComplete={() =>
-          setCurrentStep(type === 'transfer' ? payeeTransferAccountStep : categoryStep)
-        }
+        isExpanded={isExpanded}
+        onExpand={onExpand}
+        onComplete={onComplete}
       />
     )
   }
@@ -288,8 +287,8 @@ function StepByStepTransactionForm({
     <div className="field p-2">
       {renderAmountAndCurrencySteps(combineAmountAndCurrency)}
       {renderTypeStep()}
-      {renderAccountStep()}
       <FormLayout
+        AccountStep={AccountStep}
         CategoryStep={CategoryStep}
         PayeeStep={PayeeStep}
         PayeeTransferAccountStep={PayeeTransferAccountStep}
