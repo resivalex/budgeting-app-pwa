@@ -16,6 +16,7 @@ import Comment from './Comment'
 import CommentStep from './CommentStep'
 import Datetime from './Datetime'
 import DatetimeStep from './DatetimeStep'
+import SaveButton from './SaveButton'
 
 export {
   Type,
@@ -36,4 +37,5 @@ export {
   CommentStep,
   Datetime,
   DatetimeStep,
+  SaveButton,
 }

@@ -11,6 +11,7 @@ import {
   PayeeStep as PayeeFormInput,
   CommentStep as CommentFormInput,
   DatetimeStep as DatetimeFormInput,
+  SaveButton as SaveButtonFormInput,
 } from './FormInputs'
 import FormLayout, {
   AmountStepProps,
@@ -239,16 +240,7 @@ function StepByStepTransactionForm({
   }
 
   function SaveButton() {
-    return (
-      <div className="field">
-        <div className="control">
-          <button className="button is-info" onClick={handleSave} disabled={!isValid || isLoading}>
-            {isValid ? 'Сохранить' : 'Заполните необходимые поля'}
-            {isLoading && '...'}
-          </button>
-        </div>
-      </div>
-    )
+    return <SaveButtonFormInput isValid={isValid} isLoading={isLoading} onSave={handleSave} />
   }
 
   const handleSave = async () => {
