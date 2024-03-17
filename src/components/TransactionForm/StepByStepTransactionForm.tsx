@@ -12,6 +12,7 @@ import {
   CommentStep as CommentFormInput,
   DatetimeStep as DatetimeFormInput,
 } from './FormInputs'
+import FormLayout from './StepByStepTransactionForm/FormLayout'
 
 // Types
 type TransactionType = 'income' | 'expense' | 'transfer'
@@ -254,7 +255,7 @@ function StepByStepTransactionForm({
     )
   }
 
-  function renderButton() {
+  function SaveButton() {
     return (
       <div className="field">
         <div className="control">
@@ -290,7 +291,7 @@ function StepByStepTransactionForm({
       )}
       {renderCommentStep()}
       {renderDatetimeStep()}
-      {renderButton()}
+      <FormLayout SaveButton={SaveButton} />
     </div>
   )
 }
