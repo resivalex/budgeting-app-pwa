@@ -13,6 +13,9 @@ import {
   DatetimeStep as DatetimeFormInput,
 } from './FormInputs'
 import FormLayout, {
+  CategoryStepProps,
+  PayeeStepProps,
+  PayeeTransferAccountStepProps,
   CommentStepProps,
   DatetimeStepProps,
   SaveButtonProps,
@@ -191,46 +194,47 @@ function StepByStepTransactionForm({
     )
   }
 
-  function renderCategoryStep() {
+  function CategoryStep({ isExpanded, onExpand, onComplete }: CategoryStepProps) {
     return (
       <CategoryFormInput
         category={category}
         categoryOptions={categoryOptions}
-        isExpanded={currentStep === categoryStep}
         onCategoryChange={onCategoryChange}
-        onExpand={() => setCurrentStep(categoryStep)}
-        onComplete={() => setCurrentStep(payeeStep)}
+        isExpanded={isExpanded}
+        onExpand={onExpand}
+        onComplete={onComplete}
       />
     )
   }
 
-  function renderPayeeStep() {
+  function PayeeStep({ isExpanded, onExpand, onComplete }: PayeeStepProps) {
     return (
       <PayeeFormInput
         type={type}
         payee={payee}
         payees={payees}
-        isExpanded={currentStep === payeeStep}
         onPayeeChange={onPayeeChange}
-        onExpand={() => setCurrentStep(payeeStep)}
-        onComplete={() => setCurrentStep(commentStep)}
+        isExpanded={isExpanded}
+        onExpand={onExpand}
+        onComplete={onComplete}
       />
     )
   }
 
-  function renderPayeeTransferAccountStep() {
+  function PayeeTransferAccountStep({
+    isExpanded,
+    onExpand,
+    onComplete,
+  }: PayeeTransferAccountStepProps) {
     return (
       <PayeeTransferAccountFormInput
         AccountSelect={AccountSelect}
         payeeTransferAccount={payeeTransferAccount}
         accountOptions={accountOptions}
-        isExpanded={currentStep === payeeTransferAccountStep}
         onPayeeTransferAccountChange={onPayeeTransferAccountChange}
-        onExpand={() => setCurrentStep(payeeTransferAccountStep)}
-        onComplete={() => {
-          const nextStep = type === 'transfer' ? '' : commentStep
-          setCurrentStep(nextStep)
-        }}
+        isExpanded={isExpanded}
+        onExpand={onExpand}
+        onComplete={onComplete}
       />
     )
   }
@@ -285,18 +289,14 @@ function StepByStepTransactionForm({
       {renderAmountAndCurrencySteps(combineAmountAndCurrency)}
       {renderTypeStep()}
       {renderAccountStep()}
-      {type === 'transfer' ? (
-        renderPayeeTransferAccountStep()
-      ) : (
-        <>
-          {renderCategoryStep()}
-          {renderPayeeStep()}
-        </>
-      )}
       <FormLayout
+        CategoryStep={CategoryStep}
+        PayeeStep={PayeeStep}
+        PayeeTransferAccountStep={PayeeTransferAccountStep}
         CommentStep={CommentStep}
         DatetimeStep={DatetimeStep}
         SaveButton={SaveButton}
+        type={type}
         currentStep={currentStep}
         onCurrentStepChange={setCurrentStep}
       />
