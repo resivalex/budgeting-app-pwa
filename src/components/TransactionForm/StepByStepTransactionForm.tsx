@@ -13,6 +13,7 @@ import {
   DatetimeStep as DatetimeFormInput,
 } from './FormInputs'
 import FormLayout, {
+  TypeStepProps,
   AccountStepProps,
   CategoryStepProps,
   PayeeStepProps,
@@ -166,15 +167,15 @@ function StepByStepTransactionForm({
     )
   }
 
-  function renderTypeStep() {
+  function TypeStep({ alwaysShowOptionsIfEmpty, isExpanded, onExpand, onComplete }: TypeStepProps) {
     return (
       <TypeFormInput
         value={type}
-        isExpanded={currentStep === typeStep}
-        alwaysShowOptionsIfEmpty={true}
         onChange={onTypeChange}
-        onExpand={() => setCurrentStep(typeStep)}
-        onComplete={() => setCurrentStep(accountStep)}
+        alwaysShowOptionsIfEmpty={alwaysShowOptionsIfEmpty}
+        isExpanded={isExpanded}
+        onExpand={onExpand}
+        onComplete={onComplete}
       />
     )
   }
@@ -286,8 +287,8 @@ function StepByStepTransactionForm({
   return (
     <div className="field p-2">
       {renderAmountAndCurrencySteps(combineAmountAndCurrency)}
-      {renderTypeStep()}
       <FormLayout
+        TypeStep={TypeStep}
         AccountStep={AccountStep}
         CategoryStep={CategoryStep}
         PayeeStep={PayeeStep}

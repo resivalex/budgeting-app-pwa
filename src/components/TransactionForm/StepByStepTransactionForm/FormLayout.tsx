@@ -1,5 +1,12 @@
 import { FC } from 'react'
 
+export interface TypeStepProps {
+  alwaysShowOptionsIfEmpty: boolean
+  isExpanded: boolean
+  onExpand: () => void
+  onComplete: () => void
+}
+
 export interface AccountStepProps {
   isExpanded: boolean
   onExpand: () => void
@@ -48,6 +55,7 @@ const commentStep = 'comment'
 const datetimeStep = 'datetime'
 
 function FormLayout({
+  TypeStep,
   AccountStep,
   CategoryStep,
   PayeeStep,
@@ -59,6 +67,7 @@ function FormLayout({
   currentStep,
   onCurrentStepChange,
 }: {
+  TypeStep: FC<TypeStepProps>
   AccountStep: FC<AccountStepProps>
   CategoryStep: FC<CategoryStepProps>
   PayeeStep: FC<PayeeStepProps>
@@ -72,6 +81,12 @@ function FormLayout({
 }) {
   return (
     <>
+      <TypeStep
+        alwaysShowOptionsIfEmpty={true}
+        isExpanded={currentStep === typeStep}
+        onExpand={() => onCurrentStepChange(typeStep)}
+        onComplete={() => onCurrentStepChange(accountStep)}
+      />
       <AccountStep
         isExpanded={currentStep === accountStep}
         onExpand={() => onCurrentStepChange(accountStep)}
