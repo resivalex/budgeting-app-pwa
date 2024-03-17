@@ -254,6 +254,19 @@ function StepByStepTransactionForm({
     )
   }
 
+  function renderButton() {
+    return (
+      <div className="field">
+        <div className="control">
+          <button className="button is-info" onClick={handleSave} disabled={!isValid || isLoading}>
+            {isValid ? 'Сохранить' : 'Заполните необходимые поля'}
+            {isLoading && '...'}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   const handleSave = async () => {
     setIsLoading(true)
     await onSave()
@@ -277,14 +290,7 @@ function StepByStepTransactionForm({
       )}
       {renderCommentStep()}
       {renderDatetimeStep()}
-      <div className="field">
-        <div className="control">
-          <button className="button is-info" onClick={handleSave} disabled={!isValid || isLoading}>
-            {isValid ? 'Сохранить' : 'Заполните необходимые поля'}
-            {isLoading && '...'}
-          </button>
-        </div>
-      </div>
+      {renderButton()}
     </div>
   )
 }
