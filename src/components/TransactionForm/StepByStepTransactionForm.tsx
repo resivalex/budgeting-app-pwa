@@ -22,7 +22,6 @@ import FormLayout, {
   PayeeTransferAccountStepProps,
   CommentStepProps,
   DatetimeStepProps,
-  SaveButtonProps,
 } from './StepByStepTransactionForm/FormLayout'
 
 // Types
@@ -32,16 +31,6 @@ interface SelectOption {
   value: string
   label: string
 }
-
-const typeStep = 'type'
-const currencyStep = 'currency'
-const amountStep = 'amount'
-const accountStep = 'account'
-const categoryStep = 'category'
-const payeeStep = 'payee'
-const payeeTransferAccountStep = 'payeeTransferAccount'
-const commentStep = 'comment'
-const datetimeStep = 'datetime'
 
 function StepByStepTransactionForm({
   AccountSelect,
@@ -249,7 +238,7 @@ function StepByStepTransactionForm({
     )
   }
 
-  function SaveButton({}: SaveButtonProps) {
+  function SaveButton() {
     return (
       <div className="field">
         <div className="control">
