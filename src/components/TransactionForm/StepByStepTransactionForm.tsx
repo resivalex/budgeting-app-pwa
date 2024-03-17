@@ -12,7 +12,10 @@ import {
   CommentStep as CommentFormInput,
   DatetimeStep as DatetimeFormInput,
 } from './FormInputs'
-import FormLayout from './StepByStepTransactionForm/FormLayout'
+import FormLayout, {
+  DatetimeStepProps,
+  SaveButtonProps,
+} from './StepByStepTransactionForm/FormLayout'
 
 // Types
 type TransactionType = 'income' | 'expense' | 'transfer'
@@ -244,18 +247,18 @@ function StepByStepTransactionForm({
     )
   }
 
-  function renderDatetimeStep() {
+  function DatetimeStep({ isExpanded, onExpand }: DatetimeStepProps) {
     return (
       <DatetimeFormInput
         datetime={datetime}
-        isExpanded={currentStep === datetimeStep}
         onDatetimeChange={onDatetimeChange}
-        onExpand={() => setCurrentStep(datetimeStep)}
+        isExpanded={isExpanded}
+        onExpand={onExpand}
       />
     )
   }
 
-  function SaveButton() {
+  function SaveButton({}: SaveButtonProps) {
     return (
       <div className="field">
         <div className="control">
@@ -290,8 +293,12 @@ function StepByStepTransactionForm({
         </>
       )}
       {renderCommentStep()}
-      {renderDatetimeStep()}
-      <FormLayout SaveButton={SaveButton} />
+      <FormLayout
+        DatetimeStep={DatetimeStep}
+        SaveButton={SaveButton}
+        currentStep={currentStep}
+        onCurrentStepChange={setCurrentStep}
+      />
     </div>
   )
 }
