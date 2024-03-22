@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { BackendService, DbService } from '@/services'
 import { useInterval } from './useInterval'
 import { TransactionDTO } from '@/types'
@@ -12,67 +12,81 @@ export function useSyncService(
   const [isFailedPush, setIsFailedPush] = useState(false)
   const [offlineMode, setOfflineMode] = useState(false)
 
-  async function loadTransactionsFromLocal() {
-    const docs = await dbService.readAllDocs()
-    onTransactionsPull(docs)
-  }
+  const loadTransactionsFromLocalCallback = useCallback(
+    async function loadTransactionsFromLocal() {
+      const docs = await dbService.readAllDocs()
+      onTransactionsPull(docs)
+    },
+    [dbService, onTransactionsPull]
+  )
+
+  const pullDataFromRemoteCallback = useCallback(
+    async function pullDataFromRemote() {
+      try {
+        const checkSettings = await backendService.getSettings()
+
+        const dbChanged =
+          localStorage.transactionsUploadedAt !== checkSettings.transactionsUploadedAt
+        if (dbChanged) {
+          await dbService.reset()
+          localStorage.transactionsUploadedAt = checkSettings.transactionsUploadedAt
+        }
+        if (await dbService.pullChanges()) {
+          await loadTransactionsFromLocalCallback()
+        }
+        setOfflineMode(false)
+      } catch (error: any) {
+        setOfflineMode(true)
+      }
+    },
+    [backendService, dbService, loadTransactionsFromLocalCallback]
+  )
 
   useEffect(() => {
-    void loadTransactionsFromLocal()
+    void loadTransactionsFromLocalCallback()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  async function pullDataFromRemote() {
-    try {
-      const checkSettings = await backendService.getSettings()
-
-      const dbChanged =
-        localStorage.transactionsUploadedAt !== checkSettings.transactionsUploadedAt
-      if (dbChanged) {
-        await dbService.reset()
-        localStorage.transactionsUploadedAt = checkSettings.transactionsUploadedAt
+  const pushDbChangesToRemoteCallback = useCallback(
+    async function pushDbChangesToRemote() {
+      try {
+        await dbService.pushChanges()
+        setIsFailedPush(false)
+      } catch (error) {
+        setIsFailedPush(true)
       }
-      if (await dbService.pullChanges()) {
-        await loadTransactionsFromLocal()
+    },
+    [dbService]
+  )
+
+  const repeatFailedPushToRemoteCallback = useCallback(
+    async function repeatFailedPushToRemote() {
+      if (!isFailedPush) {
+        return
       }
-      setOfflineMode(false)
-    } catch (error: any) {
-      setOfflineMode(true)
-    }
-  }
+      void pushDbChangesToRemoteCallback()
+    },
+    [isFailedPush, pushDbChangesToRemoteCallback]
+  )
 
-  async function pushDbChangesToRemote() {
-    try {
-      await dbService.pushChanges()
-      setIsFailedPush(false)
-    } catch (error) {
-      setIsFailedPush(true)
-    }
-  }
-
-  async function repeatFailedPushToRemote() {
-    if (!isFailedPush) {
-      return
-    }
-    void pushDbChangesToRemote()
-  }
-
-  useInterval(pullDataFromRemote, 10000, instanceId)
-  useInterval(repeatFailedPushToRemote, 10000, instanceId)
+  const initialDelay = 3000
+  const intervalDelay = 10000
+  useInterval(pullDataFromRemoteCallback, initialDelay, intervalDelay, instanceId)
+  useInterval(repeatFailedPushToRemoteCallback, initialDelay, intervalDelay, instanceId)
 
   async function addDbTransaction(t: TransactionDTO) {
     await dbService.addTransaction(t)
-    await pushDbChangesToRemote()
+    await pushDbChangesToRemoteCallback()
   }
 
   async function replaceDbTransaction(t: TransactionDTO) {
     await dbService.replaceTransaction(t)
-    await pushDbChangesToRemote()
+    await pushDbChangesToRemoteCallback()
   }
 
   async function removeDbTransaction(id: string) {
     await dbService.removeTransaction(id)
-    await pushDbChangesToRemote()
+    await pushDbChangesToRemoteCallback()
   }
 
   return {

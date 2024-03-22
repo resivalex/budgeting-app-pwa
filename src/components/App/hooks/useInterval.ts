@@ -1,19 +1,32 @@
 import { useEffect, useRef } from 'react'
 
-export function useInterval(callback: () => void, delay: number, dependency: any) {
+export function useInterval(
+  callback: () => void,
+  initialDelay: number,
+  delay: number,
+  dependency: any
+) {
   const intervalRef = useRef<NodeJS.Timer | null>(null)
 
   useEffect(() => {
-    const interval = setInterval(callback, delay)
-    intervalRef.current = interval
+    const startInterval = () => {
+      intervalRef.current = setInterval(callback, delay)
+    }
+
+    const initialTimeout = setTimeout(() => {
+      callback()
+      startInterval()
+    }, initialDelay)
 
     return () => {
-      if (intervalRef.current === interval) {
-        clearInterval(interval)
+      console.log('clearing interval', { callback, initialDelay, delay, dependency })
+      clearTimeout(initialTimeout)
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
         intervalRef.current = null
       }
     }
-  }, [callback, delay, dependency])
+  }, [callback, delay, initialDelay, dependency])
 
   return intervalRef
 }

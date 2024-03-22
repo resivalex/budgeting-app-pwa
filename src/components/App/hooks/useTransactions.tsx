@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { TransactionDTO, TransactionsAggregations } from '@/types'
 import _ from 'lodash'
 import { TransactionAggregator } from '@/services'
@@ -25,51 +25,63 @@ export function useTransactions() {
     })
   }
 
-  function setLocalTransactions(transactions: TransactionDTO[]) {
+  const setLocalTransactionsCallback = useCallback(function setLocalTransactions(
+    transactions: TransactionDTO[]
+  ) {
     const sortedTransactions = _.sortBy(
       transactions,
       (transaction: TransactionDTO) => transaction.datetime
     ).reverse()
     setTransactions(sortedTransactions)
     updateTransactionsAggregations(sortedTransactions)
-  }
+  },
+  [])
 
-  function addLocalTransaction(t: TransactionDTO) {
-    const newTransactions = [...transactions, t]
-    const sortedTransactions = _.sortBy(
-      newTransactions,
-      (doc: TransactionDTO) => doc.datetime
-    ).reverse()
-    setTransactions(sortedTransactions)
-    updateTransactionsAggregations(sortedTransactions)
-  }
+  const addLocalTransactionCallback = useCallback(
+    function addLocalTransaction(t: TransactionDTO) {
+      const newTransactions = [...transactions, t]
+      const sortedTransactions = _.sortBy(
+        newTransactions,
+        (doc: TransactionDTO) => doc.datetime
+      ).reverse()
+      setTransactions(sortedTransactions)
+      updateTransactionsAggregations(sortedTransactions)
+    },
+    [transactions]
+  )
 
-  function replaceLocalTransaction(t: TransactionDTO) {
-    const newTransactions = [...transactions]
-    const index = newTransactions.findIndex((transaction) => transaction._id === t._id)
-    newTransactions[index] = t
-    const sortedTransactions = _.sortBy(
-      newTransactions,
-      (doc: TransactionDTO) => doc.datetime
-    ).reverse()
-    setTransactions(sortedTransactions)
-    updateTransactionsAggregations(sortedTransactions)
-  }
+  const replaceLocalTransactionCallback = useCallback(
+    function replaceLocalTransaction(t: TransactionDTO) {
+      const newTransactions = [...transactions]
+      const index = newTransactions.findIndex((transaction) => transaction._id === t._id)
+      newTransactions[index] = t
+      const sortedTransactions = _.sortBy(
+        newTransactions,
+        (doc: TransactionDTO) => doc.datetime
+      ).reverse()
+      setTransactions(sortedTransactions)
+      updateTransactionsAggregations(sortedTransactions)
+    },
+    [transactions]
+  )
 
-  function removeLocalTransaction(id: string) {
-    const newTransactions = [...transactions]
-    const index = newTransactions.findIndex((transaction) => transaction._id === id)
-    newTransactions.splice(index, 1)
-    setTransactions(newTransactions)
-    updateTransactionsAggregations(newTransactions)
-  }
+  const removeLocalTransactionCallback = useCallback(
+    function removeLocalTransaction(id: string) {
+      const newTransactions = [...transactions]
+      const index = newTransactions.findIndex((transaction) => transaction._id === id)
+      newTransactions.splice(index, 1)
+      setTransactions(newTransactions)
+      updateTransactionsAggregations(newTransactions)
+    },
+    [transactions]
+  )
 
   return {
     transactions,
     transactionsAggregations,
-    setLocalTransactions,
-    addLocalTransaction,
-    replaceLocalTransaction,
-    removeLocalTransaction,
+    setLocalTransactions: setLocalTransactionsCallback,
+    addLocalTransaction: addLocalTransactionCallback,
+    replaceLocalTransaction: replaceLocalTransactionCallback,
+    removeLocalTransaction: removeLocalTransactionCallback,
   }
 }

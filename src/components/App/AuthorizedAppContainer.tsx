@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import App from './App'
 import { BackendService, DbService } from '@/services'
@@ -36,12 +36,12 @@ export default function AuthorizedAppContainer({ backendService, dbService, isLo
     removeLocalTransaction,
   } = useTransactions()
 
-  async function handleUpdatedTransactions(transactions: TransactionDTO[]) {
+  const handleUpdatedTransactionsCallback = useCallback(async function handleUpdatedTransactions(transactions: TransactionDTO[]) {
     setLocalTransactions(transactions)
-  }
+  }, [setLocalTransactions])
 
   const { offlineMode, addDbTransaction, replaceDbTransaction, removeDbTransaction } =
-    useSyncService(backendService, dbService, instanceId, handleUpdatedTransactions)
+    useSyncService(backendService, dbService, instanceId, handleUpdatedTransactionsCallback)
 
   const [lastNotificationText, setLastNotificationText] = useState('')
 
