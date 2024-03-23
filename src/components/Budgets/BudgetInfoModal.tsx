@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown, faChevronUp, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronUp, faPencilAlt, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '@/utils'
 import { TransactionsContainer } from '@/components/Transactions'
 import { BudgetDTO } from '@/types'
@@ -58,13 +58,15 @@ export default function BudgetInfoModal({
           <p>
             Всего:{' '}
             {isEditing ? (
-              <div style={{display: 'inline-block'}}>
+              <div style={{ display: 'inline-block' }}>
                 <input
                   type="number"
                   value={newAmount}
                   onChange={(e) => setNewAmount(Number(e.target.value))}
                 />
-                <button onClick={handleAmountChange}>Confirm</button>
+                <button onClick={handleAmountChange}>
+                  <FontAwesomeIcon icon={faCheck} />
+                </button>
               </div>
             ) : (
               <strong>
