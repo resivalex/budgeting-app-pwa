@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faChevronUp, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '@/utils'
 import { TransactionsContainer } from '@/components/Transactions'
 import { BudgetDTO } from '@/types'
@@ -9,10 +9,19 @@ interface Props {
   budget: BudgetDTO
   onClose: () => void
   onTransactionRemove: (id: string) => Promise<void>
+  onBudgetChange: (amount: number) => void
 }
 
-export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }: Props) {
+export default function BudgetInfoModal({
+  budget,
+  onClose,
+  onTransactionRemove,
+  onBudgetChange,
+}: Props) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [newAmount, setNewAmount] = useState(budget.amount)
+
   if (!budget) return null
 
   const { name, currency, amount, categories, transactions, spentAmount } = budget
@@ -20,13 +29,22 @@ export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }
   let displayCategories = categories.join(', ')
   const initialDisplayCategoryLength = 2
   if (categories.length > initialDisplayCategoryLength && !isExpanded) {
-    displayCategories = categories.slice(0, initialDisplayCategoryLength).join(', ') + ' и ещё ' + (categories.length - initialDisplayCategoryLength) + '...'
+    displayCategories =
+      categories.slice(0, initialDisplayCategoryLength).join(', ') +
+      ' и ещё ' +
+      (categories.length - initialDisplayCategoryLength) +
+      '...'
   }
   const toggleButton = categories.length > initialDisplayCategoryLength && (
     <button onClick={() => setIsExpanded(!isExpanded)}>
       <FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} />
     </button>
   )
+
+  const handleAmountChange = () => {
+    onBudgetChange(newAmount)
+    setIsEditing(false)
+  }
 
   return (
     <div className="modal is-active">
@@ -39,9 +57,23 @@ export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }
         <section className="modal-card-body">
           <p>
             Всего:{' '}
-            <strong>
-              {formatFinancialAmount(amount)} {convertCurrencyCodeToSymbol(currency)}
-            </strong>
+            {isEditing ? (
+              <div style={{display: 'inline-block'}}>
+                <input
+                  type="number"
+                  value={newAmount}
+                  onChange={(e) => setNewAmount(Number(e.target.value))}
+                />
+                <button onClick={handleAmountChange}>Confirm</button>
+              </div>
+            ) : (
+              <strong>
+                {formatFinancialAmount(amount)} {convertCurrencyCodeToSymbol(currency)}{' '}
+                <button onClick={() => setIsEditing(true)}>
+                  <FontAwesomeIcon icon={faPencilAlt} />
+                </button>
+              </strong>
+            )}
           </p>
           <p>
             Потрачено:{' '}
@@ -56,8 +88,7 @@ export default function BudgetInfoModal({ budget, onClose, onTransactionRemove }
             </strong>
           </p>
           <p>
-            Категории: <strong>{displayCategories}</strong>
-            {' '}{toggleButton}
+            Категории: <strong>{displayCategories}</strong> {toggleButton}
           </p>
           <div style={{ height: 300, display: 'flex' }}>
             <TransactionsContainer transactions={transactions} onRemove={onTransactionRemove} />

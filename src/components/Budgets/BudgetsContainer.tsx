@@ -201,6 +201,7 @@ export default function BudgetsContainer({
   const [budgetMonthFirstDay, setBudgetMonthFirstDay] = useState(currentMonthFirstDay)
   const [availableMonths, setAvailableMonths] = useState<string[]>([currentMonthFirstDay])
   const [budgets, setBudgets] = useState<BudgetDTO[]>([])
+  const [modificationsCount, setModificationsCount] = useState(0)
   const categories: string[] = transactionAggregations.categories
   const selectedMonth = budgetMonthFirstDay
 
@@ -233,7 +234,15 @@ export default function BudgetsContainer({
     }
 
     void requestBudgetsFromBackend(backendService)
-  }, [categories, transactions, selectedMonth])
+  }, [categories, transactions, selectedMonth, modificationsCount])
+
+  async function updateBudgetItem(name: string, currency: string, amount: number) {
+    const config = JSON.parse(localStorage.config)
+    const backendService = new BackendService(config.backendUrl, config.backendToken)
+
+    await backendService.setMonthSpendingItemLimit(selectedMonth, name, currency, amount)
+    setModificationsCount(modificationsCount + 1)
+  }
 
   function handleFocus(budgetName: string) {
     setFocusedBudgetName(budgetName)
@@ -248,6 +257,7 @@ export default function BudgetsContainer({
       selectedMonth={selectedMonth}
       availableMonths={availableMonths}
       onMonthSelect={(month) => setBudgetMonthFirstDay(month)}
+      onBudgetItemChange={(name: string, currency: string, amount: number) => updateBudgetItem(name, currency, amount)}
       onFocus={handleFocus}
       focusedBudget={focusedBudget}
       commonBudgetsExpectationRatio={commonBudgetsExpectationRatio}

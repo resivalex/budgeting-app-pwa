@@ -72,6 +72,16 @@ class BackendService {
     }
   }
 
+  async setMonthSpendingItemLimit(date: string, name: string, currency: string, amount: number): Promise<void> {
+    await axios.post(
+      `${this.backendUrl}/spending-limits/month-budget-item`,
+      { date: date, limit:{ name: name, currency: currency, amount: amount }},
+      {
+        headers: { Authorization: `Bearer ${this.token}` },
+      }
+    )
+  }
+
   async getCategoryExpansions(): Promise<CategoryExpansionsDTO> {
     const response = await axios.get(`${this.backendUrl}/category-expansions`, {
       headers: { Authorization: `Bearer ${this.token}` },
