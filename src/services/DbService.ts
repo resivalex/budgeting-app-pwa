@@ -79,7 +79,6 @@ export default class DbService {
   }
 
   async pullChanges(): Promise<boolean> {
-    console.log('pullChanges')
     this.onLoading(true)
 
     let hasChanges = false
@@ -96,12 +95,11 @@ export default class DbService {
           }
         })
         .on('complete', () => {
-          console.log('pullChanges complete')
           this.onLoading(false)
           resolve(hasChanges)
         })
         .on('error', (err: any) => {
-          console.log('pullChanges error')
+          console.error('pullChanges error')
           this.onLoading(false)
           reject(err)
         })
