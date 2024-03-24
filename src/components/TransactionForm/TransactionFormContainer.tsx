@@ -195,16 +195,13 @@ export default function TransactionFormContainer({
     return transactionAggregator.getRecentCommentsByCategory(category)
   }, [category, transactions, appComments])
 
-  const handleDatetimeChange = useMemo(
-    () => (value: Date | null) => {
-      if (value) {
-        setDatetime(value.toISOString())
-      } else {
-        setDatetime(new Date().toISOString())
-      }
-    },
-    []
-  )
+  const handleDatetimeChange = useCallback((value: Date | null) => {
+    if (value) {
+      setDatetime(value.toISOString())
+    } else {
+      setDatetime(new Date().toISOString())
+    }
+  }, [])
 
   const isValid = !!(
     datetime &&
@@ -316,7 +313,7 @@ export default function TransactionFormContainer({
     []
   )
 
-  const viewDatetime = new Date(datetime)
+  const viewDatetime = useMemo(() => new Date(datetime), [datetime])
 
   const isStepByStep = true
   const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
