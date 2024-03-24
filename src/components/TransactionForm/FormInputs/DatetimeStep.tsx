@@ -3,7 +3,7 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { convertToLocaleTime } from '@/utils'
-import ru from 'date-fns/locale/ru';
+import ru from 'date-fns/locale/ru'
 
 interface Props {
   datetime: Date
