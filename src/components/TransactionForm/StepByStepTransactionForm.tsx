@@ -257,7 +257,7 @@ function StepByStepTransactionForm({
       ({ isExpanded, onExpand }: DatetimeStepProps) =>
         (
           <DatetimeFormInput
-            initialDatetime={datetime}
+            datetime={datetime}
             onDatetimeChange={onDatetimeChange}
             isExpanded={isExpanded}
             onExpand={onExpand}
