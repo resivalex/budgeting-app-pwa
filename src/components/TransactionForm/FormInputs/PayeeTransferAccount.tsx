@@ -16,7 +16,7 @@ const SelectedOption = styled.div<{ color?: string }>`
   padding: 2px 5px;
 `
 
-export default function PayeeTransferAccountStep({
+export default function PayeeTransferAccount({
   AccountSelect,
   payeeTransferAccount,
   isExpanded,

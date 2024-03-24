@@ -43,7 +43,7 @@ const Container = styled.div`
   }
 `
 
-export default function CurrencyStep({
+export default function Currency({
   value,
   isExpanded,
   onChange,

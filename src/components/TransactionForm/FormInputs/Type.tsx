@@ -42,7 +42,7 @@ const Container = styled.div`
   }
 `
 
-export default function TypeStep({
+export default function Type({
   value,
   isExpanded,
   alwaysShowOptionsIfEmpty,

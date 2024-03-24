@@ -3,32 +3,30 @@ import styled from 'styled-components'
 import SuggestingInput from '@/components/SuggestingInput'
 
 interface Props {
-  payee: string
+  comment: string
   isExpanded: boolean
-  onPayeeChange: (payee: string) => void
+  onCommentChange: (comment: string) => void
   onExpand: () => void
   onComplete: () => void
-  payees: string[]
-  type: 'expense' | 'income' | 'transfer' | ''
+  comments: string[]
 }
 
-const PayeeLabel = styled.div<{ isExpanded: boolean }>`
+const CommentLabel = styled.div<{ isExpanded: boolean }>`
   font-size: 1rem;
   color: ${(props) => (props.isExpanded ? 'black' : 'gray')};
 `
 
-const SelectedPayee = styled.div`
+const SelectedComment = styled.div`
   font-size: 0.8rem;
 `
 
-export default function PayeeStep({
-  payee,
+export default function Comment({
+  comment,
   isExpanded,
-  onPayeeChange,
+  onCommentChange,
   onExpand,
   onComplete,
-  payees,
-  type,
+  comments,
 }: Props) {
   const inputRef = useRef<any>(null)
 
@@ -38,32 +36,28 @@ export default function PayeeStep({
     }
   }, [isExpanded])
 
-  function labelText() {
-    return type === 'income' ? 'Плательщик' : 'Получатель'
-  }
-
   if (!isExpanded) {
     return (
       <div className="field" onClick={onExpand}>
-        <PayeeLabel className="is-size-7" isExpanded={isExpanded}>
-          {labelText()}
-        </PayeeLabel>
-        <SelectedPayee>{payee || '(пусто)'}</SelectedPayee>
+        <CommentLabel className="is-size-7" isExpanded={isExpanded}>
+          Комментарий
+        </CommentLabel>
+        <SelectedComment>{comment || '(пусто)'}</SelectedComment>
       </div>
     )
   }
 
   return (
     <div className="field">
-      <PayeeLabel className="is-size-7" isExpanded={isExpanded}>
-        {labelText()}
-      </PayeeLabel>
+      <CommentLabel className="is-size-7" isExpanded={isExpanded}>
+        Комментарий
+      </CommentLabel>
       <div className="control">
         <SuggestingInput
           ref={inputRef}
-          value={payee}
-          suggestions={payees}
-          onChange={onPayeeChange}
+          suggestions={comments}
+          value={comment}
+          onChange={onCommentChange}
           onConfirm={onComplete}
         />
       </div>

@@ -13,7 +13,7 @@ const InputContainer = styled.div`
   font-size: 1rem;
 `
 
-export default function AmountStep({
+export default function Amount({
   amount,
   isExpanded,
   onAmountChange,

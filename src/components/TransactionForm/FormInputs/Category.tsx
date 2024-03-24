@@ -21,7 +21,7 @@ const SelectedCategory = styled.div`
   font-size: 0.8rem;
 `
 
-export default function CategoryStep({
+export default function Category({
   category,
   isExpanded,
   onCategoryChange,

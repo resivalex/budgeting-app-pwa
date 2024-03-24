@@ -2,16 +2,16 @@ import { FC, useState, Ref, useMemo, useCallback } from 'react'
 import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
-  TypeStep as TypeFormInput,
-  CurrencyStep as CurrencyFormInput,
-  AmountStep as AmountFormInput,
-  AccountStep as AccountFormInput,
-  PayeeTransferAccountStep as PayeeTransferAccountFormInput,
-  CategoryStep as CategoryFormInput,
-  PayeeStep as PayeeFormInput,
-  CommentStep as CommentFormInput,
-  DatetimeStep as DatetimeFormInput,
-  SaveButton as SaveButtonFormInput,
+  Type,
+  Currency,
+  Amount,
+  Account,
+  PayeeTransferAccount,
+  Category,
+  Payee,
+  Comment,
+  Datetime,
+  SaveButton,
 } from './FormInputs'
 import FormLayout, {
   AmountStepProps,
@@ -125,7 +125,7 @@ function StepByStepTransactionForm({
     () =>
       ({ isExpanded, onExpand, onComplete }: AmountStepProps) =>
         (
-          <AmountFormInput
+          <Amount
             amount={amount}
             onAmountChange={onAmountChange}
             isExpanded={isExpanded}
@@ -140,7 +140,7 @@ function StepByStepTransactionForm({
     () =>
       ({ alwaysShowOptionsIfEmpty, isExpanded, onExpand, onComplete }: CurrencyStepProps) =>
         (
-          <CurrencyFormInput
+          <Currency
             value={currency}
             options={currencyOptions}
             onChange={onCurrencyChange}
@@ -157,7 +157,7 @@ function StepByStepTransactionForm({
     () =>
       ({ alwaysShowOptionsIfEmpty, isExpanded, onExpand, onComplete }: TypeStepProps) =>
         (
-          <TypeFormInput
+          <Type
             value={type}
             onChange={onTypeChange}
             alwaysShowOptionsIfEmpty={alwaysShowOptionsIfEmpty}
@@ -173,7 +173,7 @@ function StepByStepTransactionForm({
     () =>
       ({ isExpanded, onExpand, onComplete }: AccountStepProps) =>
         (
-          <AccountFormInput
+          <Account
             AccountSelect={AccountSelect}
             account={account}
             accountOptions={accountOptions}
@@ -190,7 +190,7 @@ function StepByStepTransactionForm({
     () =>
       ({ isExpanded, onExpand, onComplete }: CategoryStepProps) =>
         (
-          <CategoryFormInput
+          <Category
             category={category}
             categoryOptions={categoryOptions}
             onCategoryChange={onCategoryChange}
@@ -206,7 +206,7 @@ function StepByStepTransactionForm({
     () =>
       ({ isExpanded, onExpand, onComplete }: PayeeStepProps) =>
         (
-          <PayeeFormInput
+          <Payee
             type={type}
             payee={payee}
             payees={payees}
@@ -223,7 +223,7 @@ function StepByStepTransactionForm({
     () =>
       ({ isExpanded, onExpand, onComplete }: PayeeTransferAccountStepProps) =>
         (
-          <PayeeTransferAccountFormInput
+          <PayeeTransferAccount
             AccountSelect={AccountSelect}
             payeeTransferAccount={payeeTransferAccount}
             accountOptions={accountOptions}
@@ -240,7 +240,7 @@ function StepByStepTransactionForm({
     () =>
       ({ isExpanded, onExpand, onComplete }: CommentStepProps) =>
         (
-          <CommentFormInput
+          <Comment
             comment={comment}
             comments={comments}
             isExpanded={isExpanded}
@@ -256,7 +256,7 @@ function StepByStepTransactionForm({
     () =>
       ({ isExpanded, onExpand }: DatetimeStepProps) =>
         (
-          <DatetimeFormInput
+          <Datetime
             datetime={datetime}
             onDatetimeChange={onDatetimeChange}
             isExpanded={isExpanded}
@@ -272,8 +272,8 @@ function StepByStepTransactionForm({
     setIsLoading(false)
   }, [onSave])
 
-  const SaveButton = useMemo(
-    () => () => <SaveButtonFormInput isValid={isValid} isLoading={isLoading} onSave={handleSave} />,
+  const MemoizedSaveButton = useMemo(
+    () => () => <SaveButton isValid={isValid} isLoading={isLoading} onSave={handleSave} />,
     [isValid, isLoading, handleSave]
   )
 
@@ -289,7 +289,7 @@ function StepByStepTransactionForm({
       PayeeTransferAccountStep={PayeeTransferAccountStep}
       CommentStep={CommentStep}
       DatetimeStep={DatetimeStep}
-      SaveButton={SaveButton}
+      SaveButton={MemoizedSaveButton}
     />
   )
 }

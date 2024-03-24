@@ -21,7 +21,7 @@ const SelectedDateTime = styled.div`
   font-size: 0.8rem;
 `
 
-export default function DatetimeStep({ datetime, isExpanded, onDatetimeChange, onExpand }: Props) {
+export default function Datetime({ datetime, isExpanded, onDatetimeChange, onExpand }: Props) {
   if (!isExpanded) {
     return (
       <div className="field" onClick={onExpand}>
