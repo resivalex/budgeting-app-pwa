@@ -233,51 +233,49 @@ export default function TransactionFormContainer({
     })
   }
 
-  const adjustCurrencyAndAccounts = useMemo(
-    () =>
-      function (type: string, currency: string) {
-        const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
-          type,
-          currency
+  const adjustCurrencyAndAccounts = useCallback(
+    (type: string, currency: string) => {
+      const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
+        type,
+        currency
+      )
+      if (!_.includes(availableCurrencies, currency)) {
+        setCurrency('')
+      }
+      if (
+        !_.includes(
+          availableColoredAccounts.map((a) => a.account),
+          account
         )
-        if (!_.includes(availableCurrencies, currency)) {
-          setCurrency('')
-        }
-        if (
-          !_.includes(
-            _.map(availableColoredAccounts, (a) => a.account),
-            account
-          )
-        ) {
-          setAccount('')
-        }
-        if (
-          !_.includes(
-            _.map(availableColoredAccounts, (a) => a.account),
-            payeeTransferAccount
-          )
-        ) {
-          setPayeeTransferAccount('')
-        }
-      },
+      ) {
+        setAccount('')
+      }
+      if (
+        !_.includes(
+          availableColoredAccounts.map((a) => a.account),
+          payeeTransferAccount
+        )
+      ) {
+        setPayeeTransferAccount('')
+      }
+    },
     [getAvailableCurrenciesAndAccounts, account, payeeTransferAccount]
   )
 
-  const handleTypeChange = useMemo(
-    () =>
-      function (type: 'income' | 'expense' | 'transfer') {
-        setType(type)
-        adjustCurrencyAndAccounts(type, currency)
-      },
+  const handleTypeChange = useCallback(
+    (type: 'income' | 'expense' | 'transfer') => {
+      setType(type)
+      adjustCurrencyAndAccounts(type, currency)
+    },
     [adjustCurrencyAndAccounts, currency]
   )
 
-  const handleAmountChange = useMemo(() => (amount: string) => setAmount(amount), [])
+  const handleAmountChange = useCallback((amount: string) => setAmount(amount), [])
 
-  const handlePayeeChange = useMemo(() => (payee: string) => setPayee(payee), [])
+  const handlePayeeChange = useCallback((payee: string) => setPayee(payee), [])
 
-  const handlePayeeTransferAccountChange = useMemo(
-    () => (value: string) => {
+  const handlePayeeTransferAccountChange = useCallback(
+    (value: string) => {
       setPayeeTransferAccount(value)
       if (account === value) {
         setAccount(payeeTransferAccount)
@@ -286,10 +284,10 @@ export default function TransactionFormContainer({
     [account, payeeTransferAccount]
   )
 
-  const handleCommentChange = useMemo(() => (comment: string) => setComment(comment), [])
+  const handleCommentChange = useCallback((comment: string) => setComment(comment), [])
 
-  const handleAccountChange = useMemo(
-    () => (value: string) => {
+  const handleAccountChange = useCallback(
+    (value: string) => {
       setAccount(value)
       if (payeeTransferAccount === value) {
         setPayeeTransferAccount(account)
@@ -298,20 +296,17 @@ export default function TransactionFormContainer({
     [payeeTransferAccount, account]
   )
 
-  const handleCurrencyChange = useMemo(
-    () => (currency: string) => {
+  const handleCurrencyChange = useCallback(
+    (currency: string) => {
       setCurrency(currency)
       adjustCurrencyAndAccounts(type, currency)
     },
     [adjustCurrencyAndAccounts, type]
   )
 
-  const handleCategoryChange = useMemo(
-    () => (category: string) => {
-      setCategory(category)
-    },
-    []
-  )
+  const handleCategoryChange = useCallback((category: string) => {
+    setCategory(category)
+  }, [])
 
   const viewDatetime = useMemo(() => new Date(datetime), [datetime])
 
