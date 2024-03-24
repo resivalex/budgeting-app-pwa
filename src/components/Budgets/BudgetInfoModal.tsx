@@ -24,7 +24,7 @@ export default function BudgetInfoModal({
 
   if (!budget) return null
 
-  const { name, currency, amount, categories, transactions, spentAmount } = budget
+  const { name, currency, amount, categories, transactions, spentAmount, isEditable } = budget
 
   let displayCategories = categories.join(', ')
   const initialDisplayCategoryLength = 2
@@ -71,9 +71,11 @@ export default function BudgetInfoModal({
             ) : (
               <strong>
                 {formatFinancialAmount(amount)} {convertCurrencyCodeToSymbol(currency)}{' '}
-                <button onClick={() => setIsEditing(true)}>
-                  <FontAwesomeIcon icon={faPencilAlt} />
-                </button>
+                {isEditable && (
+                  <button onClick={() => setIsEditing(true)}>
+                    <FontAwesomeIcon icon={faPencilAlt} />
+                  </button>
+                )}
               </strong>
             )}
           </p>

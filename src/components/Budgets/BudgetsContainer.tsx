@@ -13,13 +13,15 @@ interface MonthSpendingLimit {
   categories: string[]
   currency: string
   amount: number
+  isEditable: boolean
 }
 
 function calculateBudget(
   transactions: TransactionDTO[],
   spendingLimit: MonthSpendingLimit,
   conversionMap: ConversionMapType,
-  color: string
+  color: string,
+  isEditable: boolean
 ) {
   const budget: BudgetDTO = {
     name: spendingLimit.name,
@@ -29,6 +31,7 @@ function calculateBudget(
     categories: spendingLimit.categories,
     transactions: [],
     spentAmount: 0,
+    isEditable: isEditable,
   }
   const categoriesMap: { [category: string]: boolean } = {}
   spendingLimit.categories.forEach((category) => {
@@ -99,8 +102,8 @@ function calculateBudgets(
       throw new Error('Transaction currency not in conversion map')
     }
   })
-  const monthSpendingLimits = spendingLimits.limits
-    .map((spendingLimit) => {
+  const monthSpendingLimitsWithNulls: (MonthSpendingLimit | null)[] = spendingLimits.limits.map(
+    (spendingLimit) => {
       const spendingLimitMonthLimits = spendingLimit.monthLimits.filter((monthLimit) => {
         const monthLimitDateObject = new Date(monthLimit.date)
         return (
@@ -112,15 +115,22 @@ function calculateBudgets(
         return null
       }
       const spendingLimitMonthLimit = spendingLimitMonthLimits[0]
-      return {
+
+      const result: MonthSpendingLimit = {
         name: spendingLimit.name,
         color: spendingLimit.color,
         categories: spendingLimit.categories,
         currency: spendingLimitMonthLimit.currency,
         amount: spendingLimitMonthLimit.amount,
+        isEditable: true,
       }
-    })
-    .filter((spendingLimit) => spendingLimit !== null) as MonthSpendingLimit[]
+
+      return result
+    }
+  )
+  const monthSpendingLimits: MonthSpendingLimit[] = monthSpendingLimitsWithNulls.filter(
+    (spendingLimit) => spendingLimit !== null
+  ) as MonthSpendingLimit[]
 
   const totalLimit: MonthSpendingLimit = {
     name: 'ОБЩИЙ',
@@ -128,6 +138,7 @@ function calculateBudgets(
     categories: [],
     currency: currencyConfig.mainCurrency,
     amount: 0,
+    isEditable: false,
   }
   monthSpendingLimits.forEach((spendingLimit: MonthSpendingLimit) => {
     totalLimit.amount +=
@@ -141,11 +152,18 @@ function calculateBudgets(
     currency: currencyConfig.mainCurrency,
     amount: 0,
     categories: categories.filter((category) => !totalLimit.categories.includes(category)),
+    isEditable: false,
   }
 
   return [totalLimit, ...monthSpendingLimits, restLimit].map(
     (spendingLimit: MonthSpendingLimit) => {
-      return calculateBudget(monthTransactions, spendingLimit, conversionMap, spendingLimit.color)
+      return calculateBudget(
+        monthTransactions,
+        spendingLimit,
+        conversionMap,
+        spendingLimit.color,
+        spendingLimit.isEditable
+      )
     }
   )
 }
@@ -257,7 +275,9 @@ export default function BudgetsContainer({
       selectedMonth={selectedMonth}
       availableMonths={availableMonths}
       onMonthSelect={(month) => setBudgetMonthFirstDay(month)}
-      onBudgetItemChange={(name: string, currency: string, amount: number) => updateBudgetItem(name, currency, amount)}
+      onBudgetItemChange={(name: string, currency: string, amount: number) =>
+        updateBudgetItem(name, currency, amount)
+      }
       onFocus={handleFocus}
       focusedBudget={focusedBudget}
       commonBudgetsExpectationRatio={commonBudgetsExpectationRatio}

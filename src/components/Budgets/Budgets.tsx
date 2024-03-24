@@ -22,12 +22,11 @@ export default function Budgets({
   selectedMonth,
   availableMonths,
   onMonthSelect,
-                                  onBudgetItemChange,
+  onBudgetItemChange,
   onFocus,
   focusedBudget,
   commonBudgetsExpectationRatio,
   onTransactionRemove,
-
 }: Props) {
   const monthOptions = availableMonths.map((month) => ({
     value: month,
@@ -69,7 +68,9 @@ export default function Budgets({
           budget={focusedBudget}
           onClose={() => onFocus('')}
           onTransactionRemove={onTransactionRemove}
-          onBudgetChange={(amount: number) => onBudgetItemChange(focusedBudget.name, focusedBudget.currency, amount)}
+          onBudgetChange={(amount: number) =>
+            onBudgetItemChange(focusedBudget.name, focusedBudget.currency, amount)
+          }
         />
       )}
     </>

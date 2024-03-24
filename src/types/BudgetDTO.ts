@@ -8,4 +8,5 @@ export type BudgetDTO = {
   categories: string[]
   transactions: TransactionDTO[]
   spentAmount: number
+  isEditable: boolean
 }
