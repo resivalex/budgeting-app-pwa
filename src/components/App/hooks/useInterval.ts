@@ -19,7 +19,6 @@ export function useInterval(
     }, initialDelay)
 
     return () => {
-      console.log('clearing interval', { callback, initialDelay, delay, dependency })
       clearTimeout(initialTimeout)
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
