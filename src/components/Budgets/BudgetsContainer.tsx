@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { convertToLocaleTime } from '@/utils'
 import { BackendService } from '@/services'
 import Budgets from './Budgets'
-import { TransactionDTO, BudgetDTO, SpendingLimitsDTO, TransactionsAggregations } from '@/types'
+import { TransactionDTO, SpendingLimitsDTO, TransactionsAggregations } from '@/types'
+import { BudgetDTO } from './BudgetDTO'
 import _ from 'lodash'
 
 type ConversionMapType = { [sourceCurrency: string]: { [targetCurrency: string]: number } }

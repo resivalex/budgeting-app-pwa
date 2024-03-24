@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown, faChevronUp, faPencilAlt, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { formatFinancialAmount, convertCurrencyCodeToSymbol } from '@/utils'
 import { TransactionsContainer } from '@/components/Transactions'
-import { BudgetDTO } from '@/types'
+import { BudgetDTO } from './BudgetDTO'
 
 interface Props {
   budget: BudgetDTO

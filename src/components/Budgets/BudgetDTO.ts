@@ -1,4 +1,4 @@
-import { TransactionDTO } from './TransactionDTO'
+import { TransactionDTO } from '@/types'
 
 export type BudgetDTO = {
   name: string
