@@ -13,7 +13,6 @@ import _ from 'lodash'
 import { useEffect } from 'react'
 import { TransactionDTO, CategoryExpansionsDTO, TransactionsAggregations } from '@/types'
 import { convertToLocaleTime, convertToUtcTime } from '@/utils'
-import TransactionForm from './TransactionForm'
 import StepByStepTransactionForm from './StepByStepTransactionForm'
 import { useNavigate, useParams } from 'react-router-dom'
 import { TransactionAggregator } from '@/services'
@@ -310,15 +309,12 @@ export default function TransactionFormContainer({
 
   const viewDatetime = useMemo(() => new Date(datetime), [datetime])
 
-  const isStepByStep = true
-  const TransactionFormComponent = isStepByStep ? StepByStepTransactionForm : TransactionForm
-
   if (coloredAccounts.length === 0) {
     return null
   }
 
   return (
-    <TransactionFormComponent
+    <StepByStepTransactionForm
       // Functional components
       AccountSelect={AccountSelect}
       // Basic transaction details
@@ -341,7 +337,7 @@ export default function TransactionFormContainer({
       onCommentChange={handleCommentChange}
       onDatetimeChange={handleDatetimeChange}
       // Dropdown options
-      accounts={isStepByStep ? availableColoredAccounts : []}
+      accounts={availableColoredAccounts}
       categoryOptions={categoryOptions}
       currencies={availableCurrencies}
       payees={payees}
