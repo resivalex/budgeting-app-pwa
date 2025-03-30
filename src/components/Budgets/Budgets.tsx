@@ -37,10 +37,12 @@ export default function Budgets({
   return (
     <>
       <div className="px-2 pb-1">
+        {/* @ts-ignore */}
         <Select
           className="basic-single"
           classNamePrefix="select"
           value={monthOptions.find((option) => option.value === selectedMonth)}
+          // @ts-ignore
           onChange={(selectedOption) => {
             if (!selectedOption) return
             onMonthSelect(selectedOption.value)

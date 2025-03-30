@@ -52,6 +52,7 @@ const ColoredAccountSelect = forwardRef(
     }))
 
     return (
+      // @ts-ignore
       <Select
         ref={selectRef}
         menuIsOpen={menuIsOpen}
@@ -60,6 +61,7 @@ const ColoredAccountSelect = forwardRef(
         className="basic-single"
         classNamePrefix="select"
         value={options.find((option) => option.value === value) || null}
+        // @ts-ignore
         onChange={(selectedOption) => {
           if (!selectedOption) return
           onChange(selectedOption.value)

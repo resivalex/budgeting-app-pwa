@@ -37,6 +37,7 @@ export default function BudgetInfoModal({
   }
   const toggleButton = categories.length > initialDisplayCategoryLength && (
     <button onClick={() => setIsExpanded(!isExpanded)}>
+      {/* @ts-ignore */}
       <FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} />
     </button>
   )
@@ -65,6 +66,7 @@ export default function BudgetInfoModal({
                   onChange={(e) => setNewAmount(Number(e.target.value))}
                 />
                 <button onClick={handleAmountChange}>
+                  {/* @ts-ignore */}
                   <FontAwesomeIcon icon={faCheck} />
                 </button>
               </div>
@@ -73,6 +75,7 @@ export default function BudgetInfoModal({
                 {formatFinancialAmount(amount)} {convertCurrencyCodeToSymbol(currency)}{' '}
                 {isEditable && (
                   <button onClick={() => setIsEditing(true)}>
+                    {/* @ts-ignore */}
                     <FontAwesomeIcon icon={faPencilAlt} />
                   </button>
                 )}

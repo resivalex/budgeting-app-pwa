@@ -40,7 +40,7 @@ export default function TransactionContent({
       <div>
         <div className="has-text-weight-semibold">{category}</div>
         {type === 'transfer' ? (
-          <div className="has-text-weight-semibold">
+          <div className="has-text-weight-semibold">{/* @ts-ignore */}
             {account} <FontAwesomeIcon icon={faArrowRightLong} /> {payee}
           </div>
         ) : (

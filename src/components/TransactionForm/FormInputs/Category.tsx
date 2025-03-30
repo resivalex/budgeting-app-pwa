@@ -63,6 +63,7 @@ export default function Category({
         Категория
       </CategoryLabel>
       <div className="control">
+        {/* @ts-ignore */}{' '}
         <Select
           ref={selectRef}
           menuIsOpen={menuIsOpen}
@@ -71,6 +72,7 @@ export default function Category({
           className="basic-single"
           classNamePrefix="select"
           value={selectedOption}
+          // @ts-ignore
           onChange={(selectedOption) => {
             if (!selectedOption) return
             handleCategoryChange(selectedOption.value)

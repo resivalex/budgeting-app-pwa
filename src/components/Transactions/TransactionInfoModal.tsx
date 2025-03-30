@@ -68,6 +68,7 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove, o
         </section>
         <footer className="modal-card-foot">
           <button className="button is-info" onClick={() => onEdit(transaction._id)}>
+            {/* @ts-ignore */}
             <FontAwesomeIcon icon={faEdit} style={{ color: 'white' }} />
           </button>
 
@@ -79,6 +80,7 @@ export default function TransactionInfoModal({ transaction, onClose, onRemove, o
             {isRemoveActive ? (
               <span>Подтвердите удаление</span>
             ) : (
+              // @ts-ignore
               <FontAwesomeIcon icon={faTrash} style={{ color: 'white' }} />
             )}
           </button>

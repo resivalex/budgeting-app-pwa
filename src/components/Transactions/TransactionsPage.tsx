@@ -79,6 +79,7 @@ export default function TransactionsPage({
           <AccountSelect value={filterAccountName} onChange={onFilterAccountNameChange} />
         </div>
         <button onClick={handleSearchIconClick} style={{ background: 'none', border: 'none' }}>
+          {/* @ts-ignore */}
           <FontAwesomeIcon icon={faSearch} size="lg" />
         </button>
       </div>

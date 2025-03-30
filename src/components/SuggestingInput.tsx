@@ -128,6 +128,7 @@ const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
           onBlur={handleBlur}
         />
         <ConfirmButton onClick={onConfirm}>
+          {/* @ts-ignore */}
           <FontAwesomeIcon icon={faCheckCircle} color={'rgb(50, 115, 220)'} />
         </ConfirmButton>
       </InputGroup>

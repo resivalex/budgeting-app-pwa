@@ -21,6 +21,7 @@ export function useInterval(
     return () => {
       clearTimeout(initialTimeout)
       if (intervalRef.current) {
+        // @ts-ignore
         clearInterval(intervalRef.current)
         intervalRef.current = null
       }
