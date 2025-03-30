@@ -43,6 +43,33 @@ const Container = styled.div`
   }
 `
 
+const sortOptionsByHardcodedOrder = (options: { value: string; label: string }[]) => {
+  const hardcodedCurrencyOrder = ['KZT', 'RUB', 'USD', 'EUR']
+
+  return [...options].sort((a, b) => {
+    const indexA = hardcodedCurrencyOrder.indexOf(a.value)
+    const indexB = hardcodedCurrencyOrder.indexOf(b.value)
+
+    // If both currencies are in hardcodedCurrencyOrder, sort by their order there
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB
+    }
+
+    // If only a is in hardcodedCurrencyOrder, it comes first
+    if (indexA !== -1) {
+      return -1
+    }
+
+    // If only b is in hardcodedCurrencyOrder, it comes first
+    if (indexB !== -1) {
+      return 1
+    }
+
+    // If neither is in hardcodedCurrencyOrder, maintain original order
+    return 0
+  })
+}
+
 export default function Currency({
   value,
   isExpanded,
@@ -79,15 +106,23 @@ export default function Currency({
     }
   }
 
-  const renderOptions = () => (<>{options.map((option) => (
-    <Option
-      key={option.value}
-      isActive={value === option.value}
-      onClick={() => handleOptionClick(option.value)}
-    >
-      {option.label}
-    </Option>
-  ))}</>)
+  const renderOptions = () => {
+    const sortedOptions = sortOptionsByHardcodedOrder(options)
+
+    return (
+      <>
+        {sortedOptions.map((option) => (
+          <Option
+            key={option.value}
+            isActive={value === option.value}
+            onClick={() => handleOptionClick(option.value)}
+          >
+            {option.label}
+          </Option>
+        ))}
+      </>
+    )
+  }
 
   if (!isExpanded) {
     return (
