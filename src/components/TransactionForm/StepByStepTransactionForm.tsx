@@ -1,4 +1,4 @@
-import { FC, useState, Ref, useMemo, useCallback, useEffect } from 'react'
+import { FC, useState, Ref, useCallback, useEffect } from 'react'
 import { convertCurrencyCodeToSymbol } from '@/utils'
 import { ColoredAccountDetailsDTO } from '@/types'
 import {
@@ -102,24 +102,16 @@ function StepByStepTransactionForm({
 }) {
   const [isLoading, setIsLoading] = useState(false)
 
-  const currencyOptions = useMemo(
-    () =>
-      currencies.map((currency) => ({
-        value: currency,
-        label: currency,
-      })),
-    [currencies]
-  )
+  const currencyOptions = currencies.map((currency) => ({
+    value: currency,
+    label: currency,
+  }))
 
-  const accountOptions = useMemo(
-    () =>
-      accounts.map((a) => ({
-        value: a.account,
-        label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
-        color: a.color,
-      })),
-    [accounts]
-  )
+  const accountOptions = accounts.map((a) => ({
+    value: a.account,
+    label: `[ ${convertCurrencyCodeToSymbol(a.currency)} ] ${a.account}`,
+    color: a.color,
+  }))
 
   function AmountStep({ isExpanded, onExpand, onComplete }: AmountStepProps) {
     useEffect(() => {
@@ -257,9 +249,8 @@ function StepByStepTransactionForm({
     setIsLoading(false)
   }, [onSave])
 
-  const MemoizedSaveButton = useMemo(
-    () => () => <SaveButton isValid={isValid} isLoading={isLoading} onSave={handleSave} />,
-    [isValid, isLoading, handleSave]
+  const MemoizedSaveButton = () => (
+    <SaveButton isValid={isValid} isLoading={isLoading} onSave={handleSave} />
   )
 
   return (

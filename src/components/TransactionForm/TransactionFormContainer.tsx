@@ -1,13 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-  FC,
-  Ref,
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-} from 'react'
+import { useState, useMemo, FC, Ref, forwardRef, useImperativeHandle, useRef } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import { useEffect } from 'react'
@@ -124,59 +115,49 @@ export default function TransactionFormContainer({
     }
   }, [transactionId])
 
-  const getAvailableCurrenciesAndAccounts = useCallback(
-    (type: string, currency: string) => {
-      const availableCurrencies =
-        type === 'transfer'
-          ? appCurrencies.filter((c) => coloredAccounts.filter((a) => a.currency === c).length > 1)
-          : appCurrencies
-      const availableColoredAccounts = coloredAccounts.filter((a) => a.currency === currency)
+  const getAvailableCurrenciesAndAccounts = (type: string, currency: string) => {
+    const availableCurrencies =
+      type === 'transfer'
+        ? appCurrencies.filter((c) => coloredAccounts.filter((a) => a.currency === c).length > 1)
+        : appCurrencies
+    const availableColoredAccounts = coloredAccounts.filter((a) => a.currency === currency)
 
-      return {
-        availableCurrencies,
-        availableColoredAccounts,
-      }
-    },
-    [coloredAccounts, appCurrencies]
-  )
+    return {
+      availableCurrencies,
+      availableColoredAccounts,
+    }
+  }
 
-  const { availableCurrencies, availableColoredAccounts } = useMemo(
-    () => getAvailableCurrenciesAndAccounts(type, currency),
-    [type, currency, getAvailableCurrenciesAndAccounts]
+  const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
+    type,
+    currency
   )
-  const availableAccountNames = useMemo(
-    () => availableColoredAccounts.map((a) => a.account),
-    [availableColoredAccounts]
-  )
+  const availableAccountNames = availableColoredAccounts.map((a) => a.account)
 
   const AccountSelect: FC<{
     value: string
     onChange: (value: string) => void
     ref?: Ref<{ focus: () => void }>
-  }> = useMemo(
-    () =>
-      forwardRef(({ value, onChange }: { value: string; onChange: (v: string) => void }, ref) => {
-        const limitedAccountSelectRef = useRef<any>(null)
+  }> = forwardRef(({ value, onChange }: { value: string; onChange: (v: string) => void }, ref) => {
+    const limitedAccountSelectRef = useRef<any>(null)
 
-        useImperativeHandle(ref, () => ({
-          focus: () => {
-            if (limitedAccountSelectRef.current && limitedAccountSelectRef.current.focus) {
-              limitedAccountSelectRef.current.focus()
-            }
-          },
-        }))
+    useImperativeHandle(ref, () => ({
+      focus: () => {
+        if (limitedAccountSelectRef.current && limitedAccountSelectRef.current.focus) {
+          limitedAccountSelectRef.current.focus()
+        }
+      },
+    }))
 
-        return (
-          <LimitedAccountSelect
-            ref={limitedAccountSelectRef}
-            value={value}
-            onChange={onChange}
-            availableNames={availableAccountNames}
-          />
-        )
-      }),
-    [availableAccountNames, LimitedAccountSelect]
-  )
+    return (
+      <LimitedAccountSelect
+        ref={limitedAccountSelectRef}
+        value={value}
+        onChange={onChange}
+        availableNames={availableAccountNames}
+      />
+    )
+  })
 
   const payees = useMemo(() => {
     if (!category) {
@@ -194,13 +175,13 @@ export default function TransactionFormContainer({
     return transactionAggregator.getRecentCommentsByCategory(category)
   }, [category, transactions, appComments])
 
-  const handleDatetimeChange = useCallback((value: Date | null) => {
+  const handleDatetimeChange = (value: Date | null) => {
     if (value) {
       setDatetime(value.toISOString())
     } else {
       setDatetime(new Date().toISOString())
     }
-  }, [])
+  }
 
   const isValid = !!(
     datetime &&
@@ -232,82 +213,67 @@ export default function TransactionFormContainer({
     })
   }
 
-  const adjustCurrencyAndAccounts = useCallback(
-    (type: string, currency: string) => {
-      const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
-        type,
-        currency
+  const adjustCurrencyAndAccounts = (type: string, currency: string) => {
+    const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
+      type,
+      currency
+    )
+    if (!_.includes(availableCurrencies, currency)) {
+      setCurrency('')
+    }
+    if (
+      !_.includes(
+        availableColoredAccounts.map((a) => a.account),
+        account
       )
-      if (!_.includes(availableCurrencies, currency)) {
-        setCurrency('')
-      }
-      if (
-        !_.includes(
-          availableColoredAccounts.map((a) => a.account),
-          account
-        )
-      ) {
-        setAccount('')
-      }
-      if (
-        !_.includes(
-          availableColoredAccounts.map((a) => a.account),
-          payeeTransferAccount
-        )
-      ) {
-        setPayeeTransferAccount('')
-      }
-    },
-    [getAvailableCurrenciesAndAccounts, account, payeeTransferAccount]
-  )
+    ) {
+      setAccount('')
+    }
+    if (
+      !_.includes(
+        availableColoredAccounts.map((a) => a.account),
+        payeeTransferAccount
+      )
+    ) {
+      setPayeeTransferAccount('')
+    }
+  }
 
-  const handleTypeChange = useCallback(
-    (type: 'income' | 'expense' | 'transfer') => {
-      setType(type)
-      adjustCurrencyAndAccounts(type, currency)
-    },
-    [adjustCurrencyAndAccounts, currency]
-  )
+  const handleTypeChange = (type: 'income' | 'expense' | 'transfer') => {
+    setType(type)
+    adjustCurrencyAndAccounts(type, currency)
+  }
 
-  const handleAmountChange = useCallback((amount: string) => setAmount(amount), [])
+  const handleAmountChange = (amount: string) => setAmount(amount)
 
-  const handlePayeeChange = useCallback((payee: string) => setPayee(payee), [])
+  const handlePayeeChange = (payee: string) => setPayee(payee)
 
-  const handlePayeeTransferAccountChange = useCallback(
-    (value: string) => {
-      setPayeeTransferAccount(value)
-      if (account === value) {
-        setAccount(payeeTransferAccount)
-      }
-    },
-    [account, payeeTransferAccount]
-  )
+  const handlePayeeTransferAccountChange = (value: string) => {
+    setPayeeTransferAccount(value)
+    if (account === value) {
+      setAccount(payeeTransferAccount)
+    }
+  }
 
-  const handleCommentChange = useCallback((comment: string) => setComment(comment), [])
+  const handleCommentChange = (comment: string) => setComment(comment)
 
-  const handleAccountChange = useCallback(
-    (value: string) => {
-      setAccount(value)
-      if (payeeTransferAccount === value) {
-        setPayeeTransferAccount(account)
-      }
-    },
-    [payeeTransferAccount, account]
-  )
+  const handleAccountChange = (value: string) => {
+    setAccount(value)
+    if (payeeTransferAccount === value) {
+      setPayeeTransferAccount(account)
+    }
+  }
 
-  const handleCurrencyChange = useCallback(
-    (currency: string) => {
-      setCurrency(currency)
-      adjustCurrencyAndAccounts(type, currency)
-    },
-    [adjustCurrencyAndAccounts, type]
-  )
+  const handleCurrencyChange = (currency: string) => {
+    setCurrency(currency)
+    adjustCurrencyAndAccounts(type, currency)
+  }
 
-  const handleCategoryChange = useCallback((category: string) => {
+  const handleCategoryChange = (category: string) => {
     setCategory(category)
-  }, [])
+  }
 
-  const viewDatetime = useMemo(() => new Date(datetime), [datetime])
+  const viewDatetime = new Date(datetime)
 
   if (coloredAccounts.length === 0) {
     return null

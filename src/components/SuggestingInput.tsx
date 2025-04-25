@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useImperativeHandle, forwardRef } from 'react'
+import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
@@ -81,14 +81,14 @@ const SuggestingInput = forwardRef((props: SuggestingInputProps, ref) => {
     },
   }))
 
-  const filteredSuggestions = useMemo(() => {
+  const filteredSuggestions = (() => {
     if (!value) {
       return suggestions
     }
     return suggestions.filter(
       (suggestion) => suggestion.toLowerCase().includes(value.toLowerCase()) && suggestion !== value
     )
-  }, [suggestions, value])
+  })()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value

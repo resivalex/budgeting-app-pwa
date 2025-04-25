@@ -37,51 +37,42 @@ export function useTransactions() {
   },
   [])
 
-  const addLocalTransactionCallback = useCallback(
-    function addLocalTransaction(t: TransactionDTO) {
-      const newTransactions = [...transactions, t]
-      const sortedTransactions = _.sortBy(
-        newTransactions,
-        (doc: TransactionDTO) => doc.datetime
-      ).reverse()
-      setTransactions(sortedTransactions)
-      updateTransactionsAggregations(sortedTransactions)
-    },
-    [transactions]
-  )
+  function addLocalTransaction(t: TransactionDTO) {
+    const newTransactions = [...transactions, t]
+    const sortedTransactions = _.sortBy(
+      newTransactions,
+      (doc: TransactionDTO) => doc.datetime
+    ).reverse()
+    setTransactions(sortedTransactions)
+    updateTransactionsAggregations(sortedTransactions)
+  }
 
-  const replaceLocalTransactionCallback = useCallback(
-    function replaceLocalTransaction(t: TransactionDTO) {
-      const newTransactions = [...transactions]
-      const index = newTransactions.findIndex((transaction) => transaction._id === t._id)
-      newTransactions[index] = t
-      const sortedTransactions = _.sortBy(
-        newTransactions,
-        (doc: TransactionDTO) => doc.datetime
-      ).reverse()
-      setTransactions(sortedTransactions)
-      updateTransactionsAggregations(sortedTransactions)
-    },
-    [transactions]
-  )
+  function replaceLocalTransaction(t: TransactionDTO) {
+    const newTransactions = [...transactions]
+    const index = newTransactions.findIndex((transaction) => transaction._id === t._id)
+    newTransactions[index] = t
+    const sortedTransactions = _.sortBy(
+      newTransactions,
+      (doc: TransactionDTO) => doc.datetime
+    ).reverse()
+    setTransactions(sortedTransactions)
+    updateTransactionsAggregations(sortedTransactions)
+  }
 
-  const removeLocalTransactionCallback = useCallback(
-    function removeLocalTransaction(id: string) {
-      const newTransactions = [...transactions]
-      const index = newTransactions.findIndex((transaction) => transaction._id === id)
-      newTransactions.splice(index, 1)
-      setTransactions(newTransactions)
-      updateTransactionsAggregations(newTransactions)
-    },
-    [transactions]
-  )
+  function removeLocalTransaction(id: string) {
+    const newTransactions = [...transactions]
+    const index = newTransactions.findIndex((transaction) => transaction._id === id)
+    newTransactions.splice(index, 1)
+    setTransactions(newTransactions)
+    updateTransactionsAggregations(newTransactions)
+  }
 
   return {
     transactions,
     transactionsAggregations,
     setLocalTransactions: setLocalTransactionsCallback,
-    addLocalTransaction: addLocalTransactionCallback,
-    replaceLocalTransaction: replaceLocalTransactionCallback,
-    removeLocalTransaction: removeLocalTransactionCallback,
+    addLocalTransaction: addLocalTransaction,
+    replaceLocalTransaction: replaceLocalTransaction,
+    removeLocalTransaction: removeLocalTransaction,
   }
 }
