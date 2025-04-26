@@ -128,36 +128,45 @@ export default function TransactionFormContainer({
     }
   }
 
-  const { availableCurrencies, availableColoredAccounts } = getAvailableCurrenciesAndAccounts(
-    type,
-    currency
+  const { availableCurrencies } = getAvailableCurrenciesAndAccounts(type, currency)
+
+  const availableColoredAccounts = useMemo(() => {
+    return coloredAccounts.filter((a) => a.currency === currency)
+  }, [coloredAccounts, currency])
+
+  const availableAccountNames = useMemo(
+    () => availableColoredAccounts.map((a) => a.account),
+    [availableColoredAccounts]
   )
-  const availableAccountNames = availableColoredAccounts.map((a) => a.account)
 
   const AccountSelect: FC<{
     value: string
     onChange: (value: string) => void
     ref?: Ref<{ focus: () => void }>
-  }> = forwardRef(({ value, onChange }: { value: string; onChange: (v: string) => void }, ref) => {
-    const limitedAccountSelectRef = useRef<any>(null)
+  }> = useMemo(
+    () =>
+      forwardRef(({ value, onChange }: { value: string; onChange: (v: string) => void }, ref) => {
+        const limitedAccountSelectRef = useRef<any>(null)
 
-    useImperativeHandle(ref, () => ({
-      focus: () => {
-        if (limitedAccountSelectRef.current && limitedAccountSelectRef.current.focus) {
-          limitedAccountSelectRef.current.focus()
-        }
-      },
-    }))
+        useImperativeHandle(ref, () => ({
+          focus: () => {
+            if (limitedAccountSelectRef.current && limitedAccountSelectRef.current.focus) {
+              limitedAccountSelectRef.current.focus()
+            }
+          },
+        }))
 
-    return (
-      <LimitedAccountSelect
-        ref={limitedAccountSelectRef}
-        value={value}
-        onChange={onChange}
-        availableNames={availableAccountNames}
-      />
-    )
-  })
+        return (
+          <LimitedAccountSelect
+            ref={limitedAccountSelectRef}
+            value={value}
+            onChange={onChange}
+            availableNames={availableAccountNames}
+          />
+        )
+      }),
+    [availableAccountNames]
+  )
 
   const payees = useMemo(() => {
     if (!category) {
